@@ -21,6 +21,50 @@ bool findInLista(char *name){
   }
   return false;
 }
+int findVariableInLista(char *name){
+  NodoArbol *aux = lista;
+  while(aux != NULL){
+    if (strcmp(aux->nombre,name) == 0){
+      printf("SE enconntro la variable en l lista!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return aux->valor;
+    }
+    aux=aux->hIzq;
+
+  }
+  return 0;
+}
+
+int resolver(NodoArbol *raiz){
+  if(raiz->tipo ==0){
+    return raiz->valor;
+  }
+  if(raiz->tipo ==1){
+    return findVariableInLista(raiz->nombre);
+  }
+  if(raiz->tipo ==2){
+    return resolverOperacion(raiz);
+  }
+return 0;
+
+
+}
+
+
+int resolverOperacion(NodoArbol *nodoop){
+  
+  if(strcmp(nodoop->nombre,"*")==0){
+    printf("multiplicacion  %s \n",nodoop->nombre);
+    return (resolver(nodoop->hIzq) * resolver(nodoop->hDer));
+  }
+  if(strcmp(nodoop->nombre,"+")==0){
+    printf("suma  %s \n",nodoop->nombre);
+    return (resolver(nodoop->hIzq) + resolver(nodoop->hDer));
+  }
+}
+
+
+
+
 
 
 
@@ -28,7 +72,7 @@ bool findInLista(char *name){
 
 %}
 
-%union { int i; char *s; char c; struct NodoArbol *p;}
+%union { int i; char *s; char c; struct nodoArbol *p;}
 
 %token<i> INT
 %token<s> ID
@@ -44,10 +88,10 @@ bool findInLista(char *name){
 %%
 
 prog: expr ';'          {
-                        //printf("%s%d\n", "Resultado: ",$1); }
+                        printf("%s%d\n", "Resultado: ",resolver($1)); 
                         }
 
-	| asignacion ';' expr ';' {printf("este programa tiene asignaciones");}
+	| asignacion ';' expr ';' {printf("este programa tiene asignaciones,Resultado: %d",resolver($3));}
     ;
 
   expr: INT               {
@@ -71,21 +115,19 @@ prog: expr ';'          {
 							}
 
 
-    | expr '+' expr     { //$$ = $1 + $3;
-                           //printf("%s,%d,%d,%d\n","Operador Suma\n",$1,$3,$1+$3);
+    | expr '+' expr     {
                           NodoArbol *nuevo =malloc(sizeof(NodoArbol));
                           nuevo->tipo =2;
-                          nuevo->nombre = $2;
+                          nuevo->nombre = "+";
                           nuevo->hIzq = $1;
                           nuevo->hDer = $3;
 
                           $$ = nuevo;
                         }
-    | expr '*' expr     { //$$ = $1 * $3;
-                           //printf("%s,%d,%d,%d\n","Operador Producto\n",$1,$3,$1*$3);
+    | expr '*' expr     { 
                            NodoArbol *nuevo =malloc(sizeof(NodoArbol));
                            nuevo->tipo =2;
-                           nuevo->nombre = $2;
+                           nuevo->nombre = "*";
                            nuevo->hIzq = $1;
                            nuevo->hDer = $3;
 
