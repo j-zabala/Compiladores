@@ -1,5 +1,16 @@
 %{
 
+/*
+
+Pre-Proyecto de Compiladores 2017 
+
+Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi 
+
+*/
+
+
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

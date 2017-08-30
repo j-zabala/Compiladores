@@ -1,7 +1,12 @@
-/**
- * Crea un arbol binario y lo recorre en
- * preorden, inorden, y en postOrden
- */
+
+/*
+
+Pre-Proyecto de Compiladores 2017 
+
+Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi 
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

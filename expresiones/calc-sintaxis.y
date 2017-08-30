@@ -1,5 +1,14 @@
 %{
 
+/*
+
+Pre-Proyecto de Compiladores 2017 
+
+Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi 
+
+*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,11 +18,15 @@
 
 NodoArbol *lista =NULL;
 
+
+/* 
+devuelve true o false segun si la variable (nombre pasado como parametro), si esta en la lista
+o no
+*/
 bool findInLista(char *name){
   NodoArbol *aux = lista;
   while(aux != NULL){
     if (strcmp(aux->nombre,name) == 0){
-      printf("SE enconntro la variable en l lista!!!!!!!!!!!!!!!!!!!!!!!!!");
       return true;
     }
     aux=aux->hIzq;
@@ -21,11 +34,14 @@ bool findInLista(char *name){
   }
   return false;
 }
+
+/* devuelve el valor de la variable (pasando como parametro el nombre de la misma) almacenado
+en la lista
+ */
 int findVariableInLista(char *name){
   NodoArbol *aux = lista;
   while(aux != NULL){
     if (strcmp(aux->nombre,name) == 0){
-      printf("SE enconntro la variable en l lista!!!!!!!!!!!!!!!!!!!!!!!!!");
       return aux->valor;
     }
     aux=aux->hIzq;
@@ -33,6 +49,13 @@ int findVariableInLista(char *name){
   }
   return 0;
 }
+
+/*esta funcion retorna el resultado entero del nodo que se le pasa como parametro, si el nodo
+ es una constante devuelve su valor, si es una variable devuelve el valor de la misma (buscando
+en la lista de variables) y si es nodo de tipo operacion devuelve el resultado de la operacion 
+aplicada a sus hijos
+*/ 
+
 
 int resolver(NodoArbol *raiz){
   if(raiz->tipo ==0){
@@ -49,15 +72,16 @@ return 0;
 
 }
 
+// esta funcion dado un nodo de tipo "operacion", retorna el resultado de aplicar la operacion
+// siendo los dos hijos del nodo los operandos
+
 
 int resolverOperacion(NodoArbol *nodoop){
   
   if(strcmp(nodoop->nombre,"*")==0){
-    printf("multiplicacion  %s \n",nodoop->nombre);
     return (resolver(nodoop->hIzq) * resolver(nodoop->hDer));
   }
   if(strcmp(nodoop->nombre,"+")==0){
-    printf("suma  %s \n",nodoop->nombre);
     return (resolver(nodoop->hIzq) + resolver(nodoop->hDer));
   }
 }
@@ -88,10 +112,10 @@ int resolverOperacion(NodoArbol *nodoop){
 %%
 
 prog: expr ';'          {
-                        printf("%s%d\n", "Resultado: ",resolver($1)); 
+                        printf("Resultado: %d \n",resolver($1)); 
                         }
 
-	| asignacion ';' expr ';' {printf("este programa tiene asignaciones,Resultado: %d",resolver($3));}
+	| asignacion ';' expr ';' {printf("Resultado: %d\n",resolver($3));}
     ;
 
   expr: INT               {
@@ -100,18 +124,19 @@ prog: expr ';'          {
                           nuevo->valor = $1;
 
                           $$ = nuevo;
-                          printf("se detecto un INT, SE GENERA EL SIGUIENTE NODO");
-                          printf ("nodo: direccion:%p nombre: %s tipo: %i valor: %i hIzq %p\n",nuevo,nuevo->nombre,nuevo->tipo,nuevo->valor,nuevo->hIzq);
-                          printf("%s%d\n","Constante entera:",$1);
+                          
                         }
 
      | ID                 {
+               if(findInLista($1)==false){
+                 printf("ERROR: Variable no declarada : %s \n",$1);
+                 exit(-1);
+                  }
                NodoArbol *nuevo =malloc(sizeof(NodoArbol));
                nuevo->tipo =1;
                nuevo->nombre = $1;
 
                $$ = nuevo;
-							printf("la gramatica detecto un id dentro de la expresion");
 							}
 
 
@@ -139,29 +164,29 @@ prog: expr ';'          {
     ;
 
  asignacion : VAR ID '=' INT {
-                              printf ("asignacion 1\n");
-                              printf ("lista: %p\n",lista);
+                              
                                NodoArbol *nuevo =malloc(sizeof(NodoArbol));
                                nuevo->hIzq=lista;
                                nuevo->nombre = $2;
                                nuevo->valor= $4;
                                nuevo->tipo=1;
                                lista= nuevo;
-                               printf ("lista(luego deagregar): %p\n",lista);
-                               printf ("nodo: direccion:%p nombre: %s tipo: %i valor: %i hIzq %p\n",nuevo,nuevo->nombre,nuevo->tipo,nuevo->valor,nuevo->hIzq);
+                               
                             }
 
 	| asignacion ';' VAR ID '=' INT {
-                                    printf ("asignacion 2");
-                                    printf ("lista: %p \n",lista);
+                                    if(findInLista($4)){
+                                      printf("ERROR: Variable declarada mas de una vez: %s\n",$4);
+                                      exit(-1);
+                                    }
+
                                      NodoArbol *nuevo =malloc(sizeof(NodoArbol));
                                      nuevo->hIzq=lista;
                                      nuevo->nombre = $4;
                                      nuevo->valor= $6;
                                      nuevo->tipo=1;
                                      lista= nuevo;
-                                     printf ("lista(luego deagregar): %p   \n",lista);
-                                     printf ("nodo: direccion:%p nombre: %s tipo: %i valor: %i hIzq %p \n",nuevo,nuevo->nombre,nuevo->tipo,nuevo->valor,nuevo->hIzq);
+                                     
                                 }
 
 	;
