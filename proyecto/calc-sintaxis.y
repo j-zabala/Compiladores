@@ -137,8 +137,9 @@ int resolverOperacion(NodoArbol *nodoop){
 
 
 
-%left '+'
-%left '*'
+%left MAS MENOS
+%left DIVISION POR MOD
+
 
 %%
 
