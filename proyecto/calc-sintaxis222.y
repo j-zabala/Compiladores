@@ -148,40 +148,78 @@ program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO");}
 
   | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("TERMINO");}
 
-var_decl: type id ';'              {printf("declaracion de var");};
+  expr: INT               {
+                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                          nuevo->tipo =0;
+                          nuevo->valor = $1;
 
-  |type id',' var_decl                {printf("declaracion de var");}
+                          $$ = nuevo;
 
-method_decl: type id PARENTESISABRE PARENTESISCIERRA block {}
+                        }
 
-  |type id PARENTESISABRE param_decl PARENTESISCIERRA block {}
+     | ID                 {
+               if(findInLista($1)==false){
+                 printf("ERROR: Variable no declarada : %s \n",$1);
+                 exit(-1);
+                  }
+               NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+               nuevo->tipo =1;
+               nuevo->nombre = $1;
 
-  |VOID id PARENTESISABRE PARENTESISCIERRA block {}
+               $$ = nuevo;
+							}
 
-  |VOID id PARENTESISABRE param_decl PARENTESISCIERRA block {}
 
-  |type id PARENTESISABRE PARENTESISCIERRA block method_decl {}
+    | expr '+' expr     {
+                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                          nuevo->tipo =2;
+                          nuevo->nombre = "+";
+                          nuevo->hIzq = $1;
+                          nuevo->hDer = $3;
 
-  |type id PARENTESISABRE param_decl PARENTESISCIERRA block method_decl {}
+                          $$ = nuevo;
+                        }
+    | expr '*' expr     {
+                           NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                           nuevo->tipo =2;
+                           nuevo->nombre = "*";
+                           nuevo->hIzq = $1;
+                           nuevo->hDer = $3;
 
-  |VOID id PARENTESISABRE PARENTESISCIERRA block method_decl {}
+                           $$ = nuevo;
+                        }
+    | '(' expr ')'              { $$ =  $2; }
 
-  |VOID id PARENTESISABRE param_decl PARENTESISCIERRA block method_decl {}
 
-param_decl: type id
+    ;
 
-  |param_decl',' type id
+ asignacion : VAR ID '=' INT {
 
-block:LLAVEABRE var_decl statament LLAVECIERRA
+                               NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                               nuevo->hIzq=lista;
+                               nuevo->nombre = $2;
+                               nuevo->valor= $4;
+                               nuevo->tipo=1;
+                               lista= nuevo;
 
-  |LLAVEABRE var_decl LLAVECIERRA
+                            }
 
-  |LLAVEABRE statament LLAVECIERRA
+	| asignacion ';' VAR ID '=' INT {
+                                    if(findInLista($4)){
+                                      printf("ERROR: Variable declarada mas de una vez: %s\n",$4);
+                                      exit(-1);
+                                    }
 
-  |LLAVEABRE  LLAVECIERRA
+                                     NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                                     nuevo->hIzq=lista;
+                                     nuevo->nombre = $4;
+                                     nuevo->valor= $6;
+                                     nuevo->tipo=1;
+                                     lista= nuevo;
 
-type:INT
+                                }
 
-  |BOOL
+	;
+
 
 %%
