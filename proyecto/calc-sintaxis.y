@@ -178,10 +178,45 @@ method_decl: type id PARENTESISABRE PARENTESISCIERRA block {}
 ;
 
 param_decl: type ID   {}
-
-  |param_decl COMA type ID  {}
+ |param_decl COMA type ID  {}
 
 ;
+
+bin_op: arith_op {}
+    
+    | rel_op {}
+
+    | cond_op {}
+;
+
+arith_op: expr MAS expr {}
+
+    | expr MENOS expr {}
+
+    | expr POR expr {}
+
+    | expr DIVISION expr {}
+
+    | expr MOD expr {}
+;
+
+rel_op: expr MAYORQUE expr {}
+
+    | expr MENORQUE expr {}
+
+    | expr IGUAL expr {}
+;
+
+cond_op: expr AMPERSAND AMPERSAND expr {}
+
+    | expr BARRAVERT BARRAVERT expr {}
+;
+
+literal: INT {}
+
+    | bool_literal {}
+;
+ 
 
 block:LLAVEABRE var_decl statament LLAVECIERRA    {}
 
@@ -198,6 +233,15 @@ type:INT    {}
   |BOOL   {}
 
 ;
+
+
+
+
+bool_literal: TRUE {}
+
+    | FALSE {}
+
+    ;
 
 
 
