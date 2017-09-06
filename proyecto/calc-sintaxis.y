@@ -149,50 +149,49 @@ prog: expr ';'          {
 	| asignacion ';' expr ';' {printf("TERMINO");}
     ;
 
-  expr: INT               {
-                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
-                          nuevo->tipo =0;
-                          nuevo->valor = $1;
+bin_op: arith_op {}
+    
+    | rel_op {}
 
-                          $$ = nuevo;
+    | cond_op {}
+;
 
-                        }
+arith_op: expr MAS expr {}
 
-     | ID                 {
-               if(findInLista($1)==false){
-                 printf("ERROR: Variable no declarada : %s \n",$1);
-                 exit(-1);
-                  }
-               NodoArbol *nuevo =malloc(sizeof(NodoArbol));
-               nuevo->tipo =1;
-               nuevo->nombre = $1;
+    | expr MENOS expr {}
 
-               $$ = nuevo;
-							}
+    | expr POR expr {}
 
+    | expr DIVISION expr {}
 
-    | expr '+' expr     {
-                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
-                          nuevo->tipo =2;
-                          nuevo->nombre = "+";
-                          nuevo->hIzq = $1;
-                          nuevo->hDer = $3;
+    | expr MOD expr {}
+;
 
-                          $$ = nuevo;
-                        }
-    | expr '*' expr     {
-                           NodoArbol *nuevo =malloc(sizeof(NodoArbol));
-                           nuevo->tipo =2;
-                           nuevo->nombre = "*";
-                           nuevo->hIzq = $1;
-                           nuevo->hDer = $3;
+rel_op: expr MAYORQUE expr {}
 
-                           $$ = nuevo;
-                        }
-    | '(' expr ')'              { $$ =  $2; }
+    | expr MENORQUE expr {}
 
+    | expr IGUAL expr {}
+;
+
+cond_op: expr AMPERSAND AMPERSAND expr {}
+
+    | expr BARRAVERT BARRAVERT expr {}
+;
+
+literal: INT {}
+
+    | bool_literal {}
 
     ;
+
+bool_literal: TRUE {}
+
+    | FALSE {}
+
+    ;
+
+
 
  asignacion : VAR ID '=' INT {
 
