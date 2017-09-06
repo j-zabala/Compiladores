@@ -47,7 +47,37 @@ extern int yydebug;
   {
     INT = 258,
     ID = 259,
-    VAR = 260
+    VAR = 260,
+    CLASS = 261,
+    IF = 262,
+    THEN = 263,
+    ELSE = 264,
+    TRUE = 265,
+    FALSE = 266,
+    RETURN = 267,
+    VOID = 268,
+    INTRES = 269,
+    BOOL = 270,
+    WHILE = 271,
+    MAS = 272,
+    MENOS = 273,
+    POR = 274,
+    EXCLAMACION = 275,
+    DIVISION = 276,
+    MOD = 277,
+    COMA = 278,
+    PUNTOYCOMA = 279,
+    PARENTESISABRE = 280,
+    PARENTESISCIERRA = 281,
+    ASIG = 282,
+    EQUALS = 283,
+    MAYORQUE = 284,
+    MENORQUE = 285,
+    AND = 286,
+    OR = 287,
+    LLAVEABRE = 288,
+    LLAVECIERRA = 289,
+    UNARIO = 290
   };
 #endif
 
@@ -56,10 +86,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 99 "calc-sintaxis.y" /* yacc.c:1909  */
- int i; char *s; char c; struct nodoArbol *p;
+#line 101 "calc-sintaxis.y" /* yacc.c:1909  */
+ int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;
 
-#line 63 "calc-sintaxis.tab.h" /* yacc.c:1909  */
+#line 93 "calc-sintaxis.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

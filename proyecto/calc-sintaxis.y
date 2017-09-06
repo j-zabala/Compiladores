@@ -13,6 +13,8 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include <stdio.h>
 #include <string.h>
 #include "arbol.c"
+#include "infostring.c"
+#include "infoint.c"
 #include <time.h>
 #include <stdbool.h>
 
@@ -96,7 +98,7 @@ int resolverOperacion(NodoArbol *nodoop){
 
 %}
 
-%union { int i; char *s; char c; struct nodoArbol *p; struct infoString *infos, struct infoInt *infoi  }
+%union { int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;}
 
 %token<infoi> INT
 %token<infos> ID
@@ -110,7 +112,7 @@ int resolverOperacion(NodoArbol *nodoop){
 %token<i> FALSE
 %token<i> RETURN
 %token<i> VOID
-%token<i> INT
+%token<i> INTRES
 %token<i> BOOL
 %token<i> WHILE
 
@@ -120,25 +122,35 @@ int resolverOperacion(NodoArbol *nodoop){
 %token<infos> EXCLAMACION
 %token<infos> DIVISION
 %token<infos> MOD
+%token<infos> COMA
 %token<infos> PUNTOYCOMA
 %token<infos> PARENTESISABRE
 %token<infos> PARENTESISCIERRA
-%token<infos> IGUAL
+%token<infos> ASIG
+%token<infos> EQUALS
 %token<infos> MAYORQUE
 %token<infos> MENORQUE
-%token<infos> AMPERSAND
-%token<infos> BARRAVERT
+%token<infos> AND
+%token<infos> OR
 %token<infos> LLAVEABRE
 %token<infos> LLAVECIERRA
 
 
 
 
-
-
-
+%left LLAVEABRE LLAVECIERRA
+%left ASIG
+%left OR 
+%left AND
+%left EQUALS
+%left MENORQUE MAYORQUE
 %left MAS MENOS
 %left DIVISION POR MOD
+%left PARENTESISABRE PARENTESISCIERRA
+%right UNARIO
+
+
+
 
 
 %%
@@ -159,7 +171,7 @@ var_decl: type ID               {printf("declaracion de var");};
 
 ;
 
-method_decl: type id PARENTESISABRE PARENTESISCIERRA block {}
+method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {}
 
   |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
 
@@ -182,53 +194,18 @@ param_decl: type ID   {}
 
 ;
 
-bin_op: arith_op {}
-    
-    | rel_op {}
 
-    | cond_op {}
-;
-
-arith_op: expr MAS expr {}
-
-    | expr MENOS expr {}
-
-    | expr POR expr {}
-
-    | expr DIVISION expr {}
-
-    | expr MOD expr {}
-;
-
-rel_op: expr MAYORQUE expr {}
-
-    | expr MENORQUE expr {}
-
-    | expr IGUAL expr {}
-;
-
-cond_op: expr AMPERSAND AMPERSAND expr {}
-
-    | expr BARRAVERT BARRAVERT expr {}
-;
-
-literal: INT {}
-
-    | bool_literal {}
-;
- 
-
-block:LLAVEABRE var_decl statament LLAVECIERRA    {}
+block:LLAVEABRE var_decl statement LLAVECIERRA    {}
 
   |LLAVEABRE var_decl LLAVECIERRA   {}
 
-  |LLAVEABRE statament LLAVECIERRA    {}
+  |LLAVEABRE statement LLAVECIERRA    {}
 
   |LLAVEABRE  LLAVECIERRA   {}
 
 ;
 
-type:INT    {}
+type:INTRES    {}
 
   |BOOL   {}
 
@@ -237,11 +214,7 @@ type:INT    {}
 
 
 
-bool_literal: TRUE {}
 
-    | FALSE {}
-
-    ;
 
 
 
@@ -250,7 +223,7 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {}
           | WHILE expr block {}
           | RETURN block PUNTOYCOMA {}
           | RETURN PUNTOYCOMA {}
-          | ID IGUAL expr PUNTOYCOMA {}
+          | ID ASIG expr PUNTOYCOMA {}
           | method_call PUNTOYCOMA {}
           | PUNTOYCOMA {}
           | block {}
@@ -265,9 +238,18 @@ param_call : expr
 
 ;
 
-expr : expr bin_op expr
-      | MENOS expr
-      | EXCLAMACION expr
+expr : expr MAS expr {}
+    | expr MENOS expr {}
+    | expr POR expr {}
+    | expr DIVISION expr {}
+    | expr MOD expr {}
+    |expr MAYORQUE expr {}
+    | expr MENORQUE expr {}
+    | expr EQUALS expr {}
+    |expr AND expr {}
+    | expr OR expr {}
+      | MENOS expr %prec UNARIO
+      | EXCLAMACION expr %prec UNARIO
       | PARENTESISABRE expr PARENTESISCIERRA
       | ID
       | method_call
@@ -275,5 +257,15 @@ expr : expr bin_op expr
 ;
 
 
+
+literal: INT {}
+
+    | bool_literal {}
+;
+bool_literal: TRUE {}
+
+    | FALSE {}
+
+    ; 
 
 %%
