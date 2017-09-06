@@ -137,8 +137,9 @@ int resolverOperacion(NodoArbol *nodoop){
 
 
 
-%left '+'
-%left '*'
+%left MAS MENOS
+%left DIVISION POR MOD
+
 
 %%
 
@@ -197,4 +198,38 @@ type:INT    {}
   |BOOL   {}
 
 ;
+
+
+
+statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {}
+          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {}
+          | WHILE expr block {}
+          | RETURN block PUNTOYCOMA {}
+          | RETURN PUNTOYCOMA {}
+          | ID IGUAL expr PUNTOYCOMA {}
+          | method_call PUNTOYCOMA {}
+          | PUNTOYCOMA {}
+          | block {}
+;
+method_call: ID PARENTESISABRE PARENTESISCIERRA
+            | ID PARENTESISABRE param_call PARENTESISCIERRA
+
+;
+
+param_call : expr
+         | param_call COMA expr
+
+;
+
+expr : expr bin_op expr
+      | MENOS expr
+      | EXCLAMACION expr
+      | PARENTESISABRE expr PARENTESISCIERRA
+      | ID
+      | method_call
+      | literal
+;
+
+
+
 %%
