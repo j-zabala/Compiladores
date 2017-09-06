@@ -137,6 +137,11 @@ false  {printf("false \n");yylval.i=yylineno;return FALSE;}
                         yylval.infos->linea = yylineno;
                         return LLAVECIERRA;}
 
+[,]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+                        strcpy(yylval.infos->info, yytext);
+                        yylval.infos->linea = yylineno;
+                        return COMA;}
+
 "//"(.*[ \t]*.*)*[\n]+  ; /*ignorar lineas comentadas*/
  "/*"((.*[ \t]*.*)*[\n]*)*"*/" ; /*ignorar comentarios*/
 

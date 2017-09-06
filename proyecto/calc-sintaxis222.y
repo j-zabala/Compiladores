@@ -137,143 +137,89 @@ int resolverOperacion(NodoArbol *nodoop){
 
 
 
-%left MAS MENOS
-%left DIVISION POR MOD
-
+%left '+'
+%left '*'
 
 %%
 
 program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO");}
 
-	| CLASS LLAVEABRE var_decl PUNTOYCOMA  LLAVECIERRA  {printf("TERMINO");}
+	| CLASS LLAVEABRE var_decl  LLAVECIERRA  {printf("TERMINO");}
 
   | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("TERMINO");}
 
-  | CLASS LLAVEABRE var_decl PUNTOYCOMA method_decl  LLAVECIERRA  {printf("TERMINO");}
+  expr: INT               {
+                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                          nuevo->tipo =0;
+                          nuevo->valor = $1;
 
-;
+                          $$ = nuevo;
 
-var_decl: type ID               {printf("declaracion de var");};
+                        }
 
-  |var_decl COMA type ID                 {printf("declaracion de var");}
+     | ID                 {
+               if(findInLista($1)==false){
+                 printf("ERROR: Variable no declarada : %s \n",$1);
+                 exit(-1);
+                  }
+               NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+               nuevo->tipo =1;
+               nuevo->nombre = $1;
 
-;
-
-method_decl: type id PARENTESISABRE PARENTESISCIERRA block {}
-
-  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
-
-  |VOID ID PARENTESISABRE PARENTESISCIERRA block {}
-
-  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
-
-  |method_decl type ID PARENTESISABRE PARENTESISCIERRA block  {}
-
-  |method_decl type ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
-
-  |method_decl VOID ID PARENTESISABRE PARENTESISCIERRA block  {}
-
-  |method_decl VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
-
-;
-
-param_decl: type ID   {}
- |param_decl COMA type ID  {}
-
-;
-
-bin_op: arith_op {}
-    
-    | rel_op {}
-
-    | cond_op {}
-;
-
-arith_op: expr MAS expr {}
-
-    | expr MENOS expr {}
-
-    | expr POR expr {}
-
-    | expr DIVISION expr {}
-
-    | expr MOD expr {}
-;
-
-rel_op: expr MAYORQUE expr {}
-
-    | expr MENORQUE expr {}
-
-    | expr IGUAL expr {}
-;
-
-cond_op: expr AMPERSAND AMPERSAND expr {}
-
-    | expr BARRAVERT BARRAVERT expr {}
-;
-
-literal: INT {}
-
-    | bool_literal {}
-;
- 
-
-block:LLAVEABRE var_decl statament LLAVECIERRA    {}
-
-  |LLAVEABRE var_decl LLAVECIERRA   {}
-
-  |LLAVEABRE statament LLAVECIERRA    {}
-
-  |LLAVEABRE  LLAVECIERRA   {}
-
-;
-
-type:INT    {}
-
-  |BOOL   {}
-
-;
+               $$ = nuevo;
+							}
 
 
+    | expr '+' expr     {
+                          NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                          nuevo->tipo =2;
+                          nuevo->nombre = "+";
+                          nuevo->hIzq = $1;
+                          nuevo->hDer = $3;
 
+                          $$ = nuevo;
+                        }
+    | expr '*' expr     {
+                           NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                           nuevo->tipo =2;
+                           nuevo->nombre = "*";
+                           nuevo->hIzq = $1;
+                           nuevo->hDer = $3;
 
-bool_literal: TRUE {}
+                           $$ = nuevo;
+                        }
+    | '(' expr ')'              { $$ =  $2; }
 
-    | FALSE {}
 
     ;
 
+ asignacion : VAR ID '=' INT {
 
+                               NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                               nuevo->hIzq=lista;
+                               nuevo->nombre = $2;
+                               nuevo->valor= $4;
+                               nuevo->tipo=1;
+                               lista= nuevo;
 
-statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {}
-          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {}
-          | WHILE expr block {}
-          | RETURN block PUNTOYCOMA {}
-          | RETURN PUNTOYCOMA {}
-          | ID IGUAL expr PUNTOYCOMA {}
-          | method_call PUNTOYCOMA {}
-          | PUNTOYCOMA {}
-          | block {}
-;
-method_call: ID PARENTESISABRE PARENTESISCIERRA
-            | ID PARENTESISABRE param_call PARENTESISCIERRA
+                            }
 
-;
+	| asignacion ';' VAR ID '=' INT {
+                                    if(findInLista($4)){
+                                      printf("ERROR: Variable declarada mas de una vez: %s\n",$4);
+                                      exit(-1);
+                                    }
 
-param_call : expr
-         | param_call COMA expr
+                                     NodoArbol *nuevo =malloc(sizeof(NodoArbol));
+                                     nuevo->hIzq=lista;
+                                     nuevo->nombre = $4;
+                                     nuevo->valor= $6;
+                                     nuevo->tipo=1;
+                                     lista= nuevo;
 
-;
+                                }
 
-expr : expr bin_op expr
-      | MENOS expr
-      | EXCLAMACION expr
-      | PARENTESISABRE expr PARENTESISCIERRA
-      | ID
-      | method_call
-      | literal
-;
-
+	;
 
 
 %%
