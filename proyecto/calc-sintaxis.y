@@ -144,44 +144,57 @@ int resolverOperacion(NodoArbol *nodoop){
 
 program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO");}
 
-	| CLASS LLAVEABRE var_decl  LLAVECIERRA  {printf("TERMINO");}
+	| CLASS LLAVEABRE var_decl PUNTOYCOMA  LLAVECIERRA  {printf("TERMINO");}
 
   | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("TERMINO");}
 
-var_decl: type id ';'              {printf("declaracion de var");};
+  | CLASS LLAVEABRE var_decl PUNTOYCOMA method_decl  LLAVECIERRA  {printf("TERMINO");}
 
-  |type id',' var_decl                {printf("declaracion de var");}
+;
+
+var_decl: type ID               {printf("declaracion de var");};
+
+  |var_decl COMA type ID                 {printf("declaracion de var");}
+
+;
 
 method_decl: type id PARENTESISABRE PARENTESISCIERRA block {}
 
-  |type id PARENTESISABRE param_decl PARENTESISCIERRA block {}
+  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
 
-  |VOID id PARENTESISABRE PARENTESISCIERRA block {}
+  |VOID ID PARENTESISABRE PARENTESISCIERRA block {}
 
-  |VOID id PARENTESISABRE param_decl PARENTESISCIERRA block {}
+  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
 
-  |type id PARENTESISABRE PARENTESISCIERRA block method_decl {}
+  |method_decl type ID PARENTESISABRE PARENTESISCIERRA block  {}
 
-  |type id PARENTESISABRE param_decl PARENTESISCIERRA block method_decl {}
+  |method_decl type ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
 
-  |VOID id PARENTESISABRE PARENTESISCIERRA block method_decl {}
+  |method_decl VOID ID PARENTESISABRE PARENTESISCIERRA block  {}
 
-  |VOID id PARENTESISABRE param_decl PARENTESISCIERRA block method_decl {}
+  |method_decl VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
 
-param_decl: type id
+;
 
-  |param_decl',' type id
+param_decl: type ID   {}
 
-block:LLAVEABRE var_decl statament LLAVECIERRA
+  |param_decl COMA type ID  {}
 
-  |LLAVEABRE var_decl LLAVECIERRA
+;
 
-  |LLAVEABRE statament LLAVECIERRA
+block:LLAVEABRE var_decl statament LLAVECIERRA    {}
 
-  |LLAVEABRE  LLAVECIERRA
+  |LLAVEABRE var_decl LLAVECIERRA   {}
 
-type:INT
+  |LLAVEABRE statament LLAVECIERRA    {}
 
-  |BOOL
+  |LLAVEABRE  LLAVECIERRA   {}
 
+;
+
+type:INT    {}
+
+  |BOOL   {}
+
+;
 %%
