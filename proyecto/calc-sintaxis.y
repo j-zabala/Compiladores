@@ -140,7 +140,7 @@ int resolverOperacion(NodoArbol *nodoop){
 
 %left LLAVEABRE LLAVECIERRA
 %left ASIG
-%left OR 
+%left OR
 %left AND
 %left EQUALS
 %left MENORQUE MAYORQUE
@@ -155,37 +155,40 @@ int resolverOperacion(NodoArbol *nodoop){
 
 %%
 
-program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO");}
+program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
-	| CLASS LLAVEABRE var_decl PUNTOYCOMA  LLAVECIERRA  {printf("TERMINO");}
+	| CLASS LLAVEABRE listavar_decl   LLAVECIERRA  {printf("\nTERMINO2");}
 
-  | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("TERMINO");}
+  | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("\nTERMINO3");}
 
-  | CLASS LLAVEABRE var_decl PUNTOYCOMA method_decl  LLAVECIERRA  {printf("TERMINO");}
-
-;
-
-var_decl: type ID               {printf("declaracion de var");};
-
-  |var_decl COMA type ID                 {printf("declaracion de var");}
+  | CLASS LLAVEABRE listavar_decl  method_decl  LLAVECIERRA  {printf("\nTERMINO4");}
 
 ;
 
-method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {}
+var_decl: type listaID PUNTOYCOMA   {printf("\ndeclaracion de var");};
 
-  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
 
-  |VOID ID PARENTESISABRE PARENTESISCIERRA block {}
+;
 
-  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {}
+listaID : ID
+| listaID COMA ID
+;
 
-  |method_decl type ID PARENTESISABRE PARENTESISCIERRA block  {}
+method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {printf("declaracion de metodo1\n");}
 
-  |method_decl type ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
+  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {printf("declaracion de metodo2\n");}
 
-  |method_decl VOID ID PARENTESISABRE PARENTESISCIERRA block  {}
+  |VOID ID PARENTESISABRE PARENTESISCIERRA block {printf("declaracion de metodo3\n");}
 
-  |method_decl VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block  {}
+  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {printf("declaracion de metodo4\n");}
+
+  |method_decl type ID PARENTESISABRE PARENTESISCIERRA block  {printf("declaracion de metodo5\n");}
+
+  |method_decl type ID PARENTESISABRE param_decl PARENTESISCIERRA block  {printf("declaracion de metodo6\n");}
+
+  |method_decl VOID ID PARENTESISABRE PARENTESISCIERRA block  {printf("declaracion de metodo7\n");}
+
+  |method_decl VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block  {printf("declaracion de metodo8\n");}
 
 ;
 
@@ -195,15 +198,24 @@ param_decl: type ID   {}
 ;
 
 
-block:LLAVEABRE var_decl statement LLAVECIERRA    {}
+block: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {}
 
-  |LLAVEABRE var_decl LLAVECIERRA   {}
+  |LLAVEABRE listavar_decl LLAVECIERRA   {}
 
-  |LLAVEABRE statement LLAVECIERRA    {}
+  |LLAVEABRE listastatement LLAVECIERRA    {}
 
   |LLAVEABRE  LLAVECIERRA   {}
-
 ;
+
+
+listavar_decl : var_decl {}
+| listavar_decl var_decl {}
+;
+
+listastatement : statement {}
+| listastatement statement {}
+;
+
 
 type:INTRES    {}
 
@@ -221,7 +233,7 @@ type:INTRES    {}
 statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {}
           | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {}
           | WHILE expr block {}
-          | RETURN block PUNTOYCOMA {}
+          | RETURN expr PUNTOYCOMA {}
           | RETURN PUNTOYCOMA {}
           | ID ASIG expr PUNTOYCOMA {}
           | method_call PUNTOYCOMA {}
@@ -266,6 +278,6 @@ bool_literal: TRUE {}
 
     | FALSE {}
 
-    ; 
+    ;
 
 %%
