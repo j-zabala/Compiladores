@@ -1,0 +1,9 @@
+class{
+	void main(){
+		int a = 1;
+		if(true && true) then {}
+		if(a == 3) then {}
+		if(true || false) then {}
+
+	}
+}
