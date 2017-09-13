@@ -1,0 +1,14 @@
+class {
+        int (int x) { /*error declaracion de identificador de funcion*/
+                return x + 1;
+        }
+        void main() {
+                int y;
+                y = 4;
+                if (y == 1) then {
+                                return 1;
+                        } else {
+                                return inc(y);
+                        }
+        }
+}

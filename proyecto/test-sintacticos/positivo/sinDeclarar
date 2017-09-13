@@ -1,0 +1,13 @@
+class {
+        int i(int x) {
+                return x + 1;
+        }
+        void main() {
+                y = 5; /*variable usada sin ser declarada(esta bien por que no es error sintactico)*/
+                if (y == 1) then {
+                                return 1;
+                        } else {
+                                return inc(y);
+                        }
+        }
+}

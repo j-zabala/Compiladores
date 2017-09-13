@@ -1,0 +1,14 @@
+class {
+        int i(int x) {
+                return x + 1;
+        }
+        void main() {
+                bool y;
+                y = 5; /*a bool le asigna un int (pero no da error por que esta bien escrito, no es un error sintactico)*/
+                if (y == 1) then {
+                                return 1;
+                        } else {
+                                return inc(y);
+                        }
+        }
+}

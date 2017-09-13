@@ -1,0 +1,14 @@
+class {
+        int i(int x) {
+                return x + 1;
+        }
+        void main() {
+                int y;
+                y = 4;
+                if (y == 1)  { /*falta el then de la sentencia if*/
+                                return 1;
+                        } else {
+                                return inc(y);
+                        }
+        }
+}
