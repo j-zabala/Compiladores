@@ -19,7 +19,7 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include "calc-sintaxis.tab.h"
 
 %}
-
+%x comment
 %option noyywrap
 %option yylineno
 
@@ -29,6 +29,15 @@ alpha_num ({alpha}|{digit}|_)
 
 
 %%
+
+
+"/*"            { BEGIN(comment); }
+<comment>"*/" { BEGIN(INITIAL); }
+<comment>\n   { }
+<comment>.    { }
+<comment><<EOF>>    {printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
+
+
 
 {digit}+                     { yylval.infoi =malloc(sizeof(InfoInt));
                               yylval.infoi->info = atoi(yytext);
@@ -170,7 +179,7 @@ false  {printf("false \n");yylval.i=yylineno;return FALSE;}
                         return COMA;}
 
 "//"(.*[ \t]*.*)*[\n]+  ; /*ignorar lineas comentadas*/
- "/*"((.*[ \t]*.*)*[\n]*)*"*/" ; /*ignorar comentarios*/
+
 
 .|\n                          ; /* ignore all the rest */
 

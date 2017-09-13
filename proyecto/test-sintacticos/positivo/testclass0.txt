@@ -1,0 +1,20 @@
+class {
+        int i(int x) {
+                return x + 1;
+        }
+        int funcionloca(int x,int y, int golasouhuhgolazo) {
+                return x + 1+2+2+2+2+10000000000000+2+2+2+2+2+2+2+2+2+2+2;
+        }
+        void main() {
+                int y;
+                y = 4;
+                y = 4;
+                y = 4;
+                y = 4;
+                y = 4;
+                y = 4;
+                y = 4;
+                y = 400000;
+
+        }
+}
