@@ -1,0 +1,13 @@
+class {
+//hola
+	void main(){
+		int y;
+		int x;
+		y = y+1;
+		x = x-3;
+		x = y/3;
+		y = x*y;
+		y = x%3;
+
+	}
+}

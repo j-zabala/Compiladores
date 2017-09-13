@@ -1,0 +1,10 @@
+class {
+//hola
+	void main(){
+		bool a;
+		a=true;
+		if(!a) then {
+			return 1;
+		}
+	}
+}

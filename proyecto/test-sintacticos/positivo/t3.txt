@@ -1,0 +1,17 @@
+class {
+//hola
+	void main(){
+		bool a;
+		a=true;
+		if(a && true) then {
+			return 1;
+		}
+		if(false || a) then {}
+
+		if(a == 1) then {}
+
+		if(a < 1) then {}
+
+		if(a > 1) then {}
+	}
+}
