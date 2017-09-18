@@ -14,8 +14,15 @@
 
 /* estructura autoreferenciada */
 typedef struct nodoArbol {
-        struct nodoArbol *hIzq;
-        struct nodoArbol *hDer;
+
+        struct nodoArbol *next;
+        // 
+        struct nodoArbol *condicion;
+        struct nodoArbol *then;
+        struct nodoArbol *else;
+
+
+
         int tipo;
         char *nombre;
         int valor;
