@@ -880,7 +880,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(comment):
 #line 38 "calc-lexico.l"
-{printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
+{ printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP

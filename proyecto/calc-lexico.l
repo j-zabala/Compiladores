@@ -31,11 +31,11 @@ alpha_num ({alpha}|{digit}|_)
 %%
 
 
-"/*"            { BEGIN(comment); }
+"/*"          { BEGIN(comment); }
 <comment>"*/" { BEGIN(INITIAL); }
 <comment>\n   { }
 <comment>.    { }
-<comment><<EOF>>    {printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
+<comment><<EOF>> { printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
 
 
 

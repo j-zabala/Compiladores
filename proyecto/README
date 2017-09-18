@@ -1,0 +1,5 @@
+EJECUTAR ./script para compilar 
+
+ejecutar ./a.out "ARCHIVO PARA ANALIZAR"
+
+si termina y no surge ningun error significa que cumple con la gramatica

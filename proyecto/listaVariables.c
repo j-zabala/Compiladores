@@ -13,12 +13,10 @@
 
 
 /* estructura autoreferenciada */
-typedef struct nodoArbol {
-        struct nodoArbol *hIzq;
-        struct nodoArbol *hDer;
-        int tipo;
+typedef struct nodoListaVariables {
+        struct nodoListaVariables *next;
+        char *tipo;
         char *nombre;
         int valor;
-} NodoArbol;
 
-//struct nodoArbol NodoArbol; /* sinónimo de la estructura nodoArbol */
+} NodoListaVariables;

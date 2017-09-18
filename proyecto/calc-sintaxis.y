@@ -12,82 +12,36 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "arbol.c"
+#include "pilaVariables.c"
+#include "listaVariables.c"
 #include "infostring.c"
 #include "infoint.c"
 #include <time.h>
 #include <stdbool.h>
 
-NodoArbol *lista =NULL;
+
+NodoPila *variableGlobalPila = malloc(sizeof(NodoPila));
 
 
-/*
-devuelve true o false segun si la variable (nombre pasado como parametro), si esta en la lista
-o no
-*/
-bool findInLista(char *name){
-  NodoArbol *aux = lista;
-  while(aux != NULL){
-    if (strcmp(aux->nombre,name) == 0){
-      return true;
-    }
-    aux=aux->hIzq;
-
-  }
-  return false;
-}
-
-/* devuelve el valor de la variable (pasando como parametro el nombre de la misma) almacenado
-en la lista
- */
-int findVariableInLista(char *name){
-  NodoArbol *aux = lista;
-  while(aux != NULL){
-    if (strcmp(aux->nombre,name) == 0){
-      return aux->valor;
-    }
-    aux=aux->hIzq;
-
-  }
-  return 0;
-}
-
-/*esta funcion retorna el resultado entero del nodo que se le pasa como parametro, si el nodo
- es una constante devuelve su valor, si es una variable devuelve el valor de la misma (buscando
-en la lista de variables) y si es nodo de tipo operacion devuelve el resultado de la operacion
-aplicada a sus hijos
-*/
-
-
-int resolver(NodoArbol *raiz){
-  if(raiz->tipo ==0){
-    return raiz->valor;
-  }
-  if(raiz->tipo ==1){
-    return findVariableInLista(raiz->nombre);
-  }
-  if(raiz->tipo ==2){
-    return resolverOperacion(raiz);
-  }
-return 0;
-
+void nuevoNivelPila(){
+ NodoPila *aux = malloc(sizeof(NodoPila));
+ aux->lista = NULL;
+ aux->nodoInferior=variableGlobalPila;
+ variableGlobalPila = aux;
 
 }
 
-// esta funcion dado un nodo de tipo "operacion", retorna el resultado de aplicar la operacion
-// siendo los dos hijos del nodo los operandos
+void eliminarNivelPila(){
+variableGlobalPila = variableGlobalPila->nodoInferior;
 
-
-int resolverOperacion(NodoArbol *nodoop){
-
-  if(strcmp(nodoop->nombre,"*")==0){
-    return (resolver(nodoop->hIzq) * resolver(nodoop->hDer));
-  }
-  if(strcmp(nodoop->nombre,"+")==0){
-    return (resolver(nodoop->hIzq) + resolver(nodoop->hDer));
-  }
 }
 
+void nuevaVariable(){
+ NodoListaVariables *aux = malloc(sizeof(NodoListaVariables));
+ aux->next = variableGlobalPila->lista;
+  variableGlobalPila->lista=aux;
+
+}
 
 
 

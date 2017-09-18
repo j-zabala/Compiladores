@@ -77,80 +77,27 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "arbol.c"
+#include "pilaVariables.c"
 #include "infostring.c"
 #include "infoint.c"
 #include <time.h>
 #include <stdbool.h>
 
-NodoArbol *lista =NULL;
+
+NodoPila *variableGlobalPila = NULL;
 
 
-/*
-devuelve true o false segun si la variable (nombre pasado como parametro), si esta en la lista
-o no
-*/
-bool findInLista(char *name){
-  NodoArbol *aux = lista;
-  while(aux != NULL){
-    if (strcmp(aux->nombre,name) == 0){
-      return true;
-    }
-    aux=aux->hIzq;
-
-  }
-  return false;
-}
-
-/* devuelve el valor de la variable (pasando como parametro el nombre de la misma) almacenado
-en la lista
- */
-int findVariableInLista(char *name){
-  NodoArbol *aux = lista;
-  while(aux != NULL){
-    if (strcmp(aux->nombre,name) == 0){
-      return aux->valor;
-    }
-    aux=aux->hIzq;
-
-  }
-  return 0;
-}
-
-/*esta funcion retorna el resultado entero del nodo que se le pasa como parametro, si el nodo
- es una constante devuelve su valor, si es una variable devuelve el valor de la misma (buscando
-en la lista de variables) y si es nodo de tipo operacion devuelve el resultado de la operacion
-aplicada a sus hijos
-*/
-
-
-int resolver(NodoArbol *raiz){
-  if(raiz->tipo ==0){
-    return raiz->valor;
-  }
-  if(raiz->tipo ==1){
-    return findVariableInLista(raiz->nombre);
-  }
-  if(raiz->tipo ==2){
-    return resolverOperacion(raiz);
-  }
-return 0;
-
+void nuevoNivelPila(){
+ NodoPila *aux = malloc(sizeof(NodoPila));
+ aux->lista = NULL;
+ aux->nodoInferior=variableGlobalPila;
+ variableGlobalPila = aux;
 
 }
 
-// esta funcion dado un nodo de tipo "operacion", retorna el resultado de aplicar la operacion
-// siendo los dos hijos del nodo los operandos
+void eliminarNivelPila(){
+variableGlobalPila = variableGlobalPila->nodoInferior;
 
-
-int resolverOperacion(NodoArbol *nodoop){
-
-  if(strcmp(nodoop->nombre,"*")==0){
-    return (resolver(nodoop->hIzq) * resolver(nodoop->hDer));
-  }
-  if(strcmp(nodoop->nombre,"+")==0){
-    return (resolver(nodoop->hIzq) + resolver(nodoop->hDer));
-  }
 }
 
 
@@ -161,8 +108,7 @@ int resolverOperacion(NodoArbol *nodoop){
 
 
 
-
-#line 166 "calc-sintaxis.tab.c" /* yacc.c:339  */
+#line 112 "calc-sintaxis.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -238,10 +184,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 101 "calc-sintaxis.y" /* yacc.c:355  */
+#line 47 "calc-sintaxis.y" /* yacc.c:355  */
  int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;
 
-#line 245 "calc-sintaxis.tab.c" /* yacc.c:355  */
+#line 191 "calc-sintaxis.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -258,7 +204,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 262 "calc-sintaxis.tab.c" /* yacc.c:358  */
+#line 208 "calc-sintaxis.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -557,15 +503,15 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint16 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,   158,   158,   160,   162,   164,   168,   173,   174,   177,
-     179,   181,   183,   185,   187,   189,   191,   195,   196,   201,
-     203,   205,   207,   211,   212,   215,   216,   220,   222,   233,
-     234,   235,   236,   237,   238,   239,   240,   241,   243,   244,
-     248,   249,   253,   254,   255,   256,   257,   258,   259,   260,
-     261,   262,   263,   264,   265,   266,   267,   268,   273,   275,
-     277,   279
+       0,   104,   104,   106,   108,   110,   114,   119,   120,   123,
+     125,   127,   129,   131,   133,   135,   137,   141,   142,   147,
+     149,   151,   153,   157,   158,   161,   162,   166,   168,   179,
+     180,   181,   182,   183,   184,   185,   186,   187,   189,   190,
+     194,   195,   199,   200,   201,   202,   203,   204,   205,   206,
+     207,   208,   209,   210,   211,   212,   213,   214,   219,   221,
+     223,   225
 };
 #endif
 
@@ -1456,295 +1402,295 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 158 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 104 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("TERMINO1\n");}
-#line 1462 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1408 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 160 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 106 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("\nTERMINO2");}
-#line 1468 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1414 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 162 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 108 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("\nTERMINO3");}
-#line 1474 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1420 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 164 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 110 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("\nTERMINO4");}
-#line 1480 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1426 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 168 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 114 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("\ndeclaracion de var");}
-#line 1486 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1432 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 177 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 123 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo1\n");}
-#line 1492 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1438 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 179 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 125 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo2\n");}
-#line 1498 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1444 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 181 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 127 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo3\n");}
-#line 1504 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1450 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 183 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 129 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo4\n");}
-#line 1510 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1456 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 185 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 131 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo5\n");}
-#line 1516 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1462 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 187 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 133 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo6\n");}
-#line 1522 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1468 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 189 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 135 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo7\n");}
-#line 1528 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1474 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 191 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 137 "calc-sintaxis.y" /* yacc.c:1646  */
     {printf("declaracion de metodo8\n");}
-#line 1534 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1480 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 195 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 141 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1486 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 142 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1492 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 147 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1498 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 149 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1504 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 151 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1510 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 153 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1516 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 157 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1522 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 158 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1528 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 161 "calc-sintaxis.y" /* yacc.c:1646  */
+    {}
+#line 1534 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 162 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1540 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 196 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 27:
+#line 166 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1546 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 201 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 28:
+#line 168 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1552 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 203 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 29:
+#line 179 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1558 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 205 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 30:
+#line 180 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1564 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 207 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 31:
+#line 181 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1570 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 211 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 32:
+#line 182 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1576 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 212 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 33:
+#line 183 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1582 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 215 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 34:
+#line 184 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1588 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 216 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 35:
+#line 185 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1594 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 220 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 36:
+#line 186 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1600 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 28:
-#line 222 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 37:
+#line 187 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1606 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 29:
-#line 233 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 42:
+#line 199 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1612 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 30:
-#line 234 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 43:
+#line 200 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1618 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 31:
-#line 235 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 44:
+#line 201 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1624 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 32:
-#line 236 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 45:
+#line 202 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1630 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 33:
-#line 237 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 46:
+#line 203 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1636 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 34:
-#line 238 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 47:
+#line 204 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1642 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 35:
-#line 239 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 48:
+#line 205 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1648 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 36:
-#line 240 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 49:
+#line 206 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1654 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 37:
-#line 241 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 50:
+#line 207 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1660 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 42:
-#line 253 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 51:
+#line 208 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1666 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 43:
-#line 254 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 58:
+#line 219 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1672 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 44:
-#line 255 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 59:
+#line 221 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1678 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 45:
-#line 256 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 60:
+#line 223 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1684 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 46:
-#line 257 "calc-sintaxis.y" /* yacc.c:1646  */
+  case 61:
+#line 225 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
 #line 1690 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
-  case 47:
-#line 258 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1696 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
 
-  case 48:
-#line 259 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1702 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 49:
-#line 260 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1708 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 50:
-#line 261 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1714 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 51:
-#line 262 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1720 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 58:
-#line 273 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1726 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 59:
-#line 275 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1732 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 60:
-#line 277 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1738 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 61:
-#line 279 "calc-sintaxis.y" /* yacc.c:1646  */
-    {}
-#line 1744 "calc-sintaxis.tab.c" /* yacc.c:1646  */
-    break;
-
-
-#line 1748 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1694 "calc-sintaxis.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1972,5 +1918,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 283 "calc-sintaxis.y" /* yacc.c:1906  */
+#line 229 "calc-sintaxis.y" /* yacc.c:1906  */
 
