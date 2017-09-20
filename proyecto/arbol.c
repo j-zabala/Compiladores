@@ -14,16 +14,17 @@
 
 /* estructura autoreferenciada */
 typedef struct nodoArbol {
+        int tipoNodo;
 
-        struct nodoArbol *next;
-        // 
-        struct nodoArbol *condicion;
-        struct nodoArbol *then;
-        struct nodoArbol *else;
+        struct nodoArbol *nextsentencia;
+        struct nodoArbol *nextlista;
+
+        struct nodoArbol *tcondicion;
+        struct nodoArbol *tthen;
+        struct nodoArbol *telse;
 
 
-
-        int tipo;
+        char *tipo;
         char *nombre;
         int valor;
 } NodoArbol;

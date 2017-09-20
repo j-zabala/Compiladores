@@ -14,8 +14,6 @@
 
 /* estructura autoreferenciada */
 typedef struct nodoPila {
-        struct nodoListaVariables *lista;
+        struct nodoArbol *lista;
         struct nodoPila *nodoInferior;
-        int nivelScope;
-
 } NodoPila;

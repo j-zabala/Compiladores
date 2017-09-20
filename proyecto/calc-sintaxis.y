@@ -13,14 +13,19 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include <stdio.h>
 #include <string.h>
 #include "pilaVariables.c"
-#include "listaVariables.c"
+//#include "listaVariables.c"
 #include "infostring.c"
 #include "infoint.c"
+#include "arbol.c"
 #include <time.h>
 #include <stdbool.h>
 
 
-NodoPila *variableGlobalPila = malloc(sizeof(NodoPila));
+NodoPila *variableGlobalPila;
+NodoArbol *listametodos;
+
+
+
 
 
 void nuevoNivelPila(){
@@ -36,18 +41,54 @@ variableGlobalPila = variableGlobalPila->nodoInferior;
 
 }
 
-void nuevaVariable(){
- NodoListaVariables *aux = malloc(sizeof(NodoListaVariables));
- aux->next = variableGlobalPila->lista;
+void nuevaVariable(char* param_nombre, char* param_tipo){
+  NodoArbol *aux = malloc(sizeof(NodoArbol));
+  aux->tipoNodo = 1;
+  aux->nombre=param_nombre;
+  aux->tipo = param_tipo;
+
+ aux->nextlista = variableGlobalPila->lista;
   variableGlobalPila->lista=aux;
 
 }
+void inicializar (){
+  variableGlobalPila = (NodoPila*) malloc(sizeof(NodoPila));
+  listametodos=malloc(sizeof(NodoArbol));
+  listametodos=NULL;
+  nuevoNivelPila();
+
+}
+
+NodoArbol* buscarVariableSC (char* param ) {
+  NodoArbol *recorrido = variableGlobalPila->lista;
+  while(recorrido != NULL){
+   if (strcmp(recorrido->nombre,param)==0){
+     return recorrido;
+   }
+   recorrido = recorrido->nextlista;
+  }
+  return NULL;
+}
 
 
+NodoArbol* buscarVariable (char* param ) {
+  NodoPila *scope = variableGlobalPila;
+  NodoArbol *recorrido = scope->lista;
+while(recorrido != NULL){
+  while(recorrido != NULL){
+   if (strcmp(recorrido->nombre,param)==0){
+     return recorrido;
+   }
+   recorrido = recorrido->nextlista;
+  }
+  scope=scope->nodoInferior;
+  recorrido = scope->lista;
+}
+  return NULL;
+}
 
 
-
-
+char *aux;
 
 
 %}
@@ -89,6 +130,8 @@ void nuevaVariable(){
 %token<infos> LLAVEABRE
 %token<infos> LLAVECIERRA
 
+%type<s> type
+
 
 
 
@@ -109,23 +152,39 @@ void nuevaVariable(){
 
 %%
 
-program: CLASS LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
+    program: {inicializar();} clases {eliminarNivelPila();}
 
-	| CLASS LLAVEABRE listavar_decl   LLAVECIERRA  {printf("\nTERMINO2");}
+clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
-  | CLASS LLAVEABRE method_decl  LLAVECIERRA  {printf("\nTERMINO3");}
+	| CLASS  LLAVEABRE  listavar_decl   LLAVECIERRA  {printf("\nTERMINO2");}
 
-  | CLASS LLAVEABRE listavar_decl  method_decl  LLAVECIERRA  {printf("\nTERMINO4");}
+  | CLASS  LLAVEABRE method_decl  LLAVECIERRA  {printf("\nTERMINO3");}
 
-;
-
-var_decl: type listaID PUNTOYCOMA   {printf("\ndeclaracion de var");};
-
+  | CLASS  LLAVEABRE listavar_decl  method_decl  LLAVECIERRA  {printf("\nTERMINO4");}
 
 ;
 
-listaID : ID
-| listaID COMA ID
+var_decl: type {aux=$1;} listaID PUNTOYCOMA   {printf("\ndeclaracion de var finalizada");};
+
+
+;
+
+listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
+                      printf("%s\n","la variable no esta en el scope!!" );
+                      nuevaVariable($1->info,aux);
+                    }else{
+                      printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$1->linea,$1->info  );
+                      }
+
+                    }
+| listaID COMA ID {
+                  if(buscarVariableSC($3->info)==NULL){
+                    printf("%s\n","la variable no esta en el scope!!" );
+                    nuevaVariable($3->info,aux);
+                  }else{
+                    printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$3->linea,$3->info  );
+                    }
+  }
 ;
 
 method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {printf("declaracion de metodo1\n");}
@@ -171,9 +230,9 @@ listastatement : statement {}
 ;
 
 
-type:INTRES    {}
+type:INTRES    {$$="int";}
 
-  |BOOL   {}
+  |BOOL   {$$="bool";}
 
 ;
 
