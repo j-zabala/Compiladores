@@ -41,14 +41,23 @@ variableGlobalPila = variableGlobalPila->nodoInferior;
 
 }
 
-void nuevaVariable(char* param_nombre, char* param_tipo){
+void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
   NodoArbol *aux = malloc(sizeof(NodoArbol));
   aux->tipoNodo = 1;
   aux->nombre=param_nombre;
   aux->tipo = param_tipo;
+  aux->nextlista =null;
+  aux->nrolinea = numeroLinea;
 
- aux->nextlista = variableGlobalPila->lista;
-  variableGlobalPila->lista=aux;
+  if (variableGlobalPila->lista !=NULL){
+    NodoArbol *reco = variableGlobalPila->lista; //segundo o mas de la lista
+    while (reco->nextlista != NULL){
+      reco = reco->nextlista;
+    }
+    reco->nextlista=aux;
+  }else{
+    variableGlobalPila->lista = aux; //primer elemento de la lista
+  }
 
 }
 void inicializar (){
@@ -90,6 +99,7 @@ while(recorrido != NULL){
 
 char *aux;
 
+NodoArbol *first ; //este puntero apunta al primer statement cuando se arma la lista de los statements
 
 %}
 
@@ -158,9 +168,9 @@ clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
 	| CLASS  LLAVEABRE  listavar_decl   LLAVECIERRA  {printf("\nTERMINO2");}
 
-  | CLASS  LLAVEABRE method_decl  LLAVECIERRA  {printf("\nTERMINO3");}
+  | CLASS  LLAVEABRE listamethod_decl  LLAVECIERRA  {printf("\nTERMINO3");}
 
-  | CLASS  LLAVEABRE listavar_decl  method_decl  LLAVECIERRA  {printf("\nTERMINO4");}
+  | CLASS  LLAVEABRE listavar_decl  listamethod_decl  LLAVECIERRA  {printf("\nTERMINO4");}
 
 ;
 
@@ -171,7 +181,7 @@ var_decl: type {aux=$1;} listaID PUNTOYCOMA   {printf("\ndeclaracion de var fina
 
 listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
                       printf("%s\n","la variable no esta en el scope!!" );
-                      nuevaVariable($1->info,aux);
+                      nuevaVariable($1->info,aux,$3->linea);
                     }else{
                       printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$1->linea,$1->info  );
                       }
@@ -180,38 +190,92 @@ listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
 | listaID COMA ID {
                   if(buscarVariableSC($3->info)==NULL){
                     printf("%s\n","la variable no esta en el scope!!" );
-                    nuevaVariable($3->info,aux);
+                    nuevaVariable($3->info,aux,$3->linea);
                   }else{
                     printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$3->linea,$3->info  );
                     }
   }
 ;
 
-method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {printf("declaracion de metodo1\n");}
 
-  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {printf("declaracion de metodo2\n");}
+listamethod_decl : listamethod_decl method_decl {}
+  | method_decl {}
 
-  |VOID ID PARENTESISABRE PARENTESISCIERRA block {printf("declaracion de metodo3\n");}
 
-  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {printf("declaracion de metodo4\n");}
+method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
+                printf("declaracion de metodo1\n");
+                NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-  |method_decl type ID PARENTESISABRE PARENTESISCIERRA block  {printf("declaracion de metodo5\n");}
+                aux->tipo=$1;
+                aux->tipoNodo=2;
+                aux->nombre= $2->info;
+                aux->cuerpo = $5;
+                aux->nrolinea =$2->linea;
+                $$ = aux;
+                }
 
-  |method_decl type ID PARENTESISABRE param_decl PARENTESISCIERRA block  {printf("declaracion de metodo6\n");}
+  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
-  |method_decl VOID ID PARENTESISABRE PARENTESISCIERRA block  {printf("declaracion de metodo7\n");}
+                                                  printf("declaracion de metodo2\n");
+                                                  NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-  |method_decl VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block  {printf("declaracion de metodo8\n");}
+                                                  aux->tipo=$1;
+                                                  aux->tipoNodo=2;
+                                                  aux->nombre= $2->info;
+                                                  aux-cuerpo = $5;
+                                                  aux->nrolinea =$2->linea;
+                                                  aux->param = variableGlobalPila->lista;
+
+                                                  eliminarNivelPila();
+
+                                                  $$ = aux;
+                                                  }
+
+  |VOID ID PARENTESISABRE PARENTESISCIERRA block {
+                                                  printf("declaracion de metodo3\n");
+
+                                                  NodoArbol *aux= malloc(sizeof(NodoArbol));
+
+                                                  aux->tipo=$1->info;
+                                                  aux->tipoNodo=2;
+                                                  aux->nombre= $2->info;
+                                                  aux-cuerpo = $5;
+                                                  aux->nrolinea =$2->linea;
+                                                  $$ = aux;
+                                                  }
+
+  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {
+                                                  printf("declaracion de metodo4\n");
+
+                                                  NodoArbol *aux= malloc(sizeof(NodoArbol));
+
+                                                  aux->tipo=$1->info;
+                                                  aux->tipoNodo=2;
+                                                  aux->nombre= $2->info;
+                                                  aux-cuerpo = $5;
+                                                  aux->nrolinea =$2->linea;
+                                                  aux->param = variableGlobalPila->lista;
+
+                                                  eliminarNivelPila();
+
+
+                                                  $$ = aux;
+                                                  }
 
 ;
 
-param_decl: type ID   {}
- |param_decl COMA type ID  {}
+
+
+param_decl : {nuevoNivelPila();} Nparam_decl
+
+Nparam_decl: type ID   {nuevaVariable($2->info,$1,$2->linea);}
+ |Nparam_decl COMA type ID  {nuevaVariable($4->info,$3,$2->linea);}
 
 ;
 
+block : {nuevoNivelPila();} Nblock {eliminarNivelPila();}
 
-block: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {}
+Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {}
 
   |LLAVEABRE listavar_decl LLAVECIERRA   {}
 
@@ -221,12 +285,16 @@ block: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {}
 ;
 
 
-listavar_decl : var_decl {}
+listavar_decl : var_decl {
+                        $$ = aux;
+                      }
 | listavar_decl var_decl {}
 ;
 
-listastatement : statement {}
-| listastatement statement {}
+listastatement : statement {first=$1;$$=$1;}
+| listastatement statement {$1->next = $2;
+                            $$=$2;
+                              }
 ;
 
 
