@@ -99,7 +99,7 @@ while(recorrido != NULL){
 
 char *aux;
 
-NodoArbol *first ; //este puntero apunta al primer statement cuando se arma la lista de los statements
+NodoArbol *nodoauxiliar ; //este puntero apunta al primer statement cuando se arma la lista de los statements
 
 %}
 
@@ -273,13 +273,13 @@ Nparam_decl: type ID   {nuevaVariable($2->info,$1,$2->linea);}
 
 ;
 
-block : {nuevoNivelPila();} Nblock {eliminarNivelPila();}
+block : {nuevoNivelPila();} Nblock {eliminarNivelPila(); $$=$1}
 
-Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {}
+Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {$$=$3->first}
 
   |LLAVEABRE listavar_decl LLAVECIERRA   {}
 
-  |LLAVEABRE listastatement LLAVECIERRA    {}
+  |LLAVEABRE listastatement LLAVECIERRA    {$$=$2->first}
 
   |LLAVEABRE  LLAVECIERRA   {}
 ;
@@ -291,8 +291,16 @@ listavar_decl : var_decl {
 | listavar_decl var_decl {}
 ;
 
-listastatement : statement {first=$1;$$=$1;}
+listastatement : statement {$1->first=$1;$$=$1;}
 | listastatement statement {$1->next = $2;
+                            nodoauxiliar=$2;
+                            while(nodoauxiliar!=NULL){
+                              nodoauxiliar->first = $1->first; // mantenemos el primero de la lista en el atributo first
+                              //para evitar una variable global, pq seria reescrita al haber
+                              //bloques anidados, el ciclo permite el agregado de los statements de un bloque interno
+                              nodoauxiliar=nodoauxiliar->next;
+                            }
+
                             $$=$2;
                               }
 ;
@@ -311,15 +319,59 @@ type:INTRES    {$$="int";}
 
 
 
-statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {}
-          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {}
-          | WHILE expr block {}
-          | RETURN expr PUNTOYCOMA {}
-          | RETURN PUNTOYCOMA {}
-          | ID ASIG expr PUNTOYCOMA {}
+statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
+                                                              NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+
+                                                              nuevo->tipoNodo=3;
+                                                              nuevo->tcondicion = $3;
+                                                              nuevo->tthen = $6;
+                                                              nuevo->nrolinea =$1;
+                                                              $$=nuevo;
+                                                            }
+          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {
+                                                                        NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                                                        nuevo->tipoNodo=4;
+                                                                        nuevo->tcondicion = $3;
+                                                                        nuevo->tthen = $6;
+                                                                        nuevo->telse = $8;
+                                                                        nuevo->nrolinea =$1;
+                                                                        $$=nuevo;
+                                                                      }
+
+          | WHILE expr block {          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        nuevo->tipoNodo=5;
+                                        nuevo->tcondicion = $2;
+                                        nuevo->cuerpo = $3;
+                                        nuevo->nrolinea =$1;
+                                        $$=nuevo;
+                                      }
+
+          | RETURN expr PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        nuevo->tipoNodo=6;
+                                        nuevo->expresion = $2;
+                                        nuevo->nrolinea =$1;
+                                        $$=nuevo;
+                                      }
+          | RETURN PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        nuevo->tipoNodo=7;
+                                        nuevo->nrolinea =$1;
+                                        $$=nuevo;
+                                      }
+          | ID ASIG expr PUNTOYCOMA {   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        nuevo->tipoNodo=8;
+                                        nuevo->nombre=$1->info;
+                                        nuevo->expresion = $3;
+                                        nuevo->nrolinea =$2->linea;
+                                        $$=nuevo;
+                                      }
           | method_call PUNTOYCOMA {}
-          | PUNTOYCOMA {}
-          | block {}
+
+          | PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        nuevo->tipoNodo=10;
+                                        nuevo->nrolinea =$1;
+                                        $$=nuevo;
+                                      }
+          | block {$$=$1}
 ;
 method_call: ID PARENTESISABRE PARENTESISCIERRA
             | ID PARENTESISABRE param_call PARENTESISCIERRA
@@ -351,13 +403,34 @@ expr : expr MAS expr {}
 
 
 
-literal: INT {}
+literal: INT {
+              NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+              nuevo->tipo="int";
+              nuevo->tipoNodo=12;
+              nuevo->valor= $1->info;
+              nuevo->nrolinea =$1->linea;
+              $$=nuevo;
+              }
 
-    | bool_literal {}
+    | bool_literal {$$=$1}
 ;
-bool_literal: TRUE {}
+bool_literal: TRUE {
+                    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                    nuevo->tipo="bool";
+                    nuevo->tipoNodo=13;
+                    nuevo->valor= 1;
+                    nuevo->nrolinea =$1;
+                    $$=nuevo;
+                  }
 
-    | FALSE {}
+    | FALSE {
+                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                  nuevo->tipo="bool";
+                  nuevo->tipoNodo=13;
+                  nuevo->valor=0;
+                  nuevo->nrolinea =$1;
+                  $$=nuevo;
+                }
 
     ;
 

@@ -23,8 +23,12 @@ typedef struct nodoArbol {
         struct nodoArbol *tthen;
         struct nodoArbol *telse;
 
+        struct nodoArbol *expresion;
+
         struct NodoArbol* cuerpo;
         struct NodoArbol* param;
+
+        struct NodoArbol* first;
         char *tipo;
         char *nombre;
         int valor;
