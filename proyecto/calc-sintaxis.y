@@ -46,7 +46,7 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
   aux->tipoNodo = 1;
   aux->nombre=param_nombre;
   aux->tipo = param_tipo;
-  aux->nextlista =null;
+  aux->nextlista =NULL;
   aux->nrolinea = numeroLinea;
 
   if (variableGlobalPila->lista !=NULL){
@@ -96,11 +96,53 @@ while(recorrido != NULL){
   return NULL;
 }
 
+NodoArbol* buscarMetodo (char* param ) {
+  NodoArbol *recorrido = listametodos;
+  while(recorrido != NULL){
+   if (strcmp(recorrido->nombre,param)==0){
+     return recorrido;
+   }
+   recorrido = recorrido->nextlista;
+  }
+  return NULL;
+}
+int mismoTipoINT (NodoArbol *a,NodoArbol* b){
+  int res =0;
+  if(strcmp(b->tipo,"int")!=0){
+    res=2;
+  }
+  if(strcmp(a->tipo,"int")!=0){
+    res=1;
+  }
+  return res;
+
+}
+
+int mismoTipoBOOL (NodoArbol *a,NodoArbol* b){
+  int res =0;
+  if(strcmp(b->tipo,"bool")!=0){
+    res=2;
+  }
+  if(strcmp(a->tipo,"bool")!=0){
+    res=1;
+  }
+  return res;
+
+}
+
+int verificarMetodoDeclarado(char* n) {
+  if(buscarMetodo(n)!=NULL){
+    return 1;
+  }
+return 0;
+
+}
+
 
 char *aux;
 
 NodoArbol *nodoauxiliar ; //este puntero apunta al primer statement cuando se arma la lista de los statements
-
+NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoauxiliar
 %}
 
 %union { int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;}
@@ -142,6 +184,22 @@ NodoArbol *nodoauxiliar ; //este puntero apunta al primer statement cuando se ar
 
 %type<s> type
 
+%type<p> listaID
+%type<p> block
+%type<p> Nblock
+%type<p> listastatement
+%type<p> statement
+%type<p> method_call
+%type<p> method_decl
+%type<p> param_call
+%type<p> param_callult
+%type<p> expr
+%type<p> literal
+%type<p> bool_literal
+
+
+
+
 
 
 
@@ -181,7 +239,7 @@ var_decl: type {aux=$1;} listaID PUNTOYCOMA   {printf("\ndeclaracion de var fina
 
 listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
                       printf("%s\n","la variable no esta en el scope!!" );
-                      nuevaVariable($1->info,aux,$3->linea);
+                      nuevaVariable($1->info,aux,$1->linea);
                     }else{
                       printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$1->linea,$1->info  );
                       }
@@ -211,6 +269,10 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                 aux->nombre= $2->info;
                 aux->cuerpo = $5;
                 aux->nrolinea =$2->linea;
+                if(verificarMetodoDeclarado(aux->nombre)==1){
+                  printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                  exit(0);
+                };
                 $$ = aux;
                 }
 
@@ -222,12 +284,15 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                                                   aux->tipo=$1;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux-cuerpo = $5;
+                                                  aux->cuerpo = $5;
                                                   aux->nrolinea =$2->linea;
                                                   aux->param = variableGlobalPila->lista;
 
                                                   eliminarNivelPila();
-
+                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
+                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                    exit(0);
+                                                  };
                                                   $$ = aux;
                                                   }
 
@@ -236,11 +301,15 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
 
                                                   NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                                                  aux->tipo=$1->info;
+                                                  aux->tipo=NULL;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux-cuerpo = $5;
+                                                  aux->cuerpo = $5;
                                                   aux->nrolinea =$2->linea;
+                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
+                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                    exit(0);
+                                                  };
                                                   $$ = aux;
                                                   }
 
@@ -249,13 +318,16 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
 
                                                   NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                                                  aux->tipo=$1->info;
+                                                  aux->tipo=NULL;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux-cuerpo = $5;
+                                                  aux->cuerpo = $5;
                                                   aux->nrolinea =$2->linea;
                                                   aux->param = variableGlobalPila->lista;
-
+                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
+                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                    exit(0);
+                                                  };
                                                   eliminarNivelPila();
 
 
@@ -273,35 +345,35 @@ Nparam_decl: type ID   {nuevaVariable($2->info,$1,$2->linea);}
 
 ;
 
-block : {nuevoNivelPila();} Nblock {eliminarNivelPila(); $$=$1}
+block : {nuevoNivelPila();} Nblock {eliminarNivelPila(); $$=$2;}
 
-Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {$$=$3->first}
+Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA    {$$=$3->first;}
 
   |LLAVEABRE listavar_decl LLAVECIERRA   {}
 
-  |LLAVEABRE listastatement LLAVECIERRA    {$$=$2->first}
+  |LLAVEABRE listastatement LLAVECIERRA    {$$=$2->first;}
 
   |LLAVEABRE  LLAVECIERRA   {}
 ;
 
 
-listavar_decl : var_decl {
-                        $$ = aux;
-                      }
+listavar_decl : var_decl {}
 | listavar_decl var_decl {}
 ;
 
 listastatement : statement {$1->first=$1;$$=$1;}
 | listastatement statement {$1->next = $2;
                             nodoauxiliar=$2;
+                            nodoauxiliarAnt =nodoauxiliar;
                             while(nodoauxiliar!=NULL){
                               nodoauxiliar->first = $1->first; // mantenemos el primero de la lista en el atributo first
                               //para evitar una variable global, pq seria reescrita al haber
                               //bloques anidados, el ciclo permite el agregado de los statements de un bloque interno
+                              nodoauxiliarAnt =nodoauxiliar;
                               nodoauxiliar=nodoauxiliar->next;
                             }
 
-                            $$=$2;
+                            $$=nodoauxiliarAnt;
                               }
 ;
 
@@ -364,41 +436,262 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
                                         nuevo->nrolinea =$2->linea;
                                         $$=nuevo;
                                       }
-          | method_call PUNTOYCOMA {}
+          | method_call PUNTOYCOMA {$$=$1;}
 
           | PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=10;
                                         nuevo->nrolinea =$1;
                                         $$=nuevo;
                                       }
-          | block {$$=$1}
+          | block {$$=$1;}
 ;
-method_call: ID PARENTESISABRE PARENTESISCIERRA
-            | ID PARENTESISABRE param_call PARENTESISCIERRA
+method_call: ID PARENTESISABRE PARENTESISCIERRA {
+                                                NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                                nuevo->tipoNodo=9;
+                                                nuevo->call_metodo = buscarMetodo($1->info);
+                                                nuevo->nrolinea =$1->linea;
+                                                if(nuevo->call_metodo == NULL){
+                                                  printf("ERROR en linea %i : llamada metodo no declarado previamente \n",nuevo->nrolinea );
+                                                  exit(0);
+                                                }
+                                                nuevo->tipo=(nuevo->call_metodo)->tipo;
+                                                $$=nuevo;
+
+                                                }
+            | ID PARENTESISABRE param_call PARENTESISCIERRA {
+                                                NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                                nuevo->tipoNodo=9;
+                                                nuevo->call_metodo = buscarMetodo($1->info);
+                                                nuevo->nrolinea =$1->linea;
+                                                if(nuevo->call_metodo == NULL){
+                                                  printf("ERROR en linea %i : llamada metodo no declarado previamente \n",nuevo->nrolinea );
+                                                  exit(0);
+                                                }
+                                                nuevo->call_params =$3;
+                                                nuevo->tipo=nuevo->call_metodo->tipo;
+                                                $$=nuevo;
+
+                                                }
+
+;
+param_call :param_callult {$$=$1->first;}
 
 ;
 
-param_call : expr
-         | param_call COMA expr
+
+param_callult : expr   { $1->first=$1; $$=$1;  }
+         | param_callult COMA expr {$3->first=$1->first; $1->next = $3; $$=$3;  }
 
 ;
 
-expr : expr MAS expr {}
-    | expr MENOS expr {}
-    | expr POR expr {}
-    | expr DIVISION expr {}
-    | expr MOD expr {}
-    |expr MAYORQUE expr {}
-    | expr MENORQUE expr {}
-    | expr EQUALS expr {}
-    |expr AND expr {}
-    | expr OR expr {}
-      | MENOS expr %prec UNARIO
-      | EXCLAMACION expr %prec UNARIO
-      | PARENTESISABRE expr PARENTESISCIERRA
-      | ID
-      | method_call
-      | literal
+expr : expr MAS expr {
+                      NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                      nuevo->tipoNodo=14;
+                      nuevo->nrolinea =$2->linea;
+                      nuevo->nombre= $2->info;
+                      nuevo->op1 = $1;
+                      nuevo->op2 = $3;
+                      int error = mismoTipoINT($1,$3);
+                      if(error == 0){
+                        nuevo->tipo = "int";
+                      }else{
+                          printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                          exit(0);
+                      }
+                      $$=nuevo;
+                      }
+    | expr MENOS expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "int";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr POR expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "int";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr DIVISION expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "int";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr MOD expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "int";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    |expr MAYORQUE expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "bool";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr MENORQUE expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoINT($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "bool";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr EQUALS expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+
+                          if(mismoTipoINT($1,$3) == 0 ||mismoTipoBOOL($1,$3) == 0 ){
+                            nuevo->tipo = "bool";
+                          }else{
+                              printf("ERROR en linea %i : operandos de distintos tipos \n",nuevo->nrolinea);
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    |expr AND expr {
+                          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                          nuevo->tipoNodo=14;
+                          nuevo->nrolinea =$2->linea;
+                          nuevo->nombre= $2->info;
+                          nuevo->op1 = $1;
+                          nuevo->op2 = $3;
+                          int error = mismoTipoBOOL($1,$3);
+                          if(error == 0){
+                            nuevo->tipo = "bool";
+                          }else{
+                              printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                              exit(0);
+                          }
+                          $$=nuevo;
+                          }
+    | expr OR expr {
+                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                  nuevo->tipoNodo=14;
+                                  nuevo->nrolinea =$2->linea;
+                                  nuevo->nombre= $2->info;
+                                  nuevo->op1 = $1;
+                                  nuevo->op2 = $3;
+                                  int error = mismoTipoBOOL($1,$3);
+                                  if(error == 0){
+                                    nuevo->tipo = "bool";
+                                  }else{
+                                      printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
+                                      exit(0);
+                                  }
+                                  $$=nuevo;
+                                  }
+
+    | MENOS expr %prec UNARIO{
+                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                  nuevo->tipoNodo=15;
+                                  nuevo->nrolinea =$1->linea;
+                                  nuevo->nombre= $1->info;
+                                  nuevo->op1 = $2;
+
+
+                                  if(strcmp($2->tipo,"int") == 0){
+                                    nuevo->tipo = "int";
+                                  }else{
+                                      printf("ERROR en linea %i : error de tipo en operando (no es un entero)   \n",nuevo->nrolinea);
+                                      exit(0);
+                                  }
+                                  $$=nuevo;
+                                  }
+    | EXCLAMACION expr %prec UNARIO{
+                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                  nuevo->tipoNodo=15;
+                                  nuevo->nrolinea =$1->linea;
+                                  nuevo->nombre= $1->info;
+                                  nuevo->op1 = $2;
+
+
+                                  if(strcmp($2->tipo,"bool") == 0){
+                                    nuevo->tipo = "bool";
+                                  }else{
+                                      printf("ERROR en linea %i : error de tipo en operando (no es un booleano)   \n",nuevo->nrolinea);
+                                      exit(0);
+                                  }
+                                  $$=nuevo;
+                                  }
+    | PARENTESISABRE expr PARENTESISCIERRA {$$=$2;}
+    | ID{
+                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                  nuevo->tipoNodo=16;
+                                  nuevo->nrolinea =$1->linea;
+                                  nuevo->op1 = buscarVariable($1->info);
+                                  if(nuevo->op1 == NULL){
+                                    printf("ERROR en linea %i : variable %s no declarada  \n",nuevo->nrolinea,$1->info);
+                                    exit(0);
+                                  }
+                                  nuevo->tipo = nuevo->op1->tipo;
+                                  $$=nuevo;
+                                  }
+    | method_call{$$=$1;}
+    | literal{$$=$1;}
 ;
 
 
@@ -412,7 +705,7 @@ literal: INT {
               $$=nuevo;
               }
 
-    | bool_literal {$$=$1}
+    | bool_literal {$$=$1;}
 ;
 bool_literal: TRUE {
                     NodoArbol *nuevo= malloc(sizeof(NodoArbol));

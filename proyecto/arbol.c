@@ -15,9 +15,9 @@
 /* estructura autoreferenciada */
 typedef struct nodoArbol {
         int tipoNodo;
-
-        struct nodoArbol *nextsentencia;
         struct nodoArbol *nextlista;
+
+        struct nodoArbol *next;//proxima sentnecia
 
         struct nodoArbol *tcondicion;
         struct nodoArbol *tthen;
@@ -25,13 +25,24 @@ typedef struct nodoArbol {
 
         struct nodoArbol *expresion;
 
-        struct NodoArbol* cuerpo;
-        struct NodoArbol* param;
 
-        struct NodoArbol* first;
+        struct nodoArbol* cuerpo;
+        struct nodoArbol* param; //se usa en la definicion de las funciones
+
+        // atibutos de llamada a metodo
+        struct nodoArbol* call_params;
+        struct nodoArbol* call_metodo;
+
+        struct nodoArbol* first;
         char *tipo;
         char *nombre;
-        int valor;
+        struct nodoArbol* valorExpresion;
+
+        struct nodoArbol* op1;
+        struct nodoArbol* op2;
+
+
+        int valor;  //para los literales
         int nrolinea;
 } NodoArbol;
 

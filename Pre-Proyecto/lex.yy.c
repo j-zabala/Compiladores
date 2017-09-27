@@ -497,13 +497,24 @@ char *yytext;
 #line 1 "calc-lexico.l"
 #line 2 "calc-lexico.l"
 
+/*
+
+Pre-Proyecto de Compiladores 2017 
+
+Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi 
+
+*/
+
+
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 #include "calc-sintaxis.tab.h"
 
-#line 507 "lex.yy.c"
+#line 518 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -721,10 +732,10 @@ YY_DECL
 		}
 
 	{
-#line 19 "calc-lexico.l"
+#line 30 "calc-lexico.l"
 
 
-#line 728 "lex.yy.c"
+#line 739 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -793,21 +804,21 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "calc-lexico.l"
+#line 32 "calc-lexico.l"
 { yylval.i = atoi(yytext);
                                 printf("INT : %d\n",atoi(yytext)); 
                                 return INT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 25 "calc-lexico.l"
+#line 36 "calc-lexico.l"
 {		printf("VAR \n");
 								return VAR;	
 									}                                         
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "calc-lexico.l"
+#line 42 "calc-lexico.l"
 { yylval.s=(char *) malloc(sizeof(yytext)*yyleng);
                                 strcpy(yylval.s,yytext);
                                 printf("ID : %s\n",yytext);
@@ -815,22 +826,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 36 "calc-lexico.l"
+#line 47 "calc-lexico.l"
 {  printf("%s\n",yytext);
 							   return *yytext;}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 41 "calc-lexico.l"
+#line 52 "calc-lexico.l"
 ; /* ignore all the rest */
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 44 "calc-lexico.l"
+#line 55 "calc-lexico.l"
 ECHO;
 	YY_BREAK
-#line 834 "lex.yy.c"
+#line 845 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1843,7 +1854,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 44 "calc-lexico.l"
+#line 55 "calc-lexico.l"
 
 
 
