@@ -284,7 +284,7 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                                                   aux->tipo=$1;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux->cuerpo = $5;
+                                                  aux->cuerpo = $6;
                                                   aux->nrolinea =$2->linea;
                                                   aux->param = variableGlobalPila->lista;
 
@@ -321,7 +321,7 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                                                   aux->tipo=NULL;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux->cuerpo = $5;
+                                                  aux->cuerpo = $6;
                                                   aux->nrolinea =$2->linea;
                                                   aux->param = variableGlobalPila->lista;
                                                   if(verificarMetodoDeclarado(aux->nombre)==1){
@@ -440,7 +440,7 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
 
           | PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=10;
-                                        nuevo->nrolinea =$1;
+                                        nuevo->nrolinea =$1->linea;
                                         $$=nuevo;
                                       }
           | block {$$=$1;}

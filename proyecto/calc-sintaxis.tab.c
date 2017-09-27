@@ -1610,7 +1610,7 @@ yyreduce:
                                                   aux->tipo=(yyvsp[-5].s);
                                                   aux->tipoNodo=2;
                                                   aux->nombre= (yyvsp[-4].infos)->info;
-                                                  aux->cuerpo = (yyvsp[-1].infos);
+                                                  aux->cuerpo = (yyvsp[0].p);
                                                   aux->nrolinea =(yyvsp[-4].infos)->linea;
                                                   aux->param = variableGlobalPila->lista;
 
@@ -1655,7 +1655,7 @@ yyreduce:
                                                   aux->tipo=NULL;
                                                   aux->tipoNodo=2;
                                                   aux->nombre= (yyvsp[-4].infos)->info;
-                                                  aux->cuerpo = (yyvsp[-1].infos);
+                                                  aux->cuerpo = (yyvsp[0].p);
                                                   aux->nrolinea =(yyvsp[-4].infos)->linea;
                                                   aux->param = variableGlobalPila->lista;
                                                   if(verificarMetodoDeclarado(aux->nombre)==1){
@@ -1855,7 +1855,7 @@ yyreduce:
 #line 441 "calc-sintaxis.y" /* yacc.c:1646  */
     {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=10;
-                                        nuevo->nrolinea =(yyvsp[0].infos);
+                                        nuevo->nrolinea =(yyvsp[0].infos)->linea;
                                         (yyval.p)=nuevo;
                                       }
 #line 1862 "calc-sintaxis.tab.c" /* yacc.c:1646  */
