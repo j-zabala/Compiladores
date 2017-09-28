@@ -1,0 +1,2494 @@
+Terminales no usados en la gramática
+
+   VAR
+
+
+Estado 15 conflictos: 1 desplazamiento/reducción
+
+
+Gramática
+
+    0 $accept: program $end
+
+    1 $@1: %empty
+
+    2 program: $@1 clases
+
+    3 clases: CLASS LLAVEABRE LLAVECIERRA
+    4       | CLASS LLAVEABRE listavar_decl LLAVECIERRA
+    5       | CLASS LLAVEABRE listamethod_decl LLAVECIERRA
+    6       | CLASS LLAVEABRE listavar_decl listamethod_decl LLAVECIERRA
+
+    7 $@2: %empty
+
+    8 var_decl: type $@2 listaID PUNTOYCOMA
+
+    9 listaID: ID
+   10        | listaID COMA ID
+
+   11 listamethod_decl: method_decl
+   12                 | listamethod_decl method_decl
+
+   13 method_decl: type ID PARENTESISABRE PARENTESISCIERRA block
+   14            | type ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   15            | VOID ID PARENTESISABRE PARENTESISCIERRA block
+   16            | VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block
+
+   17 $@3: %empty
+
+   18 param_decl: $@3 Nparam_decl
+
+   19 Nparam_decl: type ID
+   20            | Nparam_decl COMA type ID
+
+   21 $@4: %empty
+
+   22 block: $@4 Nblock
+
+   23 Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA
+   24       | LLAVEABRE listavar_decl LLAVECIERRA
+   25       | LLAVEABRE listastatement LLAVECIERRA
+   26       | LLAVEABRE LLAVECIERRA
+
+   27 listavar_decl: var_decl
+   28              | listavar_decl var_decl
+
+   29 listastatement: statement
+   30               | listastatement statement
+
+   31 type: INTRES
+   32     | BOOL
+
+   33 statement: IF PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+   35          | WHILE expr block
+   36          | RETURN expr PUNTOYCOMA
+   37          | RETURN PUNTOYCOMA
+   38          | ID ASIG expr PUNTOYCOMA
+   39          | method_call PUNTOYCOMA
+   40          | PUNTOYCOMA
+   41          | block
+
+   42 method_call: ID PARENTESISABRE PARENTESISCIERRA
+   43            | ID PARENTESISABRE param_call PARENTESISCIERRA
+
+   44 param_call: ultparam_call
+
+   45 ultparam_call: expr
+   46              | ultparam_call COMA expr
+
+   47 expr: expr MAS expr
+   48     | expr MENOS expr
+   49     | expr POR expr
+   50     | expr DIVISION expr
+   51     | expr MOD expr
+   52     | expr MAYORQUE expr
+   53     | expr MENORQUE expr
+   54     | expr EQUALS expr
+   55     | expr AND expr
+   56     | expr OR expr
+   57     | MENOS expr
+   58     | EXCLAMACION expr
+   59     | PARENTESISABRE expr PARENTESISCIERRA
+   60     | ID
+   61     | method_call
+   62     | literal
+
+   63 literal: INT
+   64        | bool_literal
+
+   65 bool_literal: TRUE
+   66             | FALSE
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+INT (258) 63
+ID (259) 9 10 13 14 15 16 19 20 38 42 43 60
+VAR (260)
+CLASS (261) 3 4 5 6
+IF (262) 33 34
+THEN (263) 33 34
+ELSE (264) 34
+TRUE (265) 65
+FALSE (266) 66
+RETURN (267) 36 37
+VOID (268) 15 16
+INTRES (269) 31
+BOOL (270) 32
+WHILE (271) 35
+MAS (272) 47
+MENOS (273) 48 57
+POR (274) 49
+EXCLAMACION (275) 58
+DIVISION (276) 50
+MOD (277) 51
+COMA (278) 10 20 46
+PUNTOYCOMA (279) 8 36 37 38 39 40
+PARENTESISABRE (280) 13 14 15 16 33 34 42 43 59
+PARENTESISCIERRA (281) 13 14 15 16 33 34 42 43 59
+ASIG (282) 38
+EQUALS (283) 54
+MAYORQUE (284) 52
+MENORQUE (285) 53
+AND (286) 55
+OR (287) 56
+LLAVEABRE (288) 3 4 5 6 23 24 25 26
+LLAVECIERRA (289) 3 4 5 6 23 24 25 26
+UNARIO (290)
+
+
+No terminales con las reglas donde aparecen
+
+$accept (36)
+    en la izquierda: 0
+program (37)
+    en la izquierda: 2, en la derecha: 0
+$@1 (38)
+    en la izquierda: 1, en la derecha: 2
+clases (39)
+    en la izquierda: 3 4 5 6, en la derecha: 2
+var_decl (40)
+    en la izquierda: 8, en la derecha: 27 28
+$@2 (41)
+    en la izquierda: 7, en la derecha: 8
+listaID (42)
+    en la izquierda: 9 10, en la derecha: 8 10
+listamethod_decl (43)
+    en la izquierda: 11 12, en la derecha: 5 6 12
+method_decl (44)
+    en la izquierda: 13 14 15 16, en la derecha: 11 12
+param_decl (45)
+    en la izquierda: 18, en la derecha: 14 16
+$@3 (46)
+    en la izquierda: 17, en la derecha: 18
+Nparam_decl (47)
+    en la izquierda: 19 20, en la derecha: 18 20
+block (48)
+    en la izquierda: 22, en la derecha: 13 14 15 16 33 34 35 41
+$@4 (49)
+    en la izquierda: 21, en la derecha: 22
+Nblock (50)
+    en la izquierda: 23 24 25 26, en la derecha: 22
+listavar_decl (51)
+    en la izquierda: 27 28, en la derecha: 4 6 23 24 28
+listastatement (52)
+    en la izquierda: 29 30, en la derecha: 23 25 30
+type (53)
+    en la izquierda: 31 32, en la derecha: 8 13 14 19 20
+statement (54)
+    en la izquierda: 33 34 35 36 37 38 39 40 41, en la derecha: 29
+    30
+method_call (55)
+    en la izquierda: 42 43, en la derecha: 39 61
+param_call (56)
+    en la izquierda: 44, en la derecha: 43
+ultparam_call (57)
+    en la izquierda: 45 46, en la derecha: 44 46
+expr (58)
+    en la izquierda: 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62,
+    en la derecha: 33 34 35 36 38 45 46 47 48 49 50 51 52 53 54 55
+    56 57 58 59
+literal (59)
+    en la izquierda: 63 64, en la derecha: 62
+bool_literal (60)
+    en la izquierda: 65 66, en la derecha: 64
+
+
+Estado 0
+
+    0 $accept: . program $end
+    1 $@1: . %empty
+    2 program: . $@1 clases
+
+    $default  reduce usando la regla 1 ($@1)
+
+    program  ir al estado 1
+    $@1      ir al estado 2
+
+
+Estado 1
+
+    0 $accept: program . $end
+
+    $end  desplazar e ir al estado 3
+
+
+Estado 2
+
+    2 program: $@1 . clases
+    3 clases: . CLASS LLAVEABRE LLAVECIERRA
+    4       | . CLASS LLAVEABRE listavar_decl LLAVECIERRA
+    5       | . CLASS LLAVEABRE listamethod_decl LLAVECIERRA
+    6       | . CLASS LLAVEABRE listavar_decl listamethod_decl LLAVECIERRA
+
+    CLASS  desplazar e ir al estado 4
+
+    clases  ir al estado 5
+
+
+Estado 3
+
+    0 $accept: program $end .
+
+    $default  aceptar
+
+
+Estado 4
+
+    3 clases: CLASS . LLAVEABRE LLAVECIERRA
+    4       | CLASS . LLAVEABRE listavar_decl LLAVECIERRA
+    5       | CLASS . LLAVEABRE listamethod_decl LLAVECIERRA
+    6       | CLASS . LLAVEABRE listavar_decl listamethod_decl LLAVECIERRA
+
+    LLAVEABRE  desplazar e ir al estado 6
+
+
+Estado 5
+
+    2 program: $@1 clases .
+
+    $default  reduce usando la regla 2 (program)
+
+
+Estado 6
+
+    3 clases: CLASS LLAVEABRE . LLAVECIERRA
+    4       | CLASS LLAVEABRE . listavar_decl LLAVECIERRA
+    5       | CLASS LLAVEABRE . listamethod_decl LLAVECIERRA
+    6       | CLASS LLAVEABRE . listavar_decl listamethod_decl LLAVECIERRA
+    8 var_decl: . type $@2 listaID PUNTOYCOMA
+   11 listamethod_decl: . method_decl
+   12                 | . listamethod_decl method_decl
+   13 method_decl: . type ID PARENTESISABRE PARENTESISCIERRA block
+   14            | . type ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   15            | . VOID ID PARENTESISABRE PARENTESISCIERRA block
+   16            | . VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   27 listavar_decl: . var_decl
+   28              | . listavar_decl var_decl
+   31 type: . INTRES
+   32     | . BOOL
+
+    VOID         desplazar e ir al estado 7
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    LLAVECIERRA  desplazar e ir al estado 10
+
+    var_decl          ir al estado 11
+    listamethod_decl  ir al estado 12
+    method_decl       ir al estado 13
+    listavar_decl     ir al estado 14
+    type              ir al estado 15
+
+
+Estado 7
+
+   15 method_decl: VOID . ID PARENTESISABRE PARENTESISCIERRA block
+   16            | VOID . ID PARENTESISABRE param_decl PARENTESISCIERRA block
+
+    ID  desplazar e ir al estado 16
+
+
+Estado 8
+
+   31 type: INTRES .
+
+    $default  reduce usando la regla 31 (type)
+
+
+Estado 9
+
+   32 type: BOOL .
+
+    $default  reduce usando la regla 32 (type)
+
+
+Estado 10
+
+    3 clases: CLASS LLAVEABRE LLAVECIERRA .
+
+    $default  reduce usando la regla 3 (clases)
+
+
+Estado 11
+
+   27 listavar_decl: var_decl .
+
+    $default  reduce usando la regla 27 (listavar_decl)
+
+
+Estado 12
+
+    5 clases: CLASS LLAVEABRE listamethod_decl . LLAVECIERRA
+   12 listamethod_decl: listamethod_decl . method_decl
+   13 method_decl: . type ID PARENTESISABRE PARENTESISCIERRA block
+   14            | . type ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   15            | . VOID ID PARENTESISABRE PARENTESISCIERRA block
+   16            | . VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   31 type: . INTRES
+   32     | . BOOL
+
+    VOID         desplazar e ir al estado 7
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    LLAVECIERRA  desplazar e ir al estado 17
+
+    method_decl  ir al estado 18
+    type         ir al estado 19
+
+
+Estado 13
+
+   11 listamethod_decl: method_decl .
+
+    $default  reduce usando la regla 11 (listamethod_decl)
+
+
+Estado 14
+
+    4 clases: CLASS LLAVEABRE listavar_decl . LLAVECIERRA
+    6       | CLASS LLAVEABRE listavar_decl . listamethod_decl LLAVECIERRA
+    8 var_decl: . type $@2 listaID PUNTOYCOMA
+   11 listamethod_decl: . method_decl
+   12                 | . listamethod_decl method_decl
+   13 method_decl: . type ID PARENTESISABRE PARENTESISCIERRA block
+   14            | . type ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   15            | . VOID ID PARENTESISABRE PARENTESISCIERRA block
+   16            | . VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   28 listavar_decl: listavar_decl . var_decl
+   31 type: . INTRES
+   32     | . BOOL
+
+    VOID         desplazar e ir al estado 7
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    LLAVECIERRA  desplazar e ir al estado 20
+
+    var_decl          ir al estado 21
+    listamethod_decl  ir al estado 22
+    method_decl       ir al estado 13
+    type              ir al estado 15
+
+
+Estado 15
+
+    7 $@2: . %empty  [ID]
+    8 var_decl: type . $@2 listaID PUNTOYCOMA
+   13 method_decl: type . ID PARENTESISABRE PARENTESISCIERRA block
+   14            | type . ID PARENTESISABRE param_decl PARENTESISCIERRA block
+
+    ID  desplazar e ir al estado 23
+
+    ID  [reduce usando la regla 7 ($@2)]
+
+    $@2  ir al estado 24
+
+
+Estado 16
+
+   15 method_decl: VOID ID . PARENTESISABRE PARENTESISCIERRA block
+   16            | VOID ID . PARENTESISABRE param_decl PARENTESISCIERRA block
+
+    PARENTESISABRE  desplazar e ir al estado 25
+
+
+Estado 17
+
+    5 clases: CLASS LLAVEABRE listamethod_decl LLAVECIERRA .
+
+    $default  reduce usando la regla 5 (clases)
+
+
+Estado 18
+
+   12 listamethod_decl: listamethod_decl method_decl .
+
+    $default  reduce usando la regla 12 (listamethod_decl)
+
+
+Estado 19
+
+   13 method_decl: type . ID PARENTESISABRE PARENTESISCIERRA block
+   14            | type . ID PARENTESISABRE param_decl PARENTESISCIERRA block
+
+    ID  desplazar e ir al estado 23
+
+
+Estado 20
+
+    4 clases: CLASS LLAVEABRE listavar_decl LLAVECIERRA .
+
+    $default  reduce usando la regla 4 (clases)
+
+
+Estado 21
+
+   28 listavar_decl: listavar_decl var_decl .
+
+    $default  reduce usando la regla 28 (listavar_decl)
+
+
+Estado 22
+
+    6 clases: CLASS LLAVEABRE listavar_decl listamethod_decl . LLAVECIERRA
+   12 listamethod_decl: listamethod_decl . method_decl
+   13 method_decl: . type ID PARENTESISABRE PARENTESISCIERRA block
+   14            | . type ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   15            | . VOID ID PARENTESISABRE PARENTESISCIERRA block
+   16            | . VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block
+   31 type: . INTRES
+   32     | . BOOL
+
+    VOID         desplazar e ir al estado 7
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    LLAVECIERRA  desplazar e ir al estado 26
+
+    method_decl  ir al estado 18
+    type         ir al estado 19
+
+
+Estado 23
+
+   13 method_decl: type ID . PARENTESISABRE PARENTESISCIERRA block
+   14            | type ID . PARENTESISABRE param_decl PARENTESISCIERRA block
+
+    PARENTESISABRE  desplazar e ir al estado 27
+
+
+Estado 24
+
+    8 var_decl: type $@2 . listaID PUNTOYCOMA
+    9 listaID: . ID
+   10        | . listaID COMA ID
+
+    ID  desplazar e ir al estado 28
+
+    listaID  ir al estado 29
+
+
+Estado 25
+
+   15 method_decl: VOID ID PARENTESISABRE . PARENTESISCIERRA block
+   16            | VOID ID PARENTESISABRE . param_decl PARENTESISCIERRA block
+   17 $@3: . %empty  [INTRES, BOOL]
+   18 param_decl: . $@3 Nparam_decl
+
+    PARENTESISCIERRA  desplazar e ir al estado 30
+
+    $default  reduce usando la regla 17 ($@3)
+
+    param_decl  ir al estado 31
+    $@3         ir al estado 32
+
+
+Estado 26
+
+    6 clases: CLASS LLAVEABRE listavar_decl listamethod_decl LLAVECIERRA .
+
+    $default  reduce usando la regla 6 (clases)
+
+
+Estado 27
+
+   13 method_decl: type ID PARENTESISABRE . PARENTESISCIERRA block
+   14            | type ID PARENTESISABRE . param_decl PARENTESISCIERRA block
+   17 $@3: . %empty  [INTRES, BOOL]
+   18 param_decl: . $@3 Nparam_decl
+
+    PARENTESISCIERRA  desplazar e ir al estado 33
+
+    $default  reduce usando la regla 17 ($@3)
+
+    param_decl  ir al estado 34
+    $@3         ir al estado 32
+
+
+Estado 28
+
+    9 listaID: ID .
+
+    $default  reduce usando la regla 9 (listaID)
+
+
+Estado 29
+
+    8 var_decl: type $@2 listaID . PUNTOYCOMA
+   10 listaID: listaID . COMA ID
+
+    COMA        desplazar e ir al estado 35
+    PUNTOYCOMA  desplazar e ir al estado 36
+
+
+Estado 30
+
+   15 method_decl: VOID ID PARENTESISABRE PARENTESISCIERRA . block
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 37
+    $@4    ir al estado 38
+
+
+Estado 31
+
+   16 method_decl: VOID ID PARENTESISABRE param_decl . PARENTESISCIERRA block
+
+    PARENTESISCIERRA  desplazar e ir al estado 39
+
+
+Estado 32
+
+   18 param_decl: $@3 . Nparam_decl
+   19 Nparam_decl: . type ID
+   20            | . Nparam_decl COMA type ID
+   31 type: . INTRES
+   32     | . BOOL
+
+    INTRES  desplazar e ir al estado 8
+    BOOL    desplazar e ir al estado 9
+
+    Nparam_decl  ir al estado 40
+    type         ir al estado 41
+
+
+Estado 33
+
+   13 method_decl: type ID PARENTESISABRE PARENTESISCIERRA . block
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 42
+    $@4    ir al estado 38
+
+
+Estado 34
+
+   14 method_decl: type ID PARENTESISABRE param_decl . PARENTESISCIERRA block
+
+    PARENTESISCIERRA  desplazar e ir al estado 43
+
+
+Estado 35
+
+   10 listaID: listaID COMA . ID
+
+    ID  desplazar e ir al estado 44
+
+
+Estado 36
+
+    8 var_decl: type $@2 listaID PUNTOYCOMA .
+
+    $default  reduce usando la regla 8 (var_decl)
+
+
+Estado 37
+
+   15 method_decl: VOID ID PARENTESISABRE PARENTESISCIERRA block .
+
+    $default  reduce usando la regla 15 (method_decl)
+
+
+Estado 38
+
+   22 block: $@4 . Nblock
+   23 Nblock: . LLAVEABRE listavar_decl listastatement LLAVECIERRA
+   24       | . LLAVEABRE listavar_decl LLAVECIERRA
+   25       | . LLAVEABRE listastatement LLAVECIERRA
+   26       | . LLAVEABRE LLAVECIERRA
+
+    LLAVEABRE  desplazar e ir al estado 45
+
+    Nblock  ir al estado 46
+
+
+Estado 39
+
+   16 method_decl: VOID ID PARENTESISABRE param_decl PARENTESISCIERRA . block
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 47
+    $@4    ir al estado 38
+
+
+Estado 40
+
+   18 param_decl: $@3 Nparam_decl .  [PARENTESISCIERRA]
+   20 Nparam_decl: Nparam_decl . COMA type ID
+
+    COMA  desplazar e ir al estado 48
+
+    $default  reduce usando la regla 18 (param_decl)
+
+
+Estado 41
+
+   19 Nparam_decl: type . ID
+
+    ID  desplazar e ir al estado 49
+
+
+Estado 42
+
+   13 method_decl: type ID PARENTESISABRE PARENTESISCIERRA block .
+
+    $default  reduce usando la regla 13 (method_decl)
+
+
+Estado 43
+
+   14 method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA . block
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 50
+    $@4    ir al estado 38
+
+
+Estado 44
+
+   10 listaID: listaID COMA ID .
+
+    $default  reduce usando la regla 10 (listaID)
+
+
+Estado 45
+
+    8 var_decl: . type $@2 listaID PUNTOYCOMA
+   21 $@4: . %empty  [LLAVEABRE]
+   22 block: . $@4 Nblock
+   23 Nblock: LLAVEABRE . listavar_decl listastatement LLAVECIERRA
+   24       | LLAVEABRE . listavar_decl LLAVECIERRA
+   25       | LLAVEABRE . listastatement LLAVECIERRA
+   26       | LLAVEABRE . LLAVECIERRA
+   27 listavar_decl: . var_decl
+   28              | . listavar_decl var_decl
+   29 listastatement: . statement
+   30               | . listastatement statement
+   31 type: . INTRES
+   32     | . BOOL
+   33 statement: . IF PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | . IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+   35          | . WHILE expr block
+   36          | . RETURN expr PUNTOYCOMA
+   37          | . RETURN PUNTOYCOMA
+   38          | . ID ASIG expr PUNTOYCOMA
+   39          | . method_call PUNTOYCOMA
+   40          | . PUNTOYCOMA
+   41          | . block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+
+    ID           desplazar e ir al estado 51
+    IF           desplazar e ir al estado 52
+    RETURN       desplazar e ir al estado 53
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    WHILE        desplazar e ir al estado 54
+    PUNTOYCOMA   desplazar e ir al estado 55
+    LLAVECIERRA  desplazar e ir al estado 56
+
+    $default  reduce usando la regla 21 ($@4)
+
+    var_decl        ir al estado 11
+    block           ir al estado 57
+    $@4             ir al estado 38
+    listavar_decl   ir al estado 58
+    listastatement  ir al estado 59
+    type            ir al estado 60
+    statement       ir al estado 61
+    method_call     ir al estado 62
+
+
+Estado 46
+
+   22 block: $@4 Nblock .
+
+    $default  reduce usando la regla 22 (block)
+
+
+Estado 47
+
+   16 method_decl: VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block .
+
+    $default  reduce usando la regla 16 (method_decl)
+
+
+Estado 48
+
+   20 Nparam_decl: Nparam_decl COMA . type ID
+   31 type: . INTRES
+   32     | . BOOL
+
+    INTRES  desplazar e ir al estado 8
+    BOOL    desplazar e ir al estado 9
+
+    type  ir al estado 63
+
+
+Estado 49
+
+   19 Nparam_decl: type ID .
+
+    $default  reduce usando la regla 19 (Nparam_decl)
+
+
+Estado 50
+
+   14 method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block .
+
+    $default  reduce usando la regla 14 (method_decl)
+
+
+Estado 51
+
+   38 statement: ID . ASIG expr PUNTOYCOMA
+   42 method_call: ID . PARENTESISABRE PARENTESISCIERRA
+   43            | ID . PARENTESISABRE param_call PARENTESISCIERRA
+
+    PARENTESISABRE  desplazar e ir al estado 64
+    ASIG            desplazar e ir al estado 65
+
+
+Estado 52
+
+   33 statement: IF . PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | IF . PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+
+    PARENTESISABRE  desplazar e ir al estado 66
+
+
+Estado 53
+
+   36 statement: RETURN . expr PUNTOYCOMA
+   37          | RETURN . PUNTOYCOMA
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PUNTOYCOMA      desplazar e ir al estado 73
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 76
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 54
+
+   35 statement: WHILE . expr block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 79
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 55
+
+   40 statement: PUNTOYCOMA .
+
+    $default  reduce usando la regla 40 (statement)
+
+
+Estado 56
+
+   26 Nblock: LLAVEABRE LLAVECIERRA .
+
+    $default  reduce usando la regla 26 (Nblock)
+
+
+Estado 57
+
+   41 statement: block .
+
+    $default  reduce usando la regla 41 (statement)
+
+
+Estado 58
+
+    8 var_decl: . type $@2 listaID PUNTOYCOMA
+   21 $@4: . %empty  [LLAVEABRE]
+   22 block: . $@4 Nblock
+   23 Nblock: LLAVEABRE listavar_decl . listastatement LLAVECIERRA
+   24       | LLAVEABRE listavar_decl . LLAVECIERRA
+   28 listavar_decl: listavar_decl . var_decl
+   29 listastatement: . statement
+   30               | . listastatement statement
+   31 type: . INTRES
+   32     | . BOOL
+   33 statement: . IF PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | . IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+   35          | . WHILE expr block
+   36          | . RETURN expr PUNTOYCOMA
+   37          | . RETURN PUNTOYCOMA
+   38          | . ID ASIG expr PUNTOYCOMA
+   39          | . method_call PUNTOYCOMA
+   40          | . PUNTOYCOMA
+   41          | . block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+
+    ID           desplazar e ir al estado 51
+    IF           desplazar e ir al estado 52
+    RETURN       desplazar e ir al estado 53
+    INTRES       desplazar e ir al estado 8
+    BOOL         desplazar e ir al estado 9
+    WHILE        desplazar e ir al estado 54
+    PUNTOYCOMA   desplazar e ir al estado 55
+    LLAVECIERRA  desplazar e ir al estado 80
+
+    $default  reduce usando la regla 21 ($@4)
+
+    var_decl        ir al estado 21
+    block           ir al estado 57
+    $@4             ir al estado 38
+    listastatement  ir al estado 81
+    type            ir al estado 60
+    statement       ir al estado 61
+    method_call     ir al estado 62
+
+
+Estado 59
+
+   21 $@4: . %empty  [LLAVEABRE]
+   22 block: . $@4 Nblock
+   25 Nblock: LLAVEABRE listastatement . LLAVECIERRA
+   30 listastatement: listastatement . statement
+   33 statement: . IF PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | . IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+   35          | . WHILE expr block
+   36          | . RETURN expr PUNTOYCOMA
+   37          | . RETURN PUNTOYCOMA
+   38          | . ID ASIG expr PUNTOYCOMA
+   39          | . method_call PUNTOYCOMA
+   40          | . PUNTOYCOMA
+   41          | . block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+
+    ID           desplazar e ir al estado 51
+    IF           desplazar e ir al estado 52
+    RETURN       desplazar e ir al estado 53
+    WHILE        desplazar e ir al estado 54
+    PUNTOYCOMA   desplazar e ir al estado 55
+    LLAVECIERRA  desplazar e ir al estado 82
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block        ir al estado 57
+    $@4          ir al estado 38
+    statement    ir al estado 83
+    method_call  ir al estado 62
+
+
+Estado 60
+
+    7 $@2: . %empty
+    8 var_decl: type . $@2 listaID PUNTOYCOMA
+
+    $default  reduce usando la regla 7 ($@2)
+
+    $@2  ir al estado 24
+
+
+Estado 61
+
+   29 listastatement: statement .
+
+    $default  reduce usando la regla 29 (listastatement)
+
+
+Estado 62
+
+   39 statement: method_call . PUNTOYCOMA
+
+    PUNTOYCOMA  desplazar e ir al estado 84
+
+
+Estado 63
+
+   20 Nparam_decl: Nparam_decl COMA type . ID
+
+    ID  desplazar e ir al estado 85
+
+
+Estado 64
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   42            | ID PARENTESISABRE . PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   43            | ID PARENTESISABRE . param_call PARENTESISCIERRA
+   44 param_call: . ultparam_call
+   45 ultparam_call: . expr
+   46              | . ultparam_call COMA expr
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT               desplazar e ir al estado 67
+    ID                desplazar e ir al estado 68
+    TRUE              desplazar e ir al estado 69
+    FALSE             desplazar e ir al estado 70
+    MENOS             desplazar e ir al estado 71
+    EXCLAMACION       desplazar e ir al estado 72
+    PARENTESISABRE    desplazar e ir al estado 74
+    PARENTESISCIERRA  desplazar e ir al estado 86
+
+    method_call    ir al estado 75
+    param_call     ir al estado 87
+    ultparam_call  ir al estado 88
+    expr           ir al estado 89
+    literal        ir al estado 77
+    bool_literal   ir al estado 78
+
+
+Estado 65
+
+   38 statement: ID ASIG . expr PUNTOYCOMA
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 90
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 66
+
+   33 statement: IF PARENTESISABRE . expr PARENTESISCIERRA THEN block
+   34          | IF PARENTESISABRE . expr PARENTESISCIERRA THEN block ELSE block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 91
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 67
+
+   63 literal: INT .
+
+    $default  reduce usando la regla 63 (literal)
+
+
+Estado 68
+
+   42 method_call: ID . PARENTESISABRE PARENTESISCIERRA
+   43            | ID . PARENTESISABRE param_call PARENTESISCIERRA
+   60 expr: ID .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+
+    PARENTESISABRE  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 60 (expr)
+
+
+Estado 69
+
+   65 bool_literal: TRUE .
+
+    $default  reduce usando la regla 65 (bool_literal)
+
+
+Estado 70
+
+   66 bool_literal: FALSE .
+
+    $default  reduce usando la regla 66 (bool_literal)
+
+
+Estado 71
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   57     | MENOS . expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 92
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 72
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   58     | EXCLAMACION . expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 93
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 73
+
+   37 statement: RETURN PUNTOYCOMA .
+
+    $default  reduce usando la regla 37 (statement)
+
+
+Estado 74
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   59     | PARENTESISABRE . expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 94
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 75
+
+   61 expr: method_call .
+
+    $default  reduce usando la regla 61 (expr)
+
+
+Estado 76
+
+   36 statement: RETURN expr . PUNTOYCOMA
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS         desplazar e ir al estado 95
+    MENOS       desplazar e ir al estado 96
+    POR         desplazar e ir al estado 97
+    DIVISION    desplazar e ir al estado 98
+    MOD         desplazar e ir al estado 99
+    PUNTOYCOMA  desplazar e ir al estado 100
+    EQUALS      desplazar e ir al estado 101
+    MAYORQUE    desplazar e ir al estado 102
+    MENORQUE    desplazar e ir al estado 103
+    AND         desplazar e ir al estado 104
+    OR          desplazar e ir al estado 105
+
+
+Estado 77
+
+   62 expr: literal .
+
+    $default  reduce usando la regla 62 (expr)
+
+
+Estado 78
+
+   64 literal: bool_literal .
+
+    $default  reduce usando la regla 64 (literal)
+
+
+Estado 79
+
+   21 $@4: . %empty  [LLAVEABRE]
+   22 block: . $@4 Nblock
+   35 statement: WHILE expr . block
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    EQUALS    desplazar e ir al estado 101
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+    AND       desplazar e ir al estado 104
+    OR        desplazar e ir al estado 105
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 106
+    $@4    ir al estado 38
+
+
+Estado 80
+
+   24 Nblock: LLAVEABRE listavar_decl LLAVECIERRA .
+
+    $default  reduce usando la regla 24 (Nblock)
+
+
+Estado 81
+
+   21 $@4: . %empty  [LLAVEABRE]
+   22 block: . $@4 Nblock
+   23 Nblock: LLAVEABRE listavar_decl listastatement . LLAVECIERRA
+   30 listastatement: listastatement . statement
+   33 statement: . IF PARENTESISABRE expr PARENTESISCIERRA THEN block
+   34          | . IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block
+   35          | . WHILE expr block
+   36          | . RETURN expr PUNTOYCOMA
+   37          | . RETURN PUNTOYCOMA
+   38          | . ID ASIG expr PUNTOYCOMA
+   39          | . method_call PUNTOYCOMA
+   40          | . PUNTOYCOMA
+   41          | . block
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+
+    ID           desplazar e ir al estado 51
+    IF           desplazar e ir al estado 52
+    RETURN       desplazar e ir al estado 53
+    WHILE        desplazar e ir al estado 54
+    PUNTOYCOMA   desplazar e ir al estado 55
+    LLAVECIERRA  desplazar e ir al estado 107
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block        ir al estado 57
+    $@4          ir al estado 38
+    statement    ir al estado 83
+    method_call  ir al estado 62
+
+
+Estado 82
+
+   25 Nblock: LLAVEABRE listastatement LLAVECIERRA .
+
+    $default  reduce usando la regla 25 (Nblock)
+
+
+Estado 83
+
+   30 listastatement: listastatement statement .
+
+    $default  reduce usando la regla 30 (listastatement)
+
+
+Estado 84
+
+   39 statement: method_call PUNTOYCOMA .
+
+    $default  reduce usando la regla 39 (statement)
+
+
+Estado 85
+
+   20 Nparam_decl: Nparam_decl COMA type ID .
+
+    $default  reduce usando la regla 20 (Nparam_decl)
+
+
+Estado 86
+
+   42 method_call: ID PARENTESISABRE PARENTESISCIERRA .
+
+    $default  reduce usando la regla 42 (method_call)
+
+
+Estado 87
+
+   43 method_call: ID PARENTESISABRE param_call . PARENTESISCIERRA
+
+    PARENTESISCIERRA  desplazar e ir al estado 108
+
+
+Estado 88
+
+   44 param_call: ultparam_call .  [PARENTESISCIERRA]
+   46 ultparam_call: ultparam_call . COMA expr
+
+    COMA  desplazar e ir al estado 109
+
+    $default  reduce usando la regla 44 (param_call)
+
+
+Estado 89
+
+   45 ultparam_call: expr .  [COMA, PARENTESISCIERRA]
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    EQUALS    desplazar e ir al estado 101
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+    AND       desplazar e ir al estado 104
+    OR        desplazar e ir al estado 105
+
+    $default  reduce usando la regla 45 (ultparam_call)
+
+
+Estado 90
+
+   38 statement: ID ASIG expr . PUNTOYCOMA
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS         desplazar e ir al estado 95
+    MENOS       desplazar e ir al estado 96
+    POR         desplazar e ir al estado 97
+    DIVISION    desplazar e ir al estado 98
+    MOD         desplazar e ir al estado 99
+    PUNTOYCOMA  desplazar e ir al estado 110
+    EQUALS      desplazar e ir al estado 101
+    MAYORQUE    desplazar e ir al estado 102
+    MENORQUE    desplazar e ir al estado 103
+    AND         desplazar e ir al estado 104
+    OR          desplazar e ir al estado 105
+
+
+Estado 91
+
+   33 statement: IF PARENTESISABRE expr . PARENTESISCIERRA THEN block
+   34          | IF PARENTESISABRE expr . PARENTESISCIERRA THEN block ELSE block
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS               desplazar e ir al estado 95
+    MENOS             desplazar e ir al estado 96
+    POR               desplazar e ir al estado 97
+    DIVISION          desplazar e ir al estado 98
+    MOD               desplazar e ir al estado 99
+    PARENTESISCIERRA  desplazar e ir al estado 111
+    EQUALS            desplazar e ir al estado 101
+    MAYORQUE          desplazar e ir al estado 102
+    MENORQUE          desplazar e ir al estado 103
+    AND               desplazar e ir al estado 104
+    OR                desplazar e ir al estado 105
+
+
+Estado 92
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+   57     | MENOS expr .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+
+    $default  reduce usando la regla 57 (expr)
+
+    El conflicto entre la regla 57 y el terminal MAS se resuelve como reducción (MAS < UNARIO).
+    El conflicto entre la regla 57 y el terminal MENOS se resuelve como reducción (MENOS < UNARIO).
+    El conflicto entre la regla 57 y el terminal POR se resuelve como reducción (POR < UNARIO).
+    El conflicto entre la regla 57 y el terminal DIVISION se resuelve como reducción (DIVISION < UNARIO).
+    El conflicto entre la regla 57 y el terminal MOD se resuelve como reducción (MOD < UNARIO).
+    El conflicto entre la regla 57 y el terminal EQUALS se resuelve como reducción (EQUALS < UNARIO).
+    El conflicto entre la regla 57 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < UNARIO).
+    El conflicto entre la regla 57 y el terminal MENORQUE se resuelve como reducción (MENORQUE < UNARIO).
+    El conflicto entre la regla 57 y el terminal AND se resuelve como reducción (AND < UNARIO).
+    El conflicto entre la regla 57 y el terminal OR se resuelve como reducción (OR < UNARIO).
+
+
+Estado 93
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+   58     | EXCLAMACION expr .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+
+    $default  reduce usando la regla 58 (expr)
+
+    El conflicto entre la regla 58 y el terminal MAS se resuelve como reducción (MAS < UNARIO).
+    El conflicto entre la regla 58 y el terminal MENOS se resuelve como reducción (MENOS < UNARIO).
+    El conflicto entre la regla 58 y el terminal POR se resuelve como reducción (POR < UNARIO).
+    El conflicto entre la regla 58 y el terminal DIVISION se resuelve como reducción (DIVISION < UNARIO).
+    El conflicto entre la regla 58 y el terminal MOD se resuelve como reducción (MOD < UNARIO).
+    El conflicto entre la regla 58 y el terminal EQUALS se resuelve como reducción (EQUALS < UNARIO).
+    El conflicto entre la regla 58 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < UNARIO).
+    El conflicto entre la regla 58 y el terminal MENORQUE se resuelve como reducción (MENORQUE < UNARIO).
+    El conflicto entre la regla 58 y el terminal AND se resuelve como reducción (AND < UNARIO).
+    El conflicto entre la regla 58 y el terminal OR se resuelve como reducción (OR < UNARIO).
+
+
+Estado 94
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+   59     | PARENTESISABRE expr . PARENTESISCIERRA
+
+    MAS               desplazar e ir al estado 95
+    MENOS             desplazar e ir al estado 96
+    POR               desplazar e ir al estado 97
+    DIVISION          desplazar e ir al estado 98
+    MOD               desplazar e ir al estado 99
+    PARENTESISCIERRA  desplazar e ir al estado 112
+    EQUALS            desplazar e ir al estado 101
+    MAYORQUE          desplazar e ir al estado 102
+    MENORQUE          desplazar e ir al estado 103
+    AND               desplazar e ir al estado 104
+    OR                desplazar e ir al estado 105
+
+
+Estado 95
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   47     | expr MAS . expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 113
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 96
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   48     | expr MENOS . expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 114
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 97
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   49     | expr POR . expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 115
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 98
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   50     | expr DIVISION . expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 116
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 99
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   51     | expr MOD . expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 117
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 100
+
+   36 statement: RETURN expr PUNTOYCOMA .
+
+    $default  reduce usando la regla 36 (statement)
+
+
+Estado 101
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   54     | expr EQUALS . expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 118
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 102
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   52     | expr MAYORQUE . expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 119
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 103
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   53     | expr MENORQUE . expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 120
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 104
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   55     | expr AND . expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 121
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 105
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   56     | expr OR . expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 122
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 106
+
+   35 statement: WHILE expr block .
+
+    $default  reduce usando la regla 35 (statement)
+
+
+Estado 107
+
+   23 Nblock: LLAVEABRE listavar_decl listastatement LLAVECIERRA .
+
+    $default  reduce usando la regla 23 (Nblock)
+
+
+Estado 108
+
+   43 method_call: ID PARENTESISABRE param_call PARENTESISCIERRA .
+
+    $default  reduce usando la regla 43 (method_call)
+
+
+Estado 109
+
+   42 method_call: . ID PARENTESISABRE PARENTESISCIERRA
+   43            | . ID PARENTESISABRE param_call PARENTESISCIERRA
+   46 ultparam_call: ultparam_call COMA . expr
+   47 expr: . expr MAS expr
+   48     | . expr MENOS expr
+   49     | . expr POR expr
+   50     | . expr DIVISION expr
+   51     | . expr MOD expr
+   52     | . expr MAYORQUE expr
+   53     | . expr MENORQUE expr
+   54     | . expr EQUALS expr
+   55     | . expr AND expr
+   56     | . expr OR expr
+   57     | . MENOS expr
+   58     | . EXCLAMACION expr
+   59     | . PARENTESISABRE expr PARENTESISCIERRA
+   60     | . ID
+   61     | . method_call
+   62     | . literal
+   63 literal: . INT
+   64        | . bool_literal
+   65 bool_literal: . TRUE
+   66             | . FALSE
+
+    INT             desplazar e ir al estado 67
+    ID              desplazar e ir al estado 68
+    TRUE            desplazar e ir al estado 69
+    FALSE           desplazar e ir al estado 70
+    MENOS           desplazar e ir al estado 71
+    EXCLAMACION     desplazar e ir al estado 72
+    PARENTESISABRE  desplazar e ir al estado 74
+
+    method_call   ir al estado 75
+    expr          ir al estado 123
+    literal       ir al estado 77
+    bool_literal  ir al estado 78
+
+
+Estado 110
+
+   38 statement: ID ASIG expr PUNTOYCOMA .
+
+    $default  reduce usando la regla 38 (statement)
+
+
+Estado 111
+
+   33 statement: IF PARENTESISABRE expr PARENTESISCIERRA . THEN block
+   34          | IF PARENTESISABRE expr PARENTESISCIERRA . THEN block ELSE block
+
+    THEN  desplazar e ir al estado 124
+
+
+Estado 112
+
+   59 expr: PARENTESISABRE expr PARENTESISCIERRA .
+
+    $default  reduce usando la regla 59 (expr)
+
+
+Estado 113
+
+   47 expr: expr . MAS expr
+   47     | expr MAS expr .  [MAS, MENOS, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+
+    $default  reduce usando la regla 47 (expr)
+
+    El conflicto entre la regla 47 y el terminal MAS se resuelve como reducción (%left MAS).
+    El conflicto entre la regla 47 y el terminal MENOS se resuelve como reducción (%left MENOS).
+    El conflicto entre la regla 47 y el aviso POR se resuelve como cambio. (MAS < POR).
+    El conflicto entre la regla 47 y el aviso DIVISION se resuelve como cambio. (MAS < DIVISION).
+    El conflicto entre la regla 47 y el aviso MOD se resuelve como cambio. (MAS < MOD).
+    El conflicto entre la regla 47 y el terminal EQUALS se resuelve como reducción (EQUALS < MAS).
+    El conflicto entre la regla 47 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < MAS).
+    El conflicto entre la regla 47 y el terminal MENORQUE se resuelve como reducción (MENORQUE < MAS).
+    El conflicto entre la regla 47 y el terminal AND se resuelve como reducción (AND < MAS).
+    El conflicto entre la regla 47 y el terminal OR se resuelve como reducción (OR < MAS).
+
+
+Estado 114
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   48     | expr MENOS expr .  [MAS, MENOS, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+
+    $default  reduce usando la regla 48 (expr)
+
+    El conflicto entre la regla 48 y el terminal MAS se resuelve como reducción (%left MAS).
+    El conflicto entre la regla 48 y el terminal MENOS se resuelve como reducción (%left MENOS).
+    El conflicto entre la regla 48 y el aviso POR se resuelve como cambio. (MENOS < POR).
+    El conflicto entre la regla 48 y el aviso DIVISION se resuelve como cambio. (MENOS < DIVISION).
+    El conflicto entre la regla 48 y el aviso MOD se resuelve como cambio. (MENOS < MOD).
+    El conflicto entre la regla 48 y el terminal EQUALS se resuelve como reducción (EQUALS < MENOS).
+    El conflicto entre la regla 48 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < MENOS).
+    El conflicto entre la regla 48 y el terminal MENORQUE se resuelve como reducción (MENORQUE < MENOS).
+    El conflicto entre la regla 48 y el terminal AND se resuelve como reducción (AND < MENOS).
+    El conflicto entre la regla 48 y el terminal OR se resuelve como reducción (OR < MENOS).
+
+
+Estado 115
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   49     | expr POR expr .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    $default  reduce usando la regla 49 (expr)
+
+    El conflicto entre la regla 49 y el terminal MAS se resuelve como reducción (MAS < POR).
+    El conflicto entre la regla 49 y el terminal MENOS se resuelve como reducción (MENOS < POR).
+    El conflicto entre la regla 49 y el terminal POR se resuelve como reducción (%left POR).
+    El conflicto entre la regla 49 y el terminal DIVISION se resuelve como reducción (%left DIVISION).
+    El conflicto entre la regla 49 y el terminal MOD se resuelve como reducción (%left MOD).
+    El conflicto entre la regla 49 y el terminal EQUALS se resuelve como reducción (EQUALS < POR).
+    El conflicto entre la regla 49 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < POR).
+    El conflicto entre la regla 49 y el terminal MENORQUE se resuelve como reducción (MENORQUE < POR).
+    El conflicto entre la regla 49 y el terminal AND se resuelve como reducción (AND < POR).
+    El conflicto entre la regla 49 y el terminal OR se resuelve como reducción (OR < POR).
+
+
+Estado 116
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   50     | expr DIVISION expr .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    $default  reduce usando la regla 50 (expr)
+
+    El conflicto entre la regla 50 y el terminal MAS se resuelve como reducción (MAS < DIVISION).
+    El conflicto entre la regla 50 y el terminal MENOS se resuelve como reducción (MENOS < DIVISION).
+    El conflicto entre la regla 50 y el terminal POR se resuelve como reducción (%left POR).
+    El conflicto entre la regla 50 y el terminal DIVISION se resuelve como reducción (%left DIVISION).
+    El conflicto entre la regla 50 y el terminal MOD se resuelve como reducción (%left MOD).
+    El conflicto entre la regla 50 y el terminal EQUALS se resuelve como reducción (EQUALS < DIVISION).
+    El conflicto entre la regla 50 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < DIVISION).
+    El conflicto entre la regla 50 y el terminal MENORQUE se resuelve como reducción (MENORQUE < DIVISION).
+    El conflicto entre la regla 50 y el terminal AND se resuelve como reducción (AND < DIVISION).
+    El conflicto entre la regla 50 y el terminal OR se resuelve como reducción (OR < DIVISION).
+
+
+Estado 117
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   51     | expr MOD expr .  [MAS, MENOS, POR, DIVISION, MOD, COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    $default  reduce usando la regla 51 (expr)
+
+    El conflicto entre la regla 51 y el terminal MAS se resuelve como reducción (MAS < MOD).
+    El conflicto entre la regla 51 y el terminal MENOS se resuelve como reducción (MENOS < MOD).
+    El conflicto entre la regla 51 y el terminal POR se resuelve como reducción (%left POR).
+    El conflicto entre la regla 51 y el terminal DIVISION se resuelve como reducción (%left DIVISION).
+    El conflicto entre la regla 51 y el terminal MOD se resuelve como reducción (%left MOD).
+    El conflicto entre la regla 51 y el terminal EQUALS se resuelve como reducción (EQUALS < MOD).
+    El conflicto entre la regla 51 y el terminal MAYORQUE se resuelve como reducción (MAYORQUE < MOD).
+    El conflicto entre la regla 51 y el terminal MENORQUE se resuelve como reducción (MENORQUE < MOD).
+    El conflicto entre la regla 51 y el terminal AND se resuelve como reducción (AND < MOD).
+    El conflicto entre la regla 51 y el terminal OR se resuelve como reducción (OR < MOD).
+
+
+Estado 118
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   54     | expr EQUALS expr .  [COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, AND, OR, LLAVEABRE]
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+
+    $default  reduce usando la regla 54 (expr)
+
+    El conflicto entre la regla 54 y el aviso MAS se resuelve como cambio. (EQUALS < MAS).
+    El conflicto entre la regla 54 y el aviso MENOS se resuelve como cambio. (EQUALS < MENOS).
+    El conflicto entre la regla 54 y el aviso POR se resuelve como cambio. (EQUALS < POR).
+    El conflicto entre la regla 54 y el aviso DIVISION se resuelve como cambio. (EQUALS < DIVISION).
+    El conflicto entre la regla 54 y el aviso MOD se resuelve como cambio. (EQUALS < MOD).
+    El conflicto entre la regla 54 y el terminal EQUALS se resuelve como reducción (%left EQUALS).
+    El conflicto entre la regla 54 y el aviso MAYORQUE se resuelve como cambio. (EQUALS < MAYORQUE).
+    El conflicto entre la regla 54 y el aviso MENORQUE se resuelve como cambio. (EQUALS < MENORQUE).
+    El conflicto entre la regla 54 y el terminal AND se resuelve como reducción (AND < EQUALS).
+    El conflicto entre la regla 54 y el terminal OR se resuelve como reducción (OR < EQUALS).
+
+
+Estado 119
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   52     | expr MAYORQUE expr .  [COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+
+    $default  reduce usando la regla 52 (expr)
+
+    El conflicto entre la regla 52 y el aviso MAS se resuelve como cambio. (MAYORQUE < MAS).
+    El conflicto entre la regla 52 y el aviso MENOS se resuelve como cambio. (MAYORQUE < MENOS).
+    El conflicto entre la regla 52 y el aviso POR se resuelve como cambio. (MAYORQUE < POR).
+    El conflicto entre la regla 52 y el aviso DIVISION se resuelve como cambio. (MAYORQUE < DIVISION).
+    El conflicto entre la regla 52 y el aviso MOD se resuelve como cambio. (MAYORQUE < MOD).
+    El conflicto entre la regla 52 y el terminal EQUALS se resuelve como reducción (EQUALS < MAYORQUE).
+    El conflicto entre la regla 52 y el terminal MAYORQUE se resuelve como reducción (%left MAYORQUE).
+    El conflicto entre la regla 52 y el terminal MENORQUE se resuelve como reducción (%left MENORQUE).
+    El conflicto entre la regla 52 y el terminal AND se resuelve como reducción (AND < MAYORQUE).
+    El conflicto entre la regla 52 y el terminal OR se resuelve como reducción (OR < MAYORQUE).
+
+
+Estado 120
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   53     | expr MENORQUE expr .  [COMA, PUNTOYCOMA, PARENTESISCIERRA, EQUALS, MAYORQUE, MENORQUE, AND, OR, LLAVEABRE]
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+
+    $default  reduce usando la regla 53 (expr)
+
+    El conflicto entre la regla 53 y el aviso MAS se resuelve como cambio. (MENORQUE < MAS).
+    El conflicto entre la regla 53 y el aviso MENOS se resuelve como cambio. (MENORQUE < MENOS).
+    El conflicto entre la regla 53 y el aviso POR se resuelve como cambio. (MENORQUE < POR).
+    El conflicto entre la regla 53 y el aviso DIVISION se resuelve como cambio. (MENORQUE < DIVISION).
+    El conflicto entre la regla 53 y el aviso MOD se resuelve como cambio. (MENORQUE < MOD).
+    El conflicto entre la regla 53 y el terminal EQUALS se resuelve como reducción (EQUALS < MENORQUE).
+    El conflicto entre la regla 53 y el terminal MAYORQUE se resuelve como reducción (%left MAYORQUE).
+    El conflicto entre la regla 53 y el terminal MENORQUE se resuelve como reducción (%left MENORQUE).
+    El conflicto entre la regla 53 y el terminal AND se resuelve como reducción (AND < MENORQUE).
+    El conflicto entre la regla 53 y el terminal OR se resuelve como reducción (OR < MENORQUE).
+
+
+Estado 121
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   55     | expr AND expr .  [COMA, PUNTOYCOMA, PARENTESISCIERRA, AND, OR, LLAVEABRE]
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    EQUALS    desplazar e ir al estado 101
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+
+    $default  reduce usando la regla 55 (expr)
+
+    El conflicto entre la regla 55 y el aviso MAS se resuelve como cambio. (AND < MAS).
+    El conflicto entre la regla 55 y el aviso MENOS se resuelve como cambio. (AND < MENOS).
+    El conflicto entre la regla 55 y el aviso POR se resuelve como cambio. (AND < POR).
+    El conflicto entre la regla 55 y el aviso DIVISION se resuelve como cambio. (AND < DIVISION).
+    El conflicto entre la regla 55 y el aviso MOD se resuelve como cambio. (AND < MOD).
+    El conflicto entre la regla 55 y el aviso EQUALS se resuelve como cambio. (AND < EQUALS).
+    El conflicto entre la regla 55 y el aviso MAYORQUE se resuelve como cambio. (AND < MAYORQUE).
+    El conflicto entre la regla 55 y el aviso MENORQUE se resuelve como cambio. (AND < MENORQUE).
+    El conflicto entre la regla 55 y el terminal AND se resuelve como reducción (%left AND).
+    El conflicto entre la regla 55 y el terminal OR se resuelve como reducción (OR < AND).
+
+
+Estado 122
+
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+   56     | expr OR expr .  [COMA, PUNTOYCOMA, PARENTESISCIERRA, OR, LLAVEABRE]
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    EQUALS    desplazar e ir al estado 101
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+    AND       desplazar e ir al estado 104
+
+    $default  reduce usando la regla 56 (expr)
+
+    El conflicto entre la regla 56 y el aviso MAS se resuelve como cambio. (OR < MAS).
+    El conflicto entre la regla 56 y el aviso MENOS se resuelve como cambio. (OR < MENOS).
+    El conflicto entre la regla 56 y el aviso POR se resuelve como cambio. (OR < POR).
+    El conflicto entre la regla 56 y el aviso DIVISION se resuelve como cambio. (OR < DIVISION).
+    El conflicto entre la regla 56 y el aviso MOD se resuelve como cambio. (OR < MOD).
+    El conflicto entre la regla 56 y el aviso EQUALS se resuelve como cambio. (OR < EQUALS).
+    El conflicto entre la regla 56 y el aviso MAYORQUE se resuelve como cambio. (OR < MAYORQUE).
+    El conflicto entre la regla 56 y el aviso MENORQUE se resuelve como cambio. (OR < MENORQUE).
+    El conflicto entre la regla 56 y el aviso AND se resuelve como cambio. (OR < AND).
+    El conflicto entre la regla 56 y el terminal OR se resuelve como reducción (%left OR).
+
+
+Estado 123
+
+   46 ultparam_call: ultparam_call COMA expr .  [COMA, PARENTESISCIERRA]
+   47 expr: expr . MAS expr
+   48     | expr . MENOS expr
+   49     | expr . POR expr
+   50     | expr . DIVISION expr
+   51     | expr . MOD expr
+   52     | expr . MAYORQUE expr
+   53     | expr . MENORQUE expr
+   54     | expr . EQUALS expr
+   55     | expr . AND expr
+   56     | expr . OR expr
+
+    MAS       desplazar e ir al estado 95
+    MENOS     desplazar e ir al estado 96
+    POR       desplazar e ir al estado 97
+    DIVISION  desplazar e ir al estado 98
+    MOD       desplazar e ir al estado 99
+    EQUALS    desplazar e ir al estado 101
+    MAYORQUE  desplazar e ir al estado 102
+    MENORQUE  desplazar e ir al estado 103
+    AND       desplazar e ir al estado 104
+    OR        desplazar e ir al estado 105
+
+    $default  reduce usando la regla 46 (ultparam_call)
+
+
+Estado 124
+
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+   33 statement: IF PARENTESISABRE expr PARENTESISCIERRA THEN . block
+   34          | IF PARENTESISABRE expr PARENTESISCIERRA THEN . block ELSE block
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 125
+    $@4    ir al estado 38
+
+
+Estado 125
+
+   33 statement: IF PARENTESISABRE expr PARENTESISCIERRA THEN block .  [ID, IF, RETURN, WHILE, PUNTOYCOMA, LLAVEABRE, LLAVECIERRA]
+   34          | IF PARENTESISABRE expr PARENTESISCIERRA THEN block . ELSE block
+
+    ELSE  desplazar e ir al estado 126
+
+    $default  reduce usando la regla 33 (statement)
+
+
+Estado 126
+
+   21 $@4: . %empty
+   22 block: . $@4 Nblock
+   34 statement: IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE . block
+
+    $default  reduce usando la regla 21 ($@4)
+
+    block  ir al estado 127
+    $@4    ir al estado 38
+
+
+Estado 127
+
+   34 statement: IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block .
+
+    $default  reduce usando la regla 34 (statement)

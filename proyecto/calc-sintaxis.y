@@ -192,7 +192,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 %type<p> method_call
 %type<p> method_decl
 %type<p> param_call
-%type<p> param_callult
+%type<p> ultparam_call
 %type<p> expr
 %type<p> literal
 %type<p> bool_literal
@@ -232,9 +232,7 @@ clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
 ;
 
-var_decl: type {aux=$1;} listaID PUNTOYCOMA   {printf("\ndeclaracion de var finalizada");};
-
-
+var_decl: type  listaID PUNTOYCOMA   {printf("\ndeclaracion de var finalizada");};
 ;
 
 listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
@@ -256,11 +254,30 @@ listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
 ;
 
 
-listamethod_decl : listamethod_decl method_decl {}
-  | method_decl {}
+listamethod_decl : method_decl {}
+| listamethod_decl method_decl {}
 
 
-method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
+method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
+
+  printf("declaracion de metodo2\n");
+  NodoArbol *aux= malloc(sizeof(NodoArbol));
+
+  aux->tipo=$1;
+  aux->tipoNodo=2;
+  aux->nombre= $2->info;
+  aux->cuerpo = $6;
+  aux->nrolinea =$2->linea;
+  aux->param = variableGlobalPila->lista;
+
+  eliminarNivelPila();
+  if(verificarMetodoDeclarado(aux->nombre)==1){
+    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+    exit(0);
+  };
+  $$ = aux;
+}
+|type ID PARENTESISABRE PARENTESISCIERRA block {
                 printf("declaracion de metodo1\n");
                 NodoArbol *aux= malloc(sizeof(NodoArbol));
 
@@ -276,26 +293,28 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                 $$ = aux;
                 }
 
-  |type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
-                                                  printf("declaracion de metodo2\n");
-                                                  NodoArbol *aux= malloc(sizeof(NodoArbol));
+  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {
+                                                    printf("declaracion de metodo4\n");
 
-                                                  aux->tipo=$1;
-                                                  aux->tipoNodo=2;
-                                                  aux->nombre= $2->info;
-                                                  aux->cuerpo = $6;
-                                                  aux->nrolinea =$2->linea;
-                                                  aux->param = variableGlobalPila->lista;
+                                                    NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                                                  eliminarNivelPila();
-                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
-                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
-                                                    exit(0);
-                                                  };
-                                                  $$ = aux;
+                                                    aux->tipo=NULL;
+                                                    aux->tipoNodo=2;
+                                                    aux->nombre= $2->info;
+                                                    aux->cuerpo = $6;
+                                                    aux->nrolinea =$2->linea;
+                                                    aux->param = variableGlobalPila->lista;
+                                                    if(verificarMetodoDeclarado(aux->nombre)==1){
+                                                      printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                      exit(0);
+                                                    };
+                                                    eliminarNivelPila();
+
+
+                                                    $$ = aux;
+
                                                   }
-
   |VOID ID PARENTESISABRE PARENTESISCIERRA block {
                                                   printf("declaracion de metodo3\n");
 
@@ -313,26 +332,6 @@ method_decl: type ID PARENTESISABRE PARENTESISCIERRA block {
                                                   $$ = aux;
                                                   }
 
-  |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {
-                                                  printf("declaracion de metodo4\n");
-
-                                                  NodoArbol *aux= malloc(sizeof(NodoArbol));
-
-                                                  aux->tipo=NULL;
-                                                  aux->tipoNodo=2;
-                                                  aux->nombre= $2->info;
-                                                  aux->cuerpo = $6;
-                                                  aux->nrolinea =$2->linea;
-                                                  aux->param = variableGlobalPila->lista;
-                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
-                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
-                                                    exit(0);
-                                                  };
-                                                  eliminarNivelPila();
-
-
-                                                  $$ = aux;
-                                                  }
 
 ;
 
@@ -378,9 +377,15 @@ listastatement : statement {$1->first=$1;$$=$1;}
 ;
 
 
-type:INTRES    {$$="int";}
+type:INTRES    {
+                aux="int";
+                $$=aux;
+                }
 
-  |BOOL   {$$="bool";}
+  |BOOL   {
+                  aux="bool";
+                  $$=aux;
+                  }
 
 ;
 
@@ -474,13 +479,14 @@ method_call: ID PARENTESISABRE PARENTESISCIERRA {
                                                 }
 
 ;
-param_call :param_callult {$$=$1->first;}
+
+param_call : ultparam_call {$$=$1->first;}
 
 ;
 
 
-param_callult : expr   { $1->first=$1; $$=$1;  }
-         | param_callult COMA expr {$3->first=$1->first; $1->next = $3; $$=$3;  }
+ultparam_call : expr   { $1->first=$1; $$=$1;  }
+         | ultparam_call COMA expr {$3->first=$1->first; $1->next = $3; $$=$3;  }
 
 ;
 
@@ -645,7 +651,7 @@ expr : expr MAS expr {
                                   $$=nuevo;
                                   }
 
-    | MENOS expr %prec UNARIO{
+    | MENOS expr %prec UNARIO {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                   nuevo->tipoNodo=15;
                                   nuevo->nrolinea =$1->linea;
