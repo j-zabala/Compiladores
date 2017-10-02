@@ -26,7 +26,60 @@ NodoArbol *listametodos;
 
 
 
-
+void imprimirNodo(NodoArbol nodo){
+  printf("TIPO NONO= %i", nodo.tipoNodo);
+/*  if(nodo.next!=NULL){
+    imprimirNodo(nodo.next);
+  }*/
+  if(nodo.tcondicion!=NULL){
+    imprimirNodo(nodo.tcondicion);
+  }
+  if(nodo.tthen!=NULL){
+    imprimirNodo(nodo.tthen);
+  }
+  if(nodo.telse!=NULL){
+    imprimirNodo(nodo.telse);
+  }
+  if(nodo.expresion!=NULL){
+    imprimirNodo(nodo.expresion);
+  }
+  if(nodo.cuerpo!=NULL){
+    imprimirNodo(nodo.cuerpo);
+  }
+  if(nodo.param!=NULL){
+    imprimirNodo(nodo.param);
+  }
+  if(nodo.call_params!=NULL){
+    imprimirNodo(nodo.call_params);
+  }
+  if(nodo.call_metodo!=NULL){
+    imprimirNodo(nodo.call_metodo);
+  }
+  if(nodo.first!=NULL){
+    imprimirNodo(nodo.first);
+  }
+  if(nodo.tipo!=NULL){
+    printf("TIPO= %s\n", nodo.tipo);
+  }
+  if(nodo.nombre!=NULL){
+    printf("NOMBRE= %s\n", nodo.nombre);
+  }
+  if(nodo.valorExpresion!=NULL){
+    imprimirNodo(nodo.valorExpresion);
+  }
+  if(nodo.op1!=NULL){
+    imprimirNodo(nodo.op1);
+  }
+  if(nodo.op2!=NULL){
+    imprimirNodo(nodo.op2);
+  }
+  if(nodo.valor!=NULL){
+    printf("VALOR= %i\n", nodo.valor);
+  }
+  if(nodo.nrolinea!=NULL){
+    printf("NUMERO DE LINEA= %i\n", nodo.nrolinea);
+  }
+}
 
 void nuevoNivelPila(){
  NodoPila *aux = malloc(sizeof(NodoPila));
