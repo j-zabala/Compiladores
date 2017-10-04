@@ -26,65 +26,86 @@ NodoArbol *listametodos;
 
 
 
-void imprimirNodo(NodoArbol nodo){
-  printf("TIPO NONO= %i", nodo.tipoNodo);
-/*  if(nodo.next!=NULL){
-    imprimirNodo(nodo.next);
-  }*/
-  if(nodo.tcondicion!=NULL){
-    imprimirNodo(nodo.tcondicion);
+void imprimirNodo(NodoArbol *nodo){
+  printf("nodo en la direccion: %p \n",nodo);
+  printf("TIPO NODO= %i \n", nodo->tipoNodo);
+
+  if(nodo->tcondicion!=NULL){
+    imprimirNodo(nodo->tcondicion);
   }
-  if(nodo.tthen!=NULL){
-    imprimirNodo(nodo.tthen);
+  if(nodo->tthen!=NULL){
+    imprimirNodo(nodo->tthen);
   }
-  if(nodo.telse!=NULL){
-    imprimirNodo(nodo.telse);
+  if(nodo->telse!=NULL){
+    imprimirNodo(nodo->telse);
   }
-  if(nodo.expresion!=NULL){
-    imprimirNodo(nodo.expresion);
+  if(nodo->expresion!=NULL){
+    imprimirNodo(nodo->expresion);
   }
-  if(nodo.cuerpo!=NULL){
-    imprimirNodo(nodo.cuerpo);
+
+  if(nodo->param!=NULL){
+    imprimirNodo(nodo->param);
   }
-  if(nodo.param!=NULL){
-    imprimirNodo(nodo.param);
+  if(nodo->call_params!=NULL){
+    imprimirNodo(nodo->call_params);
   }
-  if(nodo.call_params!=NULL){
-    imprimirNodo(nodo.call_params);
+  if(nodo->call_metodo!=NULL){
+    imprimirNodo(nodo->call_metodo);
   }
-  if(nodo.call_metodo!=NULL){
-    imprimirNodo(nodo.call_metodo);
+  if(nodo->first!=NULL){
+    printf("dir de mem del first %p \n",nodo->first);
   }
-  if(nodo.first!=NULL){
-    imprimirNodo(nodo.first);
+  if(nodo->tipo!=NULL){
+    printf("TIPO= %s\n", nodo->tipo);
   }
-  if(nodo.tipo!=NULL){
-    printf("TIPO= %s\n", nodo.tipo);
+  if(nodo->nombre!=NULL){
+    printf("NOMBRE= %s\n", nodo->nombre);
   }
-  if(nodo.nombre!=NULL){
-    printf("NOMBRE= %s\n", nodo.nombre);
+  if(nodo->valorExpresion!=NULL){
+    imprimirNodo(nodo->valorExpresion);
   }
-  if(nodo.valorExpresion!=NULL){
-    imprimirNodo(nodo.valorExpresion);
+  if(nodo->op1!=NULL){
+    imprimirNodo(nodo->op1);
   }
-  if(nodo.op1!=NULL){
-    imprimirNodo(nodo.op1);
+  if(nodo->op2!=NULL){
+    imprimirNodo(nodo->op2);
   }
-  if(nodo.op2!=NULL){
-    imprimirNodo(nodo.op2);
+  if(nodo->valor!=NULL){
+    printf("VALOR= %i\n", nodo->valor);
   }
-  if(nodo.valor!=NULL){
-    printf("VALOR= %i\n", nodo.valor);
+  if(nodo->nrolinea!=NULL){
+    printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
   }
-  if(nodo.nrolinea!=NULL){
-    printf("NUMERO DE LINEA= %i\n", nodo.nrolinea);
+
+  printf("el next de este nodo es %p \n",nodo->next);
+
+}
+
+void imprimirmetodos(){
+  printf("imprimir metodos \n");
+
+  NodoArbol *metodo = listametodos ;
+  NodoArbol *recorrido = metodo->cuerpo ;
+  while(metodo!=NULL){
+
+    while (recorrido != NULL) {
+      printf("recorrido = %p\n",recorrido );
+      imprimirNodo(recorrido);
+      //recorrido=recorrido->next;
+
+    }
+
+    metodo=metodo->nextlista;
+    recorrido = metodo->cuerpo;
   }
 }
+
 
 void nuevoNivelPila(){
  NodoPila *aux = malloc(sizeof(NodoPila));
  aux->lista = NULL;
  aux->nodoInferior=variableGlobalPila;
+ printf("se crea nivel nuevo (dir: %p), inferior %p \n ", aux, variableGlobalPila);
  variableGlobalPila = aux;
 
 }
@@ -114,14 +135,18 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
 
 }
 void inicializar (){
-  variableGlobalPila = (NodoPila*) malloc(sizeof(NodoPila));
-  listametodos=malloc(sizeof(NodoArbol));
+  //listametodos=malloc(sizeof(NodoArbol));
   listametodos=NULL;
-  nuevoNivelPila();
+
+  variableGlobalPila = (NodoPila*) malloc(sizeof(NodoPila));
+  variableGlobalPila->nodoInferior=NULL;
+  printf("dir de mem del inferior al global %p \n",variableGlobalPila->nodoInferior);
+  //nuevoNivelPila();
 
 }
 
 NodoArbol* buscarVariableSC (char* param ) {
+
   NodoArbol *recorrido = variableGlobalPila->lista;
   while(recorrido != NULL){
    if (strcmp(recorrido->nombre,param)==0){
@@ -134,11 +159,32 @@ NodoArbol* buscarVariableSC (char* param ) {
 
 
 NodoArbol* buscarVariable (char* param ) {
+
+  printf("VAMOS A IMPRIMIR LA TABLA DE VARIABLES\n");
+
   NodoPila *scope = variableGlobalPila;
   NodoArbol *recorrido = scope->lista;
-while(recorrido != NULL){
+  while(scope != NULL){
+    printf("NIVEL CON PUNTERO: %p\n",scope );
+    while(recorrido != NULL){
+     printf("%s %s | ",recorrido->tipo,recorrido->nombre);
+     recorrido = recorrido->nextlista;
+    }
+    printf("\n------------------------------------------\n" );
+    scope=scope->nodoInferior;
+    if (scope !=NULL){
+      recorrido = scope->lista;
+    }
+
+  }
+  printf("termino de impriir la tabla");
+  scope = variableGlobalPila;
+  recorrido = scope->lista;
+while(scope != NULL){
   while(recorrido != NULL){
-   if (strcmp(recorrido->nombre,param)==0){
+    printf("se va a buscar la variable %s",param);
+   printf("se va a comparar %s con %s ",param,recorrido->nombre);
+   if(strcmp(recorrido->nombre,param)==0){
      return recorrido;
    }
    recorrido = recorrido->nextlista;
@@ -273,7 +319,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();}
+    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();}
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
@@ -307,8 +353,8 @@ listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
 ;
 
 
-listamethod_decl : method_decl {}
-| listamethod_decl method_decl {}
+listamethod_decl : method_decl {$1->nextlista=listametodos;listametodos=$1;}
+| listamethod_decl method_decl {$2->nextlista=listametodos;listametodos=$2;}
 
 
 method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
