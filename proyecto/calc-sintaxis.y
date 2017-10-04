@@ -31,6 +31,7 @@ void imprimirNodo(NodoArbol *nodo){
   printf("TIPO NODO= %i \n", nodo->tipoNodo);
 
   if(nodo->tcondicion!=NULL){
+
     imprimirNodo(nodo->tcondicion);
   }
   if(nodo->tthen!=NULL){
@@ -87,16 +88,18 @@ void imprimirmetodos(){
   NodoArbol *metodo = listametodos ;
   NodoArbol *recorrido = metodo->cuerpo ;
   while(metodo!=NULL){
-
+    printf("vamos a imprimir metodo con nombre: %s\n",metodo->nombre);
     while (recorrido != NULL) {
       printf("recorrido = %p\n",recorrido );
       imprimirNodo(recorrido);
-      //recorrido=recorrido->next;
-
+      recorrido = recorrido->next;
     }
 
     metodo=metodo->nextlista;
-    recorrido = metodo->cuerpo;
+    if (metodo !=NULL){
+      recorrido = metodo->cuerpo;
+
+    }
   }
 }
 
