@@ -241,6 +241,52 @@ return 0;
 }
 
 
+// punter al metodo
+int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
+  int cant_ret_correctos=0;
+  NodoArbol* recorrido = primernodo;
+
+  while(recorrido!=NULL){
+    if(recorrido->tipoNodo==5){
+      cant_ret_correctos=cant_ret_correctos+verifTiposif(tipo,nombre_metodo,recorrido);
+    }
+    if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
+      cant_ret_correctos=cant_ret_correctos+verifTiposRet(tipo,nombre_metodo,recorrido);
+    }
+    recorrido=recorrido->next;
+  }
+  if (cant_ret_correctos==0){
+    printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
+    exit(0);
+  }
+  return cant_ret_correctos;
+}
+
+int verifTiposif(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
+  if(strcmp((nodo->tcondicion)->tipo,"bool")!=0){
+    printf("ERROR linea %i: la condicion del if no es una expresion booleana \n",nodo->nrolinea);
+  }
+  if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+
+
+}
+
+int verifTiposRet(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
+  if(strcmp(nodo->tipo,paramtipo)!=0){
+    printf("ERROR linea %i: el tipo del return no coincide con el de la funcion \n",nodo->nrolinea);
+  }
+  if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+
+
+}
+
+
+
+
+
+
+
+
 char *aux;
 
 NodoArbol *nodoauxiliar ; //este puntero apunta al primer statement cuando se arma la lista de los statements
