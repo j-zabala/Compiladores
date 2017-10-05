@@ -102,7 +102,131 @@ void imprimirmetodos(){
     }
   }
 }
+void graficarArbolNODOS(NodoArbol *nodo){
+  char* auxx;
+  FILE* fichero;
 
+  printf("nodo actual %p\n",nodo);
+  printf("nodo siguiente %p\n",nodo->nextlista);
+  printf("VOY A AGREGAR el nodo %p\n",nodo);
+  printf("abre archivo\n");
+  fichero = fopen("grafo.txt", "a");
+  putc('"',fichero);
+  sprintf(auxx, "%p", nodo);
+  fputs(auxx,fichero);
+  putc('"',fichero);
+  fputs("[label = ",fichero);
+  putc('"',fichero);
+  fputs("<f0> ",fichero);
+  fputs(auxx,fichero);
+  fputs("| <f1> ",fichero);
+  printf("voy a leer tiponodo\n" );
+  sprintf(auxx, "%i", nodo->tipoNodo);
+  printf("ya lei \n" );
+  fputs(auxx,fichero);
+  fputs("| <f2> ",fichero);
+  fputs(nodo->nombre,fichero);
+  fputs("| <f3> next",fichero);
+  fputs("| <f4> cuerpo",fichero);
+  putc('"',fichero);
+  fputs(" shape = ",fichero);
+  putc('"',fichero);
+  fputs("record",fichero);
+  putc('"',fichero);
+  fputs("];",fichero);
+  fclose(fichero);
+  printf("cerro archivo\n");
+  if(nodo->next!=NULL){
+    graficarArbolNODOS(nodo->next);
+  }
+  if(nodo->cuerpo!=NULL){
+    graficarArbolNODOS(nodo->cuerpo);
+  }
+  if(nodo->nextlista!=NULL&&nodo->tipoNodo==2){
+    graficarArbolNODOS(nodo->nextlista);
+  }
+  printf("ajajajajaj");
+  printf("termino nodo %p\n",nodo);
+  return;
+}
+
+void graficar (NodoArbol* nodo){
+  FILE* fichero;
+  fichero = fopen("grafo.txt", "w");
+  printf("%s\n","fichero abierto" );
+  fputs("digraph g {graph [rankdir = ",fichero);
+  putc('"',fichero);
+  fputs("LR",fichero);
+  putc('"',fichero);
+  fputs("];node [fontsize =",fichero);
+  fputs(" ",fichero);
+  putc('"',fichero);
+  fputs("16",fichero);
+  putc('"',fichero);
+  fputs(" shape = ",fichero);
+  putc('"',fichero);
+  fputs("ellipse",fichero);
+  putc('"',fichero);
+  fputs("];edge [];",fichero);
+  fclose(fichero);
+  printf("%s\n","fichero cerraso");
+  graficarArbolNODOS(nodo);
+  fichero = fopen("grafo.txt", "a");
+  putc('}',fichero);
+  fclose(fichero);
+  printf("termino graficar arbolnodos\n");
+}
+
+
+void graficarArbolARCOS(NodoArbol *nodo){
+  FILE* fichero;
+  fichero = fopen("grafo.txt", "a");
+ fclose(fichero);
+
+}
+
+
+
+
+
+// punter al metodo
+// int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
+//   int cant_ret_correctos=0;
+//   NodoArbol* recorrido = primernodo;
+//
+//   while(recorrido!=NULL){
+//     if(recorrido->tipoNodo==5){
+//       cant_ret_correctos=cant_ret_correctos+verifTiposif(tipo,nombre_metodo,recorrido);
+//     }
+//     if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
+//       cant_ret_correctos=cant_ret_correctos+verifTiposRet(tipo,nombre_metodo,recorrido);
+//     }
+//     recorrido=recorrido->next;
+//   }
+//   if (cant_ret_correctos==0){
+//     printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
+//     exit(0);
+//   }
+//   return cant_ret_correctos;
+// }
+//
+// int verifTiposif(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
+//   if(strcmp((nodo->tcondicion)->tipo,"bool")!=0){
+//     printf("ERROR linea %i: la condicion del if no es una expresion booleana \n",nodo->nrolinea);
+//   }
+//   if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+//
+//
+// }
+//
+// int verifTiposRet(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
+//   if(strcmp(nodo->tipo,paramtipo)!=0){
+//     printf("ERROR linea %i: el tipo del return no coincide con el de la funcion \n",nodo->nrolinea);
+//   }
+//   if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+//
+//
+// }
 
 void nuevoNivelPila(){
  NodoPila *aux = malloc(sizeof(NodoPila));
@@ -322,7 +446,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();}
+    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();graficar(listametodos->cuerpo);}
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
