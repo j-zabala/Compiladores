@@ -10,7 +10,7 @@ class {
                 int j;
                 return x + 1;
         }
-        void main() {
+        int main() {
                 int y;
                 y = 4;
                 if (y == 1) then {

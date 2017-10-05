@@ -241,32 +241,14 @@ return 0;
 }
 
 
-// punter al metodo
-int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
-  int cant_ret_correctos=0;
-  NodoArbol* recorrido = primernodo;
 
-  while(recorrido!=NULL){
-    if(recorrido->tipoNodo==5){
-      cant_ret_correctos=cant_ret_correctos+verifTiposif(tipo,nombre_metodo,recorrido);
-    }
-    if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
-      cant_ret_correctos=cant_ret_correctos+verifTiposRet(tipo,nombre_metodo,recorrido);
-    }
-    recorrido=recorrido->next;
-  }
-  if (cant_ret_correctos==0){
-    printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
-    exit(0);
-  }
-  return cant_ret_correctos;
-}
+int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo);
 
 int verifTiposif(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
   if(strcmp((nodo->tcondicion)->tipo,"bool")!=0){
     printf("ERROR linea %i: la condicion del if no es una expresion booleana \n",nodo->nrolinea);
   }
-  if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+  if(verifTipos(paramtipo,nombre_metodo,nodo->tthen)>0 &&verifTipos(paramtipo,nombre_metodo,nodo->telse)>0 ){return 1;}
 
 
 }
@@ -274,14 +256,44 @@ int verifTiposif(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
 int verifTiposRet(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
   if(strcmp(nodo->tipo,paramtipo)!=0){
     printf("ERROR linea %i: el tipo del return no coincide con el de la funcion \n",nodo->nrolinea);
+    exit(0);
   }
-  if(verifTipos(nodo->tthen)>0 &&verifTipos(nodo->telse)>0 ){return 1;}
+  return 1;
+}
+int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
+  int cant_ret_correctos=0;
+  NodoArbol* recorrido = primernodo;
+  printf("recorrido de statements en el main \n ");
+  while(recorrido!=NULL){
+    printf("nodo actual es:%i \n",recorrido->tipoNodo);
+    if(recorrido->tipoNodo==4){
+      printf("va a verificar en los if\n" );
+      cant_ret_correctos=cant_ret_correctos+verifTiposif(param_tipo,nombre_metodo,recorrido);
+    }
+    if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
+      cant_ret_correctos=cant_ret_correctos+verifTiposRet(param_tipo,nombre_metodo,recorrido);
+    }
+    recorrido=recorrido->next;
+  }
 
-
+  if (cant_ret_correctos==0){
+    printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
+    exit(0);
+  }
+  return cant_ret_correctos;
 }
 
 
+void controlTiposMetod(){
+  NodoArbol* metodo = listametodos;
+  while(metodo!=NULL){
+    verifTipos(metodo->tipo,metodo->nombre,metodo->cuerpo);
+    //metodo=metodo->nextlista;
+    metodo=NULL;
+  }
 
+
+}
 
 
 
@@ -368,7 +380,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();}
+    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();controlTiposMetod();}
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
@@ -447,7 +459,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
                                                     NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                                                    aux->tipo=NULL;
+                                                    aux->tipo="void";
                                                     aux->tipoNodo=2;
                                                     aux->nombre= $2->info;
                                                     aux->cuerpo = $6;
@@ -468,7 +480,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
                                                   NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                                                  aux->tipo=NULL;
+                                                  aux->tipo="void";
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
                                                   aux->cuerpo = $5;
@@ -573,6 +585,7 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
 
           | RETURN expr PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=6;
+                                        nuevo->tipo=$2->tipo;
                                         nuevo->expresion = $2;
                                         nuevo->nrolinea =$1;
                                         $$=nuevo;
@@ -580,6 +593,7 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
           | RETURN PUNTOYCOMA {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=7;
                                         nuevo->nrolinea =$1;
+                                        nuevo->tipo="void";
                                         $$=nuevo;
                                       }
           | ID ASIG expr PUNTOYCOMA {   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -833,15 +847,13 @@ expr : expr MAS expr {
                                   }
     | PARENTESISABRE expr PARENTESISCIERRA {$$=$2;}
     | ID{
-                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
-                                  nuevo->tipoNodo=16;
-                                  nuevo->nrolinea =$1->linea;
-                                  nuevo->op1 = buscarVariable($1->info);
-                                  if(nuevo->op1 == NULL){
-                                    printf("ERROR en linea %i : variable %s no declarada  \n",nuevo->nrolinea,$1->info);
+                                  NodoArbol *nuevo;
+                                  int nrolinea = $1->linea;
+                                  nuevo = buscarVariable($1->info);
+                                  if(nuevo == NULL){
+                                    printf("ERROR en linea %i : variable %s no declarada  \n",nrolinea,$1->info);
                                     exit(0);
                                   }
-                                  nuevo->tipo = nuevo->op1->tipo;
                                   $$=nuevo;
                                   }
     | method_call{$$=$1;}
