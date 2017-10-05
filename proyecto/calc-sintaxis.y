@@ -103,6 +103,7 @@ void imprimirmetodos(){
   }
 }
 void graficarArbolNODOS(NodoArbol *nodo){
+  if (nodo==NULL){return;}
   char* auxx;
   FILE* fichero;
 
@@ -111,29 +112,21 @@ void graficarArbolNODOS(NodoArbol *nodo){
   printf("VOY A AGREGAR el nodo %p\n",nodo);
   printf("abre archivo\n");
   fichero = fopen("grafo.txt", "a");
-  putc('"',fichero);
-  sprintf(auxx, "%p", nodo);
-  fputs(auxx,fichero);
-  putc('"',fichero);
-  fputs("[label = ",fichero);
-  putc('"',fichero);
-  fputs("<f0> ",fichero);
-  fputs(auxx,fichero);
-  fputs("| <f1> ",fichero);
+    // putc('"',fichero);
+   sprintf(auxx, "\"%p\"[label = \"<f0> %p| <f1> %i| <f2> %s| <f3> next| <f4> cuerpo\"shape = \"record\"];",nodo,nodo,nodo->tipoNodo,nodo->nombre);
+  // fputs(auxx,fichero);
+  // putc('"',fichero);
+
   printf("voy a leer tiponodo\n" );
-  sprintf(auxx, "%i", nodo->tipoNodo);
+
   printf("ya lei \n" );
+
+
+
+
+
   fputs(auxx,fichero);
-  fputs("| <f2> ",fichero);
-  fputs(nodo->nombre,fichero);
-  fputs("| <f3> next",fichero);
-  fputs("| <f4> cuerpo",fichero);
-  putc('"',fichero);
-  fputs(" shape = ",fichero);
-  putc('"',fichero);
-  fputs("record",fichero);
-  putc('"',fichero);
-  fputs("];",fichero);
+
   fclose(fichero);
   printf("cerro archivo\n");
   if(nodo->next!=NULL){
@@ -143,19 +136,18 @@ void graficarArbolNODOS(NodoArbol *nodo){
     graficarArbolNODOS(nodo->cuerpo);
   }
   if(nodo->nextlista!=NULL&&nodo->tipoNodo==2){
-    graficarArbolNODOS(nodo->nextlista);
+   graficarArbolNODOS(nodo->nextlista);
   }
   printf("ajajajajaj");
   printf("termino nodo %p\n",nodo);
-  return;
 }
 
 void graficar (NodoArbol* nodo){
   FILE* fichero;
-  fichero = fopen("grafo.txt", "w");
+  fichero = fopen("grafo.txt","w");
   printf("%s\n","fichero abierto" );
-  fputs("digraph g {graph [rankdir = ",fichero);
-  putc('"',fichero);
+  fputs("digraph g {graph [rankdir = \" ",fichero);
+  //putc('"',fichero);
   fputs("LR",fichero);
   putc('"',fichero);
   fputs("];node [fontsize =",fichero);
@@ -170,11 +162,14 @@ void graficar (NodoArbol* nodo){
   fputs("];edge [];",fichero);
   fclose(fichero);
   printf("%s\n","fichero cerraso");
+
   graficarArbolNODOS(nodo);
-  fichero = fopen("grafo.txt", "a");
-  putc('}',fichero);
-  fclose(fichero);
-  printf("termino graficar arbolnodos\n");
+  // graficarArbolARCOS(nodo);
+  //printf("perro");
+  //fichero = fopen("grafo.txt","a");
+  //putc('}',fichero);
+  //fclose(fichero);
+  //printf("termino graficar arbolnodos\n");
 }
 
 
@@ -446,7 +441,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();graficar(listametodos->cuerpo);}
+    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();graficar(listametodos);}
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
 
