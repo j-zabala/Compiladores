@@ -17,6 +17,7 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 #include "infostring.c"
 #include "infoint.c"
 #include "arbol.c"
+#include "nodosIntermedio.c"
 #include <time.h>
 #include <stdbool.h>
 
@@ -24,7 +25,21 @@ Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 NodoPila *variableGlobalPila;
 NodoArbol *listametodos;
 
+NodoInt* codigoIntermedio;
+NodoInt* ultcodigoIntermedio;
 
+
+void agregarCodIntermedio(NodoInt* nuevo){
+  if (codigoIntermedio==NULL){
+    codigoIntermedio = nuevo;
+
+  }else{
+    ultcodigoIntermedio->next=nuevo;
+  }
+  
+  ultcodigoIntermedio = nuevo;
+
+}
 
 void imprimirNodo(NodoArbol *nodo){
   // printf("nodo en la direccion: %p \n",nodo);
