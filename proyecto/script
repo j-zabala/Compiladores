@@ -1,5 +1,24 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]
+then
+        echo "Haz el favor de sólo especificar un directorio"
+        exit 1;
+fi
+
+if [ $1 == "" ]
+then    
+    echo "no se especifico nombre del archivo"
+    exit 1;
+fi
+
+if [ ! -f $1 ]
+   then
+    echo "archivo no encontrado"
+    exit 1;
+fi
+
 flex calc-lexico.l 
 bison -d calc-sintaxis.y
 gcc lex.yy.c calc-sintaxis.tab.c
+./a.out $1

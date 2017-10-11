@@ -27,8 +27,8 @@ NodoArbol *listametodos;
 
 
 void imprimirNodo(NodoArbol *nodo){
-  printf("nodo en la direccion: %p \n",nodo);
-  printf("TIPO NODO= %i \n", nodo->tipoNodo);
+  // printf("nodo en la direccion: %p \n",nodo);
+  // printf("TIPO NODO= %i \n", nodo->tipoNodo);
 
   if(nodo->tcondicion!=NULL){
 
@@ -108,7 +108,7 @@ void nuevoNivelPila(){
  NodoPila *aux = malloc(sizeof(NodoPila));
  aux->lista = NULL;
  aux->nodoInferior=variableGlobalPila;
- printf("se crea nivel nuevo (dir: %p), inferior %p \n ", aux, variableGlobalPila);
+ //printf("se crea nivel nuevo (dir: %p), inferior %p \n ", aux, variableGlobalPila);
  variableGlobalPila = aux;
 
 }
@@ -138,13 +138,13 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
 
 }
 void inicializar (){
-  //listametodos=malloc(sizeof(NodoArbol));
+
   listametodos=NULL;
 
   variableGlobalPila = (NodoPila*) malloc(sizeof(NodoPila));
   variableGlobalPila->nodoInferior=NULL;
-  printf("dir de mem del inferior al global %p \n",variableGlobalPila->nodoInferior);
-  //nuevoNivelPila();
+  //printf("dir de mem del inferior al global %p \n",variableGlobalPila->nodoInferior);
+
 
 }
 
@@ -163,30 +163,30 @@ NodoArbol* buscarVariableSC (char* param ) {
 
 NodoArbol* buscarVariable (char* param ) {
 
-  printf("VAMOS A IMPRIMIR LA TABLA DE VARIABLES\n");
+  // printf("VAMOS A IMPRIMIR LA TABLA DE VARIABLES\n");
 
   NodoPila *scope = variableGlobalPila;
   NodoArbol *recorrido = scope->lista;
   while(scope != NULL){
-    printf("NIVEL CON PUNTERO: %p\n",scope );
+    // printf("NIVEL CON PUNTERO: %p\n",scope );
     while(recorrido != NULL){
-     printf("%s %s | ",recorrido->tipo,recorrido->nombre);
+    //  printf("%s %s | ",recorrido->tipo,recorrido->nombre);
      recorrido = recorrido->nextlista;
     }
-    printf("\n------------------------------------------\n" );
+    // printf("\n------------------------------------------\n" );
     scope=scope->nodoInferior;
     if (scope !=NULL){
       recorrido = scope->lista;
     }
 
   }
-  printf("termino de impriir la tabla");
+  // printf("termino de impriir la tabla\n");
   scope = variableGlobalPila;
   recorrido = scope->lista;
 while(scope != NULL){
   while(recorrido != NULL){
-    printf("se va a buscar la variable %s",param);
-   printf("se va a comparar %s con %s ",param,recorrido->nombre);
+    // printf("se va a buscar la variable %s\n",param);
+  //  printf("se va a comparar %s con %s \n",param,recorrido->nombre);
    if(strcmp(recorrido->nombre,param)==0){
      return recorrido;
    }
@@ -263,11 +263,11 @@ int verifTiposRet(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
 int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
   int cant_ret_correctos=0;
   NodoArbol* recorrido = primernodo;
-  printf("recorrido de statements en el main \n ");
+  // printf("recorrido de statements en el main \n ");
   while(recorrido!=NULL){
-    printf("nodo actual es:%i \n",recorrido->tipoNodo);
+    // printf("nodo actual es:%i \n",recorrido->tipoNodo);
     if(recorrido->tipoNodo==4){
-      printf("va a verificar en los if\n" );
+      // printf("va a verificar en los if\n" );
       cant_ret_correctos=cant_ret_correctos+verifTiposif(param_tipo,nombre_metodo,recorrido);
     }
     if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
@@ -295,7 +295,25 @@ void controlTiposMetod(){
 
 }
 
+void verificarTipoParametros(NodoArbol* nodo){
+    NodoArbol* metodo = nodo->call_metodo;
 
+    NodoArbol *recorridollamada = nodo->call_params;
+    NodoArbol *recorridodecl = metodo->param;
+    while(recorridollamada!=NULL && recorridodecl!=NULL){
+      if(strcmp(recorridodecl->tipo,recorridollamada->tipo)!=0){
+        printf("ERROR linea %i : un parametro no es del tipo correcto\n",nodo->nrolinea );
+        exit(0);
+      }
+      recorridollamada=recorridollamada->next;
+      recorridodecl=recorridodecl->nextlista;
+    }
+    if(recorridodecl!=recorridollamada){
+      printf("ERROR linea %i : no se esta llamando a la funcion con la cantidad de parametros correcta\n",nodo->nrolinea );
+      exit(0);
+    }
+
+}
 
 
 
@@ -380,35 +398,45 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();imprimirmetodos();controlTiposMetod();}
+    program: {inicializar();} clases {eliminarNivelPila();controlTiposMetod();}
 
-clases: CLASS  LLAVEABRE LLAVECIERRA          {printf("TERMINO1\n");}
+clases: CLASS  LLAVEABRE LLAVECIERRA          {
+  // printf("TERMINO1\n");
+}
 
-	| CLASS  LLAVEABRE  listavar_decl   LLAVECIERRA  {printf("\nTERMINO2");}
+	| CLASS  LLAVEABRE  listavar_decl   LLAVECIERRA  {
+    // printf("\nTERMINO2");
+}
 
-  | CLASS  LLAVEABRE listamethod_decl  LLAVECIERRA  {printf("\nTERMINO3");}
+  | CLASS  LLAVEABRE listamethod_decl  LLAVECIERRA  {
+    // printf("\nTERMINO3");
+  }
 
-  | CLASS  LLAVEABRE listavar_decl  listamethod_decl  LLAVECIERRA  {printf("\nTERMINO4");}
+  | CLASS  LLAVEABRE listavar_decl  listamethod_decl  LLAVECIERRA  {
+    // printf("\nTERMINO4");
+  }
 
 ;
 
-var_decl: type  listaID PUNTOYCOMA   {printf("\ndeclaracion de var finalizada");};
+var_decl: type  listaID PUNTOYCOMA   {
+  // printf("\ndeclaracion de var finalizada");
+};
 ;
 
 listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
-                      printf("%s\n","la variable no esta en el scope!!" );
+                      // printf("%s\n","la variable no esta en el scope!!" );
                       nuevaVariable($1->info,aux,$1->linea);
                     }else{
-                      printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$1->linea,$1->info  );
+                      printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info  );
                       }
 
                     }
 | listaID COMA ID {
                   if(buscarVariableSC($3->info)==NULL){
-                    printf("%s\n","la variable no esta en el scope!!" );
+                  //  printf("%s\n","la variable no esta en el scope!!" );
                     nuevaVariable($3->info,aux,$3->linea);
                   }else{
-                    printf("linea %i VARIABLE %s YA DECLARADA!!! \n",$3->linea,$3->info  );
+                    printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info  );
                     }
   }
 ;
@@ -420,7 +448,7 @@ listamethod_decl : method_decl {$1->nextlista=listametodos;listametodos=$1;}
 
 method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
-  printf("declaracion de metodo2\n");
+  // printf("declaracion de metodo2\n");
   NodoArbol *aux= malloc(sizeof(NodoArbol));
 
   aux->tipo=$1;
@@ -438,7 +466,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
   $$ = aux;
 }
 |type ID PARENTESISABRE PARENTESISCIERRA block {
-                printf("declaracion de metodo1\n");
+                // printf("declaracion de metodo1\n");
                 NodoArbol *aux= malloc(sizeof(NodoArbol));
 
                 aux->tipo=$1;
@@ -455,7 +483,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
 
   |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {
-                                                    printf("declaracion de metodo4\n");
+                                                    // printf("declaracion de metodo4\n");
 
                                                     NodoArbol *aux= malloc(sizeof(NodoArbol));
 
@@ -476,7 +504,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
                                                   }
   |VOID ID PARENTESISABRE PARENTESISCIERRA block {
-                                                  printf("declaracion de metodo3\n");
+                                                  // printf("declaracion de metodo3\n");
 
                                                   NodoArbol *aux= malloc(sizeof(NodoArbol));
 
@@ -599,7 +627,16 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
           | ID ASIG expr PUNTOYCOMA {   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=8;
                                         nuevo->nombre=$1->info;
+                                        nuevo->op1=buscarVariable($1->info);
+                                        if(nuevo->op1==NULL){
+                                          printf("ERROR linea %i : variable %s no declarada\n",$2->linea,$1->info);
+                                          exit(0);
+                                        }
                                         nuevo->expresion = $3;
+                                        if(strcmp((nuevo->op1)->tipo,(nuevo->expresion)->tipo)!=0){
+                                          printf("ERROR linea %i : se esta asignando una expr %s a una variable %s \n",$2->linea,(nuevo->op1)->tipo,(nuevo->expresion)->tipo);
+                                          exit(0);
+                                        }
                                         nuevo->nrolinea =$2->linea;
                                         $$=nuevo;
                                       }
@@ -621,7 +658,9 @@ method_call: ID PARENTESISABRE PARENTESISCIERRA {
                                                   printf("ERROR en linea %i : llamada metodo no declarado previamente \n",nuevo->nrolinea );
                                                   exit(0);
                                                 }
+                                                verificarTipoParametros(nuevo);
                                                 nuevo->tipo=(nuevo->call_metodo)->tipo;
+
                                                 $$=nuevo;
 
                                                 }
@@ -635,6 +674,7 @@ method_call: ID PARENTESISABRE PARENTESISCIERRA {
                                                   exit(0);
                                                 }
                                                 nuevo->call_params =$3;
+                                                verificarTipoParametros(nuevo);
                                                 nuevo->tipo=nuevo->call_metodo->tipo;
                                                 $$=nuevo;
 
@@ -847,14 +887,17 @@ expr : expr MAS expr {
                                   }
     | PARENTESISABRE expr PARENTESISCIERRA {$$=$2;}
     | ID{
-                                  NodoArbol *nuevo;
-                                  int nrolinea = $1->linea;
-                                  nuevo = buscarVariable($1->info);
-                                  if(nuevo == NULL){
-                                    printf("ERROR en linea %i : variable %s no declarada  \n",nrolinea,$1->info);
+                                  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                  nuevo->tipoNodo=16;
+
+                                  nuevo->nrolinea =$1->linea;
+                                  nuevo->op1 = buscarVariable($1->info);
+                                  if(nuevo->op1 == NULL){
+                                    printf("ERROR en linea %i : variable %s no declarada  \n",nuevo->nrolinea,$1->info);
                                     exit(0);
                                   }
-                                  $$=nuevo;
+                                    nuevo->tipo = (nuevo->op1)->tipo;
+                                    $$=nuevo;
                                   }
     | method_call{$$=$1;}
     | literal{$$=$1;}

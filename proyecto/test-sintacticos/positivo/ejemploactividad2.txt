@@ -1,0 +1,23 @@
+class {
+
+        int jota(int equis) {
+                int jota;
+                return 2;
+        }
+
+        int iiih(int equis,bool holanda) {
+                int jota;
+                return equis + 1;
+        }
+        int main() {
+                int ye;
+                bool zeta;
+                zeta =4;
+                iiih(ye,zeta);
+                if (ye == 1) then {
+                                return 1;
+                        } else {
+                                return ye;
+                        }
+        }
+}

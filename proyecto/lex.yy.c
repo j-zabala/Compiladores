@@ -880,88 +880,114 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(comment):
 #line 38 "calc-lexico.l"
-{ printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
+{
+                  //printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?");
+
+                  }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 42 "calc-lexico.l"
+#line 45 "calc-lexico.l"
 { yylval.infoi =malloc(sizeof(InfoInt));
                               yylval.infoi->info = atoi(yytext);
                               yylval.infoi->linea = yylineno;
 
-                                printf("INT : %d\n",atoi(yytext));
+                                //printf("INT : %d\n",atoi(yytext));
                                 return INT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 52 "calc-lexico.l"
-{printf("CLASS \n");yylval.i=yylineno;return CLASS;}
+#line 55 "calc-lexico.l"
+{
+        //printf("CLASS \n");
+        yylval.i=yylineno;return CLASS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 53 "calc-lexico.l"
-{printf("if \n");yylval.i=yylineno;return IF;}
+#line 58 "calc-lexico.l"
+{
+        //printf("if \n");
+        yylval.i=yylineno;return IF;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 54 "calc-lexico.l"
-{printf("else \n");yylval.i=yylineno;return ELSE;}
+#line 61 "calc-lexico.l"
+{
+      //printf("else \n");
+      yylval.i=yylineno;return ELSE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 55 "calc-lexico.l"
-{printf("VOID \n");yylval.i=yylineno;return VOID;}
+#line 64 "calc-lexico.l"
+{
+      //printf("VOID \n");
+      yylval.i=yylineno;return VOID;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 56 "calc-lexico.l"
-{printf("then \n");yylval.i=yylineno;return THEN;}
+#line 67 "calc-lexico.l"
+{
+      //printf("then \n");
+      yylval.i=yylineno;return THEN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 57 "calc-lexico.l"
-{printf("int \n");yylval.i=yylineno;return INTRES;}
+#line 70 "calc-lexico.l"
+{
+      //printf("int \n");
+      yylval.i=yylineno;return INTRES;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 58 "calc-lexico.l"
-{printf("bool \n");yylval.i=yylineno;return BOOL;}
+#line 73 "calc-lexico.l"
+{
+      //printf("bool \n");
+      yylval.i=yylineno;return BOOL;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 59 "calc-lexico.l"
-{printf("RETURN \n");yylval.i=yylineno;return RETURN;}
+#line 76 "calc-lexico.l"
+{
+      //printf("RETURN \n");
+      yylval.i=yylineno;return RETURN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 60 "calc-lexico.l"
-{printf("WHILE \n");yylval.i=yylineno;return WHILE;}
+#line 79 "calc-lexico.l"
+{
+      //printf("WHILE \n");
+      yylval.i=yylineno;return WHILE;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 61 "calc-lexico.l"
-{printf("true \n");yylval.i=yylineno;return TRUE;}
+#line 82 "calc-lexico.l"
+{
+      //printf("true \n");
+      yylval.i=yylineno;return TRUE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 62 "calc-lexico.l"
-{printf("false \n");yylval.i=yylineno;return FALSE;}
+#line 85 "calc-lexico.l"
+{
+      //printf("false \n");
+      yylval.i=yylineno;return FALSE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 66 "calc-lexico.l"
+#line 91 "calc-lexico.l"
 {        yylval.infos =malloc(sizeof(InfoString));
                                 yylval.infos->info = malloc(sizeof(char*)*yyleng);
                                 strcpy(yylval.infos->info , yytext);
                                 yylval.infos->linea = yylineno;
-                                printf("ID : %s\n",yytext);
+                            //    printf("ID : %s\n",yytext);
                                 return ID;
                               }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 76 "calc-lexico.l"
-{  printf("%s\n",yytext);
+#line 101 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
                           yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
@@ -971,8 +997,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 84 "calc-lexico.l"
-{ printf("%s\n",yytext); yylval.infos =malloc(sizeof(InfoString));
+#line 110 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -980,8 +1008,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 89 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 117 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -989,8 +1019,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 96 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 126 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -998,8 +1030,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 102 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 134 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
 
                           strcpy(yylval.infos->info, yytext);
@@ -1008,8 +1042,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 109 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 143 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1017,8 +1053,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 115 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 151 "calc-lexico.l"
+{
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1026,8 +1064,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 120 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 158 "calc-lexico.l"
+{
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1035,8 +1075,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 125 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 165 "calc-lexico.l"
+{
+//printf("%s\n",yytext);
+yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1044,8 +1086,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 130 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 172 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1053,8 +1097,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 135 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 179 "calc-lexico.l"
+{
+//printf("%s\n",yytext);
+yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1062,8 +1108,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 140 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 186 "calc-lexico.l"
+{
+                          // printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1071,8 +1119,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 145 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 193 "calc-lexico.l"
+{
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1080,8 +1130,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 150 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 200 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                             yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1089,8 +1141,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 155 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+#line 207 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
+                            yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1098,10 +1152,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 160 "calc-lexico.l"
-{  printf("%s\n",yytext);
+#line 214 "calc-lexico.l"
+{
+                          //printf("%s\n",yytext);
                           yylval.infos =malloc(sizeof(InfoString));
-                          printf("llaveqabre");
+                          //printf("llaveqabre");
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1109,9 +1164,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 169 "calc-lexico.l"
+#line 224 "calc-lexico.l"
 {
-                        printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
@@ -1119,8 +1175,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 176 "calc-lexico.l"
-{  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));yylval.infos->info = malloc(sizeof(char*)*yyleng);
+#line 232 "calc-lexico.l"
+{
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return COMA;}
@@ -1128,21 +1186,21 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 181 "calc-lexico.l"
+#line 239 "calc-lexico.l"
 ; /*ignorar lineas comentadas*/
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 184 "calc-lexico.l"
+#line 242 "calc-lexico.l"
 ; /* ignore all the rest */
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 187 "calc-lexico.l"
+#line 245 "calc-lexico.l"
 ECHO;
 	YY_BREAK
-#line 1146 "lex.yy.c"
+#line 1204 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2155,7 +2213,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 187 "calc-lexico.l"
+#line 245 "calc-lexico.l"
 
 
 

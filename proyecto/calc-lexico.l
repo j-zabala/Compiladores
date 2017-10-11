@@ -35,7 +35,10 @@ alpha_num ({alpha}|{digit}|_)
 <comment>"*/" { BEGIN(INITIAL); }
 <comment>\n   { }
 <comment>.    { }
-<comment><<EOF>> { printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?"); }
+<comment><<EOF>> {
+                  //printf("comentario no cierra antes del fin del archivo. ¿Falta cierre de comentario?");
+
+                  }
 
 
 
@@ -43,23 +46,45 @@ alpha_num ({alpha}|{digit}|_)
                               yylval.infoi->info = atoi(yytext);
                               yylval.infoi->linea = yylineno;
 
-                                printf("INT : %d\n",atoi(yytext));
+                                //printf("INT : %d\n",atoi(yytext));
                                 return INT;}
 
 
 
 
-class {printf("CLASS \n");yylval.i=yylineno;return CLASS;}
-if  {printf("if \n");yylval.i=yylineno;return IF;}
-else  {printf("else \n");yylval.i=yylineno;return ELSE;}
-void  {printf("VOID \n");yylval.i=yylineno;return VOID;}
-then  {printf("then \n");yylval.i=yylineno;return THEN;}
-int  {printf("int \n");yylval.i=yylineno;return INTRES;}
-bool  {printf("bool \n");yylval.i=yylineno;return BOOL;}
-return {printf("RETURN \n");yylval.i=yylineno;return RETURN;}
-while  {printf("WHILE \n");yylval.i=yylineno;return WHILE;}
-true  {printf("true \n");yylval.i=yylineno;return TRUE;}
-false  {printf("false \n");yylval.i=yylineno;return FALSE;}
+class {
+        //printf("CLASS \n");
+        yylval.i=yylineno;return CLASS;}
+if  {
+        //printf("if \n");
+        yylval.i=yylineno;return IF;}
+else  {
+      //printf("else \n");
+      yylval.i=yylineno;return ELSE;}
+void  {
+      //printf("VOID \n");
+      yylval.i=yylineno;return VOID;}
+then  {
+      //printf("then \n");
+      yylval.i=yylineno;return THEN;}
+int  {
+      //printf("int \n");
+      yylval.i=yylineno;return INTRES;}
+bool  {
+      //printf("bool \n");
+      yylval.i=yylineno;return BOOL;}
+return {
+      //printf("RETURN \n");
+      yylval.i=yylineno;return RETURN;}
+while  {
+      //printf("WHILE \n");
+      yylval.i=yylineno;return WHILE;}
+true  {
+      //printf("true \n");
+      yylval.i=yylineno;return TRUE;}
+false  {
+      //printf("false \n");
+      yylval.i=yylineno;return FALSE;}
 
 
 
@@ -67,13 +92,14 @@ false  {printf("false \n");yylval.i=yylineno;return FALSE;}
                                 yylval.infos->info = malloc(sizeof(char*)*yyleng);
                                 strcpy(yylval.infos->info , yytext);
                                 yylval.infos->linea = yylineno;
-                                printf("ID : %s\n",yytext);
+                            //    printf("ID : %s\n",yytext);
                                 return ID;
                               }
 
 
 
-[+]                   {  printf("%s\n",yytext);
+[+]                   {
+                          //printf("%s\n",yytext);
                           yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
@@ -81,85 +107,114 @@ false  {printf("false \n");yylval.i=yylineno;return FALSE;}
 
                           return MAS;}
 
-[-]                   { printf("%s\n",yytext); yylval.infos =malloc(sizeof(InfoString));
+[-]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return MENOS;}
-[!]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[!]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return EXCLAMACION;}
 
 
-[/]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[/]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return DIVISION;}
 
-[%]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[%]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
 
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return MOD;}
 
-[*]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[*]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return POR;}
 
-[;]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[;]                   {
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return PUNTOYCOMA;}
-[(]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[(]                   {
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return PARENTESISABRE;}
-[)]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[)]                   {
+//printf("%s\n",yytext);
+yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return PARENTESISCIERRA;}
-[=]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[=]                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return ASIG;}
-==                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+==                   {
+//printf("%s\n",yytext);
+yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return EQUALS;}
-[>]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[>]                   {
+                          // printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return MAYORQUE;}
-[<]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+[<]                   {
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return MENORQUE;}
-"&&"                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+"&&"                   {
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                             yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
                           return AND;}
-"||"                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+"||"                   {
+                          //printf("%s\n",yytext);
+                            yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return OR;}
-[{]                   {  printf("%s\n",yytext);
+[{]                   {
+                          //printf("%s\n",yytext);
                           yylval.infos =malloc(sizeof(InfoString));
-                          printf("llaveqabre");
+                          //printf("llaveqabre");
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -167,13 +222,16 @@ false  {printf("false \n");yylval.i=yylineno;return FALSE;}
 
 
 [}]                   {
-                        printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));
                         yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return LLAVECIERRA;}
 
-[,]                   {  printf("%s\n",yytext);yylval.infos =malloc(sizeof(InfoString));yylval.infos->info = malloc(sizeof(char*)*yyleng);
+[,]                   {
+                        //printf("%s\n",yytext);
+                        yylval.infos =malloc(sizeof(InfoString));yylval.infos->info = malloc(sizeof(char*)*yyleng);
                         strcpy(yylval.infos->info, yytext);
                         yylval.infos->linea = yylineno;
                         return COMA;}
