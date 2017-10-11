@@ -193,7 +193,9 @@ while(scope != NULL){
    recorrido = recorrido->nextlista;
   }
   scope=scope->nodoInferior;
-  recorrido = scope->lista;
+  if (scope !=NULL){
+    recorrido = scope->lista;
+  }
 }
   return NULL;
 }
@@ -627,7 +629,9 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
           | ID ASIG expr PUNTOYCOMA {   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=8;
                                         nuevo->nombre=$1->info;
+                                        //printf("asignacion, nombre variable %s \n",$1->info);
                                         nuevo->op1=buscarVariable($1->info);
+                                        //printf("volvio de buscar la variable");
                                         if(nuevo->op1==NULL){
                                           printf("ERROR linea %i : variable %s no declarada\n",$2->linea,$1->info);
                                           exit(0);

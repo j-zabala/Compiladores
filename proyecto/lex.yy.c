@@ -1077,8 +1077,8 @@ case 26:
 YY_RULE_SETUP
 #line 165 "calc-lexico.l"
 {
-//printf("%s\n",yytext);
-yylval.infos =malloc(sizeof(InfoString));
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -1099,8 +1099,8 @@ case 28:
 YY_RULE_SETUP
 #line 179 "calc-lexico.l"
 {
-//printf("%s\n",yytext);
-yylval.infos =malloc(sizeof(InfoString));
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;

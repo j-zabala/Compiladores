@@ -1,0 +1,23 @@
+#!/bin/bash
+if [ ! -d $1 ]
+then
+        echo "El archivo $1 especificado no es un directorio, abortando."
+        exit 1;
+fi
+
+directorioTest=$1
+
+./scriptCOMP
+for archivo in `ls $directorioTest`
+do
+
+        if [ -f $directorioTest/$archivo ]
+        then
+                echo "RESULTADOS DE $directorioTest/$archivo"
+
+                ./a.out $directorioTest/$archivo
+
+                echo "----------------------------------------------------------------"
+        fi
+        
+done

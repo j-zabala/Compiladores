@@ -163,8 +163,8 @@ false  {
                         yylval.infos->linea = yylineno;
                         return PARENTESISABRE;}
 [)]                   {
-//printf("%s\n",yytext);
-yylval.infos =malloc(sizeof(InfoString));
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;
@@ -177,8 +177,8 @@ yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->linea = yylineno;
                           return ASIG;}
 ==                   {
-//printf("%s\n",yytext);
-yylval.infos =malloc(sizeof(InfoString));
+                          //printf("%s\n",yytext);
+                          yylval.infos =malloc(sizeof(InfoString));
                           yylval.infos->info = malloc(sizeof(char*)*yyleng);
                           strcpy(yylval.infos->info, yytext);
                           yylval.infos->linea = yylineno;

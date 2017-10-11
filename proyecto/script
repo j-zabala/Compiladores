@@ -7,7 +7,7 @@ then
 fi
 
 if [ $1 == "" ]
-then    
+then
     echo "no se especifico nombre del archivo"
     exit 1;
 fi
@@ -18,7 +18,5 @@ if [ ! -f $1 ]
     exit 1;
 fi
 
-flex calc-lexico.l 
-bison -d calc-sintaxis.y
-gcc lex.yy.c calc-sintaxis.tab.c
+./scriptCOMP
 ./a.out $1
