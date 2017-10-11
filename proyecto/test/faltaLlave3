@@ -8,9 +8,10 @@ class {
                 if (y == 1) then {
                                 return 1;
                         } else {
-                                return inc(y);
+                                return i(y);
                         }
 
 }
+
 
 /*falta { en la linea anterior*/

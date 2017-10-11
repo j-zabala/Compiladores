@@ -11,7 +11,7 @@ class {
         }
         int main() {
                 int ye;
-                //bool zeta;
+                bool zeta;
                 zeta =4;
                 iiih(ye,zeta);
                 if (ye == 1) then {
