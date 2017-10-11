@@ -1,5 +1,18 @@
-EJECUTAR ./script para compilar 
+PROYECTO COMPILADORES 2017
 
-ejecutar ./a.out "ARCHIVO PARA ANALIZAR"
+INTEGRANTES: Bruno Zergoni Coronel, Valentin Vivaldi y Joaquin Zabala
 
-si termina y no surge ningun error significa que cumple con la gramatica
+
+UTILIZACION:
+
+./script <ruta de archivo>   Compila "el compilador" y se ejecuta sobre un archivo especificado
+
+./scriptCOMP                 solo Compila el "compilador"
+
+./scriptDIR  <ruta a un directorio>                Compila "el compilador" y se ejecuta sobre todos los archivos
+
+                                                    del directorio especificado
+
+IMPORTANTE: en la carpeta test se incluyen algunos test de los diferentes
+errores sintacticos y semanticos que encuentra el compilador, si no se indica ningun error
+significa que el codigo ingresador es correcto en sintaxis y en semantica.
