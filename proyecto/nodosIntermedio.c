@@ -16,7 +16,8 @@ typedef struct nodoInt {
         int tipoNodo;
         struct nodoInt *next;//proxima sentnecia
         char *tipo;
-        char *nombre;
+        char *operacion;
+        char * nombre;
         struct nodoArbol* op1;
         struct nodoArbol* op2;
         struct nodoArbol* op3;

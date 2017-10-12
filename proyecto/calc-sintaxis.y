@@ -28,6 +28,8 @@ NodoArbol *listametodos;
 NodoInt* codigoIntermedio;
 NodoInt* ultcodigoIntermedio;
 
+int cantidadTemporales;
+int cantidadLabels;
 
 void agregarCodIntermedio(NodoInt* nuevo){
   if (codigoIntermedio==NULL){
@@ -36,10 +38,131 @@ void agregarCodIntermedio(NodoInt* nuevo){
   }else{
     ultcodigoIntermedio->next=nuevo;
   }
-  
+
   ultcodigoIntermedio = nuevo;
 
 }
+
+void metodoAIntermedio(NodoArbol* nodo){
+  if(nodo->tipoNodo!=2){
+    printf("ERROR EL NODO PASADO NO ES UN METODO\n");
+    exit(0);
+  }
+  NodoInt* nuevo = malloc(sizeof(NodoInt));
+  nuevo->nombre = nodo->nombre;
+  nuevo->operacion = "METODO";
+  agregarCodIntermedio(nuevo);
+
+  pasarACodIntermedio(nodo->cuerpo);
+
+  nuevo = malloc(sizeof(NodoInt));
+  nuevo->nombre = nodo->nombre;
+  nuevo->operacion = "ENDMETODO";
+  agregarCodIntermedio(nuevo);
+
+
+}
+
+char* nuevoLabel(char* info){
+  char* aux;
+  sprintf(aux,"LAB%d%s",cantidadLabels++,info);
+  return aux;
+}
+
+
+NodoArbol* nuevaVariableTemporal(char* tipo){
+  NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+  sprintf(nuevo->nombre,"T%d",cantidadTemporales);
+  cantidadTemporales++;
+  nuevo->tipo=tipo;
+  printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
+  return nuevo;
+}
+
+
+NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
+  if(nodo == NULL){return NULL;}
+  NodoInt* nuevo;
+  char* lab1;
+  char* lab2;
+
+  if(nodo->tipoNodo==3||nodo->tipoNodo==4){
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "JMPFalso";
+    nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
+    char* labELSE = nuevoLabel("ELSE");
+    char* labF = nuevoLabel("ENDIF");
+    nuevo->nombre = labELSE;
+    agregarCodIntermedio(nuevo);
+
+    pasarACodIntermedio(nodo->tthen); //agrega cod intermedio del then
+
+    nuevo = malloc(sizeof(NodoInt));
+    nuevo->operacion = "JMP";        //agrega el JMP al final de el if
+    nuevo->nombre =labF;
+    agregarCodIntermedio(nuevo);
+
+    nuevo = malloc(sizeof(NodoInt));
+    nuevo->operacion = "LABEL"; // agrega el label al que se salta por si no cumple la cond
+    nuevo->nombre =labELSE;
+    agregarCodIntermedio(nuevo);
+
+    pasarACodIntermedio(nodo->telse);//agrega cod intermedio del else
+
+    nuevo = malloc(sizeof(NodoInt));
+    nuevo->operacion = "LABEL"; // agrega el label que marca el fin del if
+    nuevo->nombre =labF;
+    agregarCodIntermedio(nuevo);
+  }
+
+
+  if(nodo->tipoNodo==5){
+    lab1 = nuevoLabel("WHILE");
+    lab2 = nuevoLabel("ENDWHILE");
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion="LABEL";
+    nuevo->nombre = lab1;
+    agregarCodIntermedio(nuevo);
+
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "JMPFalso";
+    nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
+    nuevo->nombre= lab2;
+    agregarCodIntermedio(nuevo);
+
+    pasarACodIntermedio(nodo->cuerpo);
+
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "JMP";
+    nuevo->nombre= lab1;
+    agregarCodIntermedio(nuevo);
+
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion="LABEL";
+    nuevo->nombre = lab2;
+    agregarCodIntermedio(nuevo);
+  }
+
+  if(nodo->tipoNodo==3){
+
+  }
+  if(nodo->tipoNodo==3){
+
+  }
+  if(nodo->tipoNodo==3){
+
+  }
+
+  if(nodo->next!=NULL){
+    pasarACodIntermedio(nodo->next);
+  }
+
+};
+
+
+
+
+
 
 void imprimirNodo(NodoArbol *nodo){
   // printf("nodo en la direccion: %p \n",nodo);
@@ -133,6 +256,7 @@ variableGlobalPila = variableGlobalPila->nodoInferior;
 
 }
 
+
 void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
   NodoArbol *aux = malloc(sizeof(NodoArbol));
   aux->tipoNodo = 1;
@@ -153,7 +277,8 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
 
 }
 void inicializar (){
-
+  cantidadTemporales=0;
+  cantidadLabels=0;
   listametodos=NULL;
 
   variableGlobalPila = (NodoPila*) malloc(sizeof(NodoPila));
