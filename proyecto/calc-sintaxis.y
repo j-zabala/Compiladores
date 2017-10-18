@@ -143,20 +143,110 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     agregarCodIntermedio(nuevo);
   }
 
-  if(nodo->tipoNodo==3){
+  if(nodo->tipoNodo==6||nodo->tipoNodo==7){
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "RETURN";
+    if(nodo->tipoNodo==6){
+      nuevo->op1 = pasarACodIntermedio(nodo->expresion);
+    }
+
+    agregarCodIntermedio(nuevo);
+  }
+
+  if(nodo->tipoNodo==8){
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "MOV";
+    nuevo->op2 = pasarACodIntermedio(nodo->expresion);
+    nuevo->op1= nodo->op1;
 
   }
-  if(nodo->tipoNodo==3){
+  if(nodo->tipoNodo==9){
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "CALL";
+    nuevo->nombre= nodo->nombre;
+    //ver si apuntamos al metodo
+    loadParametros(nodo->call_params);
+    agregarCodIntermedio(nuevo);
+  }
+  if(nodo->tipoNodo==9){
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "CALL";
+    nuevo->nombre= nodo->nombre;
+    //ver si apuntamos al metodo
+    loadParametros(nodo->call_params);
+    agregarCodIntermedio(nuevo);
+  }
+  //literal entero
+  if(nodo->tipoNodo==12||nodo->tipoNodo==13){
+    NodoArbol *temp=nuevaVariableTemporal(nodo->tipo);
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->operacion = "MOV";
+    nuevo->op1 = temp;
+    nuevo->op2 = nodo;
+    agregarCodIntermedio(nuevo);
+    return temp;
+  }
+
+if(nodo->tipoNodo==14){
+    NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
+    NodoArbol* temp2 = pasarACodIntermedio(nodo->op2);
+    NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
+    nuevo= malloc(sizeof(NodoInt));
+
+    nuevo->op1=temp1;
+    nuevo->op2=temp2;
+    nuevo->op3=res;
+
+    if(strcmp("*",nodo->nombre)==0){
+      nuevo->operacion="MULT";
+    }
+    if(strcmp("+",nodo->nombre)==0){
+      nuevo->operacion="SUM";
+    }
+    if(strcmp("/",nodo->nombre)==0){
+      nuevo->operacion="DIV";
+    }
+    if(strcmp("%",nodo->nombre)==0){
+      nuevo->operacion="MOD";
+    }
+    if(strcmp(">",nodo->nombre)==0){
+      nuevo->operacion="MAYORQUE";
+    }
+    if(strcmp("<",nodo->nombre)==0){
+      nuevo->operacion="MENORQUE";
+    }
+    if(strcmp("==",nodo->nombre)==0){
+      nuevo->operacion="IGUAL";
+    }
+    agregarCodIntermedio(nuevo);
+    return res;
+}
+  if(nodo->tipoNodo==15){
+    NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
+    NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
+    nuevo= malloc(sizeof(NodoInt));
+    nuevo->op1=temp1;
+    nuevo->op3=res;
+    if(strcmp("!",nodo->nombre)==0){
+      nuevo->operacion="NEGBOOL";
+    }
+    if(strcmp("-",nodo->nombre)==0){
+      nuevo->operacion="NEGINT";
+    }
+    agregarCodIntermedio(nuevo);
+    return res;
 
   }
-  if(nodo->tipoNodo==3){
+  if(nodo->tipoNodo==16){
+    return nodo->op1;
 
   }
-
+  //avanza a la siguiente sentencia
   if(nodo->next!=NULL){
     pasarACodIntermedio(nodo->next);
   }
 
+  return NULL;
 };
 
 
