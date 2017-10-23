@@ -31,6 +31,14 @@ NodoInt* ultcodigoIntermedio;
 int cantidadTemporales;
 int cantidadLabels;
 
+void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
+
+NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
+
+void loadParametros(NodoArbol* parameters){//hacer 
+
+}
+
 void agregarCodIntermedio(NodoInt* nuevo){
   if (codigoIntermedio==NULL){
     codigoIntermedio = nuevo;
@@ -158,7 +166,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     nuevo->operacion = "MOV";
     nuevo->op2 = pasarACodIntermedio(nodo->expresion);
     nuevo->op1= nodo->op1;
-
+    agregarCodIntermedio(nuevo);
   }
   if(nodo->tipoNodo==9){
     nuevo= malloc(sizeof(NodoInt));
@@ -245,11 +253,44 @@ if(nodo->tipoNodo==14){
   if(nodo->next!=NULL){
     pasarACodIntermedio(nodo->next);
   }
-
+/*  if(nodo->next==NULL){ //guarda la ultima instruccion de la list de codigo intermedio
+    ultcodigoIntermedio=nodo;
+  }*/
   return NULL;
 };
 
+void imprimirLista(NodoInt* nodo){
+  if(nodo!=NULL){
+     if(nodo->tipoNodo!=NULL){
+       printf("TIPO NODO: %i\n", nodo->tipoNodo);
+     }
 
+    if(nodo->tipo!=NULL){
+      printf("TIPO: %s\n", nodo->tipo);
+    }
+    if(nodo->operacion!=NULL){
+      printf("OPERACION: %s\n", nodo->operacion);
+    }
+    if(nodo->nombre!=NULL){
+      printf("NOMBRE: %s\n", nodo->nombre);
+    }
+    if(nodo->op1!=NULL){
+        printf("OP1:\n");
+        imprimirNodo(nodo->op1);
+    }
+    if(nodo->op2!=NULL){
+        printf("OP2:\n");
+        imprimirNodo(nodo->op2);
+    }
+    if(nodo->op3!=NULL){
+        printf("OP3:\n");
+        imprimirNodo(nodo->op3);
+    }
+    if (nodo->next!=NULL){
+      imprimirLista(nodo->next);
+    }
+  }
+}
 
 
 
@@ -299,10 +340,10 @@ void imprimirNodo(NodoArbol *nodo){
   if(nodo->op2!=NULL){
     imprimirNodo(nodo->op2);
   }
-  if(nodo->valor!=NULL){
+  if((nodo->valor)!=NULL){
     printf("VALOR= %i\n", nodo->valor);
   }
-  if(nodo->nrolinea!=NULL){
+  if((nodo->nrolinea)!=NULL){
     printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
   }
 
@@ -630,7 +671,9 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 
 %%
 
-    program: {inicializar();} clases {eliminarNivelPila();controlTiposMetod();}
+    program: {
+      inicializar();} clases {eliminarNivelPila();controlTiposMetod();//pasarACodIntermedio(listametodos);imprimirLista(codigoIntermedio);
+    }
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {
   // printf("TERMINO1\n");
