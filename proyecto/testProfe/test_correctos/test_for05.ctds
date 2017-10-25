@@ -1,8 +1,8 @@
 class{
 
-int A[5] ;
-float B [56];
-bool C[10];
+int a ;
+int b;
+bool c;
 
 int par(){
    return 15;
@@ -11,14 +11,12 @@ int par(){
 
 int pruArreglos(int b, int c ){
         int i;
-        A[0] = 2;
+        i=1;
+        a = 2;
+        a = i + 2;
 
 
-        for i = par() , par() +5 {
-               A[i] = i + 2;
-        }
-
-        return A[1];
+        return a;
 
 
 }
@@ -26,7 +24,7 @@ int pruArreglos(int b, int c ){
 
 int main(){
 
-    printI(pruArreglos(4,8 ));
+    
 
     return 1;
 

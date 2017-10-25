@@ -1,28 +1,24 @@
-class main{
+class{
 
-void met(integer n){
-
-        
-	integer i;         
-        integer total;
+void met(int n){
+	int i;
+        int total;
 
         total = 1;
         i = 4;
 	while(i > 0){
 
-		total += total * i;  
+		total = total * i;
 		i = i - 1;
 
 	}
 	return;
 
-} 
+}
 
-void printI(integer i)extern;
 void  main (){
-  printI( met(5) ); //Error met es de tipo void, no puede usarse como expresion
   return;
 
 }
 
-} // end class 
+} // end class

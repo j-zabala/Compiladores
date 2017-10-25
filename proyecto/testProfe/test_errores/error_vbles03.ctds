@@ -1,14 +1,14 @@
-class main{
+class{
 
-integer factorial(integer n){
+int factorial(int n){
 
-	integer i = n;  // no permite inicializar en las declaraciones
-	integer total = 1; // no permite inicializar en las declaraciones
- 
+	int i = n;  // no permite inicializar en las declaraciones
+	int total = 1; // no permite inicializar en las declaraciones
+
 
 	while(i > 0){
 
-		total += total * i; 
+		total = total * i;
 		i = i - 1;
 
 	}
@@ -20,4 +20,4 @@ integer factorial(integer n){
 void main(){
    return ;
 }
-} // end class 
+} // end class

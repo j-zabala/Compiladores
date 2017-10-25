@@ -1,8 +1,8 @@
-class main{
+class{
 
 /* Sumatoria de flotantes,
-   ej: sumatoria(4) = 4.0 + 3.0 + 2.0 + 1.0
-       sumatoria(4.5) = 4.5 + 3.5+ 2.5+ 1.5+ 0.5
+   ej: sumatoria(4) = 30 + 30 + 30 + 30
+       sumatoria(30) = 30 + 30+ 30+ 30+ 30
  */
 
 int sumatoria(int b){
@@ -13,24 +13,23 @@ int sumatoria(int b){
         i = b;
 
 	while(i > 0  || i > 0 )   {
-		if(i > 0){
+		if(i > 0)then{
 			total = total + i;
                 }
-		i -= 1;
+		i = i-1;
 	} /* fin while */
 	res = total;
 	return res;
 
 }
 
-void printf(int f) extern;
 
 void main(){
      int f;
      int a;
      a = 8;
      f = sumatoria(a);
-     printf(f);
+
      return;
 }
 

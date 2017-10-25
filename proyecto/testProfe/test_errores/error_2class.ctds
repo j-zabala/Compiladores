@@ -1,14 +1,14 @@
 
 /* Error clases repetidas*/
 
-class test_class{
-   float c;
-   void alo(integer x){
+class {
+   int c;
+   void alo(int x){
       x= x + 1;
       return;
    }
 
-   void alo2(integer x){
+   void alo2(int x){
       alo(); // Error alo tiene un parametro
       x=  alo(2) + 1; //error metido void usado como expr
       return;
@@ -17,28 +17,28 @@ class test_class{
 }
 
 class test_class{
-   float e;
-   void alo(integer x){
+   int e;
+   void alo(int x){
       x= x + 1;
       return;
    }
 
-   void alo2(integer x){
-      alo(2); 
+   void alo2(int x){
+      alo(2);
       x=  1;
       return;
    }
 
 }
 
-class main{  //ERROR falta main
-   float c;
-   void alo(integer x){
+class{  //ERROR falta main
+   int c;
+   void alo(int x){
       x= x + 1;
       return;
    }
 
-   void alo2(integer x){
+   void alo2(int x){
       alo(2);
       x=   x + 1;
       return;

@@ -17,7 +17,7 @@ int potencia(int x, int n){
         i = 1;
         prod = 10;
 
-	if (n < 0){
+	if (n < 0)then{
 		n = -n;
 		neg = true;
 	}
@@ -26,7 +26,7 @@ int potencia(int x, int n){
 		prod = prod * x * 20;
 		i = i + 1;
 	}
-	if (!(!neg)){ //neg true
+	if (!(!neg))then{ //neg true
 		return 1/prod;
         }
 	else{
@@ -54,10 +54,10 @@ int multiples(int x, int y){
         k = 0;
         n = 5;
 
-	if(x > y){
+	if(x > y)then{
 
 
-              if (m < a) {
+              if (m < a)then {
                  res = x;
               }
               else{
@@ -65,22 +65,22 @@ int multiples(int x, int y){
               }
         }
 	else{
-		while(j <= n){
+		while(j < n){
 
-			while i <= n  {
+			while i < n  {
 
 				while(((k < n || k == n))){
-					if( b == 3 ){
+					if( b == 3 )then{
 						res = res + 20;
                                         }
 					else{
 						res = res - (100 / 20);
                                         }
 
-					k += 1;
+					k = k+1;
 				}
 
-				if( a < x && 00 < x){
+				if( a < x && 00 < x)then{
 					res = 350 + 40 * res - 4980;
                                 }
 				else{
@@ -105,7 +105,6 @@ int multiples(int x, int y){
 
 }
 
-void printf(int f) extern;
 
 void main(){
      int f;
@@ -115,7 +114,7 @@ void main(){
      w = 43;
      m= -76;
      f = potencia(a, 2);
-     printf(multiples(a,f+20));
+
      return;
 }
 

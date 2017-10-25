@@ -1,5 +1,5 @@
-class main{
-   float c;
+class{
+   int c;
 
    void main(){ //WARNING multiples main (podria ser un warning o un error)
       int x;

@@ -11,16 +11,16 @@ int potencia(int x, int n){
         i = 1;
         prod = 1;
 
-	if (n < 0){
+	if (n < 0)then{
 		n = -n;
 		neg = !neg;
 	}
 
-	while(i <= n){
+	while(i < n){
 		prod = prod * x;
 		i = i + 1;
 	}
-	if (!(!neg)){
+	if (!(!neg))then{
 		return 1/prod;
         }
 	else{
@@ -36,7 +36,7 @@ void main(){
      int a;
      a = 8;
      f = potencia(a, 2);
-     printF(f);
+
      return;
 }
 

@@ -1,4 +1,4 @@
-intclass main{
+class{
 
 int w;
 int m;
@@ -17,7 +17,7 @@ int potencia(int x, int n){
         i = 1;
         prod = 10;
 
-	if (n < 0){
+	if (n < 0)then{
 		n = -n;
 		neg = true;
 	}
@@ -26,7 +26,7 @@ int potencia(int x, int n){
 		prod = prod * x * 20;
 		i = i + 1;
 	}
-	if (!(!neg)){ //neg true
+	if (!(!neg))then{ //neg true
 		return 10/prod;
         }
 	else{
@@ -55,7 +55,6 @@ void main(){
      m= -76;
      a = 800;
      f = potencia(a, 2);
-     printf(multRepeat(res,f));
      return;
 }
 

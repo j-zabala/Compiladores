@@ -1,30 +1,28 @@
-class main{
+class{
 
-float promedio (float nota1, float nota2, float nota3){
+int promedio (int nota1, int nota2, int nota3){
 
-	if ((nota1 > nota3) && (nota2 > nota3)){
-		return (nota1 + nota2)/2.0;
+	if ((nota1 > nota3) && (nota2 > nota3))then{
+		return (nota1 + nota2)/30;
 	}
-	if ((nota1 > nota2) && (nota3 > nota2)){
-		return (nota1 + nota3)/2.0;
+	if ((nota1 > nota2) && (nota3 > nota2))then{
+		return (nota1 + nota3)/30;
 	}
-	if ((nota2 > true) && (nota3 > nota1)){ //error comparaciones deben ser del mismo tipo
-		return (nota3 + nota2)/2.0;
+	if ((nota2 > true) && (nota3 > nota1))then{ //error comparaciones deben ser del mismo tipo
+		return (nota3 + nota2)/30;
 	}
-	if (!(nota1 == nota2) && (nota1 != nota3) && !(nota2 == nota3)){
+	if (!(nota1 == nota2) && (nota1 != nota3) && !(nota2 == nota3))then{
 		return nota1;
 	}
 }
 
 
-void printF(float f)extern;
 
 /*
-Saca el promedio entre las dos notas mas altas.
+Saca el promedio entre las dos notas mas altas
 */
 
-integer main(){ 
-    printF(promedio( 3.3, 7.66 , -10.0) );
+int main(){
     return 1;
 }
 

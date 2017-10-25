@@ -1,23 +1,23 @@
-class main{
-   float c;
+class{
+   int c;
 
-   void alo(bool b, integer  x){
+   void alo(bool b, int  x){
       x= x + 1;
       return ; 
    }
 
-   integer  alo2(integer  x){
+   int  alo2(int  x){
       alo(true, x);
       x=  x + 1; 
       return x; 
    }
  
    void main(){
-        integer  y;
+        int  y;
         y = 7;
         c = y *8;
         y = alo2(y, 5, c); // Error alo2 tiene un unico parametro
-        y = alo2(-5.3); // Error alo2 toma un entero
+        y = alo2(-30); // Error alo2 toma un entero
         alo((c+3)*y, false); // Error el orden de los tipos de los parametros esta mal
         return;
    }

@@ -11,7 +11,7 @@ int breaks(int g){
           i = i + 1;
 
              { //bloque 2
-	          if(g < 0){
+	          if(g < 0)then{
 	                aux=false;
                    }
 	           else{
@@ -29,7 +29,7 @@ int breaks(int g){
 
 
 int main(){
-   printI(breaks(1) );
+
    return 1;
 }
 

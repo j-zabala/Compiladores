@@ -19,7 +19,7 @@ int pruArreglos(int b, int c ){
 
 int main(){
 
-    printf(pruArreglos(4,8 ));
+
 
     return 1;
 

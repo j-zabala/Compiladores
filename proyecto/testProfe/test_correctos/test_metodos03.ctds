@@ -1,31 +1,31 @@
-class main {
-	
+class {
+
 	bool res;
 
-	
-	integer inc (integer x) {
+
+	int inc (int x) {
 		return x+1;
 	}
-	integer resto(integer x, float y) {
-		
-		integer res;
-		
-		if (x > 3*2) {
+	int resto(int x, int y) {
+
+		int res;
+
+		if (x > 3*2)then {
 			res = x / 3;
 		}
 		else {
-			res = x%2;
+			res = x+2;
 		}
 		return res;
 	}
 
-        void printI(integer i)extern;
-	
-       integer main() {
-                integer A[1];
+
+
+       int main() {
+                int a;
                 res = false;
-		 A[0] = resto(inc(5),10.2);
-                printI(A[1-1]);
+		 a = resto(inc(5),102);
+
                 return 1;
 	}
 }

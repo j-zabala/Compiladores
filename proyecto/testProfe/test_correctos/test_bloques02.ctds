@@ -3,19 +3,20 @@ class {
 int breaks(int g){
       int  i;
       bool j;
+      bool aux;
+
       i = 0;
       j=true;
-      bool=aux;
       aux=true;
       while(i < 10 && aux){
       { //bloque 1
           int j;
           i = i + 1;
           { //bloque 2
-             float j;
+             int j;
              { //bloque 3
-                  j = 2.3;
-	          if(g < 0){
+                  j = 30;
+	          if(g < 0)then{
 	                aux=false;
                    }
 	           else{
@@ -31,10 +32,9 @@ int breaks(int g){
 
 }
 
-void printI(int i) extern;
 
 int main(){
-   printI(breaks( 1) );
+
    return 1;
 }
 

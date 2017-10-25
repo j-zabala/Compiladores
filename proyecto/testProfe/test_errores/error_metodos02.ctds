@@ -1,19 +1,19 @@
-class main{
-   float c;
+class{
+   int c;
 
-   void alo(integer x){
+   void alo(int x){
       x= x + 1;
-      return x; // Error alo no puede retornar nada porq retorna void.
+      return x; // Error alo no puede retornar nada porq retorna void 
    }
 
-   integer alo2(integer x){
+   int alo2(int x){
       alo(x);
       x=  x + 1; 
       return; // error alo2 debe retornar un entero
    }
  
    void main(){
-        integer y;
+        int y;
         y = 7;
         c = y *8;
         alo2(y);

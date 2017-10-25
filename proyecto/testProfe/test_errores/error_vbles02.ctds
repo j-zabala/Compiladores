@@ -1,25 +1,25 @@
-class main{
+class{
 
-integer factorial(integer n){
+int factorial(int n){
 
-        
-	integer _i;         
+
+	int _i;
         bool 9while; //no puede comenzar con nro
-        integer total;
+        int total;
         i = 4;
 	while(i > 0){
 
-		total += Total * i; //Error total no declarada 
+		total = Total * i; //Error total no declarada
 		i = i - 1;
 
 	}
 	return total;
 
-} 
+}
 
 void  main (){
   return;
 
 }
 
-} // end class 
+} // end class

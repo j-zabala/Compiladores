@@ -1,27 +1,25 @@
-class main{
+class{
 
-integer pruif(integer b, integer c ){
-	
-        float res[8];
-        integer i;   
+int pruif(int b, int c ){
 
-	if(b > c) // Error o no depende de su gramatica, el if tiene q tener llaves
-		res[0] = 1 - c;   
+        int res;
+        int i;
 
-       if(b > c) {}// Error o no depende de su gramatica, el body no puede estar vacio
-		       
- 
+	if(b > c)then // Error o no depende de su gramatica, el if tiene q tener llaves
+		res = 1 - c;
 
-	return res[b];
-		
+       if(b > c)then{}// Error o no depende de su gramatica, el body no puede estar vacio
+
+
+
+	return res;
+
 }
 
-void printI(integer i)extern;
 
-integer main(){
+int main(){
 
-    printI( pruif(4,8 ) + 5 );
-     //Error falta return;    
+     //Error falta return;
 }
 
 }
