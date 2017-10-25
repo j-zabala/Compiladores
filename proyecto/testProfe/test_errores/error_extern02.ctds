@@ -1,0 +1,24 @@
+class{
+
+void met(int n){
+	int i;
+        int total;
+
+        total = 1;
+        i = 4;
+	while(i > 0){
+
+		total = total * i;
+		i = i - 1;
+
+	}
+	return;
+
+}
+
+void  main (){
+  return;
+
+}
+
+} // end class

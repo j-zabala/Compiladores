@@ -1,0 +1,22 @@
+/* error clases anidadas */
+
+class{
+   int c;
+   void alo(int x){
+      x= x + 1;
+   }
+
+   void alo2(int x){
+      alo();
+      x=  alo() + 1;
+   }
+
+  class{
+      int c;
+      void alo(int x){
+      x= x + 1;
+      }
+
+  }
+
+}

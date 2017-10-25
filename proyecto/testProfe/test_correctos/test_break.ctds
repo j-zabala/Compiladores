@@ -1,0 +1,31 @@
+class{
+
+int breaks(int g){
+      bool aux;
+      int  i;
+      i = 0;
+      aux=true;
+      while(i < 10){
+	i = i + 1;
+	if(g < 0)then{
+	     aux=false;
+        }
+	else{
+
+        }
+      }
+
+	return i;
+
+
+
+
+}
+
+int main(){
+   return 1;
+}
+
+
+
+}

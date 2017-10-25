@@ -1,0 +1,56 @@
+class{
+
+int  breaks(int g){
+      int   i;
+      bool j;
+      i = 0;
+
+
+      while(i < 10){
+	{ //bloque 1
+          int j;
+          i = i + 1;
+
+             { //bloque 2
+                  j = 30; //correcto
+	          if(g < 0)then{
+
+                   }
+	           else{
+
+                        { //bloque 3
+                          int  j;
+
+                          { //bloque 4
+
+                              { //bloque 5
+                                   j = true; //ERROR j es int
+
+                              } //fin bloque 5
+
+                           } //fin bloque 4
+	                    j = 3; //correcto
+                        } //fin bloque 3
+	                ;
+                   }
+             } //fin bloque 2
+        }//fin bloque 1
+
+     } //fin while
+
+     j=true;//correcto
+
+	return i;
+
+}
+
+
+
+int  main(){
+
+   return 1;
+}
+
+
+
+}

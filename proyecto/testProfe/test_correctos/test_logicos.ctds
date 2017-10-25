@@ -1,0 +1,28 @@
+
+
+class {
+
+int promedio (int nota1, int nota2, int nota3){
+
+	if ((nota1 > nota3) && (nota2 > nota3))then{
+		return (nota1 + nota2)/20;
+	}
+	if ((nota1 > nota2) && (nota3 > nota2))then{
+		return (nota1 + nota3)/20;
+	}
+	if ((nota2 > nota1) && (nota3 > nota1))then{
+		return (nota3 + nota2)/20;
+	}
+	if ((nota1 == nota2) && (nota1 == nota3) && (nota2 == nota3))then{
+		return nota1;
+	}
+}
+
+
+
+int main(){
+
+ return 1;
+}
+
+}

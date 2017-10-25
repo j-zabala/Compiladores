@@ -1,0 +1,43 @@
+class {
+
+int breaks(int g){
+      int  i;
+      bool j;
+      bool aux;
+
+      i = 0;
+      j=true;
+      aux=true;
+      while(i < 10 && aux){
+      { //bloque 1
+          int j;
+          i = i + 1;
+          { //bloque 2
+             int j;
+             { //bloque 3
+                  j = 30;
+	          if(g < 0)then{
+	                aux=false;
+                   }
+	           else{
+
+                   }
+             } //fin bloque 3
+          }//fin floque 2
+       }//fin bloque 1
+
+     } //fin while
+
+	return i;
+
+}
+
+
+int main(){
+
+   return 1;
+}
+
+
+
+}

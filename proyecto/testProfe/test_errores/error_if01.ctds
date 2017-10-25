@@ -1,0 +1,25 @@
+class{
+
+int pruif(int b, int c ){
+
+        int res;
+        int i;
+
+	if(b > c)then // Error o no depende de su gramatica, el if tiene q tener llaves
+		res = 1 - c;
+
+       if(b > c)then{}// Error o no depende de su gramatica, el body no puede estar vacio
+
+
+
+	return res;
+
+}
+
+
+int main(){
+
+     //Error falta return;
+}
+
+}

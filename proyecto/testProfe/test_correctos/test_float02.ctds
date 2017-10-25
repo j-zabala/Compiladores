@@ -1,0 +1,36 @@
+class{
+
+/* Sumatoria de flotantes,
+   ej: sumatoria(4) = 30 + 30 + 30 + 30
+       sumatoria(30) = 30 + 30+ 30+ 30+ 30
+ */
+
+int sumatoria(int b){
+	int total;
+	int i;
+	int res;
+        total = 0;
+        i = b;
+
+	while(i > 0  || i > 0 )   {
+		if(i > 0)then{
+			total = total + i;
+                }
+		i = i-1;
+	} /* fin while */
+	res = total;
+	return res;
+
+}
+
+
+void main(){
+     int f;
+     int a;
+     a = 8;
+     f = sumatoria(a);
+
+     return;
+}
+
+}

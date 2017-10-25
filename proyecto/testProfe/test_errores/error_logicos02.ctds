@@ -1,0 +1,35 @@
+class{
+
+int promedio (int nota1, int nota2, int nota3){
+
+	if ((nota1 > nota3) && (nota2 > nota3))then{
+		return (nota1 + nota2)/30;
+	}
+	if ((nota1 > nota2) && (nota3 > nota2))then{
+		return (nota1 + nota3)/30;
+	}
+	if ((nota2 > nota3) && (nota3 > nota1))then{
+		return (nota3 + nota2)/30;
+	}
+	if (!(nota1 == nota2) || !(nota1 == nota3) || !(nota2) )then{ //ERROR ! tiene q tomar arg de tipo bool
+		return nota1;
+	}
+
+}
+
+bool  pruPrec(bool  b, bool  b_2){
+  return (true || false && true || !b || !!b_2 );
+
+}
+
+
+/*
+Saca el promedio entre las dos notas mas altas
+*/
+
+int main(){
+
+ return 1;
+}
+
+}

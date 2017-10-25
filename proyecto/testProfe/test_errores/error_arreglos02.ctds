@@ -1,0 +1,22 @@
+class{
+
+int a ;
+int b ;
+bool c;
+
+int pruArreglos(int b, int c ){
+        a = true; // Error a es de tipo int
+	return a; //Error acceso fuera de rango, a tiene 5 lugares, indexados del 0 al 4
+}
+
+
+
+int main(){
+
+
+
+    return 1;
+
+}
+
+}

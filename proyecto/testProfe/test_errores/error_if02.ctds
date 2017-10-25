@@ -1,0 +1,33 @@
+class{
+
+bool b;
+
+int pruif(int b, int c ){
+
+        int res;
+        bool i;
+
+	if(b)then{ // Error la expresion debe ser de tipo bool
+		res = 1 - c;
+        }
+        if ( i = true )then{ //ERROr la asignacion no retorna valor
+           res  = res+30;
+        }
+        else{
+
+        return 1;
+       }
+
+	return res;
+
+}
+
+
+int main(){
+
+    return 1;
+
+
+}
+
+}

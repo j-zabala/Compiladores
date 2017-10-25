@@ -35,7 +35,9 @@ void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 
+
 void agregarCodIntermedio(NodoInt* nuevo);
+
 
 
 void loadParametros(NodoArbol* parameters){
@@ -913,10 +915,11 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
                                                                         $$=nuevo;
                                                                       }
 
-          | WHILE expr block {          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+          | WHILE PARENTESISABRE expr PARENTESISCIERRA block {
+                                      NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=5;
-                                        nuevo->tcondicion = $2;
-                                        nuevo->cuerpo = $3;
+                                        nuevo->tcondicion = $3;
+                                        nuevo->cuerpo = $5;
                                         nuevo->nrolinea =$1;
                                         $$=nuevo;
                                       }
