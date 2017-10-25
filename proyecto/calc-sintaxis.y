@@ -108,10 +108,11 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     printf("null pasarACodIntermedio\n");
     return NULL;}
   printf("despues del null en pasarACodIntermedio\n");
+  imprimirNodo(nodo);
   NodoInt* nuevo;
   char* lab1;
   char* lab2;
-  if(nodo->tipoNodo==2){
+  if(nodo->tipoNodo==2){ //declaracion de funcion
     metodoAIntermedio(nodo);
   }
   if(nodo->tipoNodo==3||nodo->tipoNodo==4){
