@@ -191,18 +191,12 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     nuevo->op1= nodo->op1;
     agregarCodIntermedio(nuevo);
   }
+
   if(nodo->tipoNodo==9){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
-    //ver si apuntamos al metodo
-    loadParametros(nodo->call_params);
-    agregarCodIntermedio(nuevo);
-  }
-  if(nodo->tipoNodo==9){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
+    printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",nodo->nombre);
+    nuevo->nombre= (nodo->call_metodo)->nombre;
     //ver si apuntamos al metodo
     loadParametros(nodo->call_params);
     agregarCodIntermedio(nuevo);
@@ -283,32 +277,32 @@ if(nodo->tipoNodo==14){
 };
 
 void imprimirLista(NodoInt* nodo){
-  printf("())\n");
+  printf("\n");
   if(nodo!=NULL){
-      printf("DENTRO DE IMPRIMIR\n");
-     if(nodo->tipoNodo!=NULL){
-       printf("TIPO NODO: %i\n", nodo->tipoNodo);
-     }
+    //   printf("DENTRO DE IMPRIMIR\n");
+    //  if(nodo->tipoNodo!=NULL){
+    //    printf("TIPO NODO: %i\n", nodo->tipoNodo);
+    //  }
 
-    if(nodo->tipo!=NULL){
-      printf("TIPO: %s\n", nodo->tipo);
-    }
+    // if(nodo->tipo!=NULL){
+    //   printf("TIPO: %s\n", nodo->tipo);
+    // }
     if(nodo->operacion!=NULL){
-      printf("OPERACION: %s\n", nodo->operacion);
+      printf("%s ", nodo->operacion);
     }
     if(nodo->nombre!=NULL){
-      printf("NOMBRE: %s\n", nodo->nombre);
+      printf("(%s) ", nodo->nombre);
     }
     if(nodo->op1!=NULL){
-        printf("OP1:\n");
+        printf(" ");
         imprimirNodo(nodo->op1);
     }
     if(nodo->op2!=NULL){
-        printf("OP2:\n");
+        printf(" ");
         imprimirNodo(nodo->op2);
     }
     if(nodo->op3!=NULL){
-        printf("OP3:\n");
+        printf(" ");
         imprimirNodo(nodo->op3);
     }
     if (nodo->next!=NULL){
@@ -324,55 +318,55 @@ void imprimirNodo(NodoArbol *nodo){
   // printf("nodo en la direccion: %p \n",nodo);
   // printf("TIPO NODO= %i \n", nodo->tipoNodo);
 
-  if(nodo->tcondicion!=NULL){
-
-    imprimirNodo(nodo->tcondicion);
-  }
-  if(nodo->tthen!=NULL){
-    imprimirNodo(nodo->tthen);
-  }
-  if(nodo->telse!=NULL){
-    imprimirNodo(nodo->telse);
-  }
-  if(nodo->expresion!=NULL){
-    imprimirNodo(nodo->expresion);
-  }
-
-  if(nodo->param!=NULL){
-    imprimirNodo(nodo->param);
-  }
-  if(nodo->call_params!=NULL){
-    imprimirNodo(nodo->call_params);
-  }
-  if(nodo->call_metodo!=NULL){
-    imprimirNodo(nodo->call_metodo);
-  }
-  if(nodo->first!=NULL){
-    printf("dir de mem del first %p \n",nodo->first);
-  }
-  if(nodo->tipo!=NULL){
-    printf("TIPO= %s\n", nodo->tipo);
-  }
+  // if(nodo->tcondicion!=NULL){
+  //
+  //   imprimirNodo(nodo->tcondicion);
+  // }
+  // if(nodo->tthen!=NULL){
+  //   imprimirNodo(nodo->tthen);
+  // }
+  // if(nodo->telse!=NULL){
+  //   imprimirNodo(nodo->telse);
+  // }
+  // if(nodo->expresion!=NULL){
+  //   imprimirNodo(nodo->expresion);
+  // }
+  //
+  // if(nodo->param!=NULL){
+  //   imprimirNodo(nodo->param);
+  // }
+  // if(nodo->call_params!=NULL){
+  //   imprimirNodo(nodo->call_params);
+  // }
+  // if(nodo->call_metodo!=NULL){
+  //   imprimirNodo(nodo->call_metodo);
+  // }
+  // if(nodo->first!=NULL){
+  //   printf("dir de mem del first %p \n",nodo->first);
+  // }
+  // if(nodo->tipo!=NULL){
+  //   printf("TIPO= %s\n", nodo->tipo);
+  // }
   if(nodo->nombre!=NULL){
-    printf("NOMBRE= %s\n", nodo->nombre);
+    printf(" %s", nodo->nombre);
   }
-  if(nodo->valorExpresion!=NULL){
-    imprimirNodo(nodo->valorExpresion);
-  }
-  if(nodo->op1!=NULL){
-    imprimirNodo(nodo->op1);
-  }
-  if(nodo->op2!=NULL){
-    imprimirNodo(nodo->op2);
-  }
+  // if(nodo->valorExpresion!=NULL){
+  //   imprimirNodo(nodo->valorExpresion);
+  // }
+  // if(nodo->op1!=NULL){
+  //   imprimirNodo(nodo->op1);
+  // }
+  // if(nodo->op2!=NULL){
+  //   imprimirNodo(nodo->op2);
+  // }
   if((nodo->valor)!=NULL){
-    printf("VALOR= %i\n", nodo->valor);
+    printf(" %i", nodo->valor);
   }
-  if((nodo->nrolinea)!=NULL){
-    printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
-  }
-
-  printf("el next de este nodo es %p \n",nodo->next);
+  // if((nodo->nrolinea)!=NULL){
+  //   printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
+  // }
+  //
+  // printf("el next de este nodo es %p \n",nodo->next);
 
 }
 
