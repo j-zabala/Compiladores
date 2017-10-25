@@ -1,23 +1,5 @@
 class {
-        int y;
-        int z;
-        int j(int x) {
-                int j;
-                return 2;
-        }
-
-        int i(int x) {
-                int j;
-                return x + 1;
-        }
-        int main() {
-                int y;
-                y = 4;
-                j(y);
-                if (y == 1) then {
-                                return 1;
-                        } else {
-                                return y;
-                        }
+        int main() {              
+                return 0;
         }
 }

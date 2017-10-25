@@ -100,11 +100,23 @@ void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 
-void loadParametros(NodoArbol* parameters){//hacer 
+void agregarCodIntermedio(NodoInt* nuevo);
 
+
+void loadParametros(NodoArbol* parameters){
+  if(parameters==NULL){ return; }
+  NodoInt* aux=malloc(sizeof(NodoInt));
+  aux->operacion="LOADP";
+  aux->nombre=parameters->nombre;
+  aux->op1=pasarACodIntermedio(parameters);
+  agregarCodIntermedio(aux);
+  loadParametros(parameters->nextlista);
 }
 
 void agregarCodIntermedio(NodoInt* nuevo){
+  if(nuevo==NULL){
+    return;
+  }
   if (codigoIntermedio==NULL){
     codigoIntermedio = nuevo;
 
@@ -117,6 +129,9 @@ void agregarCodIntermedio(NodoInt* nuevo){
 }
 
 void metodoAIntermedio(NodoArbol* nodo){
+  if(nodo==NULL){
+    return;
+  }
   if(nodo->tipoNodo!=2){
     printf("ERROR EL NODO PASADO NO ES UN METODO\n");
     exit(0);
@@ -154,11 +169,16 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
 
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
-  if(nodo == NULL){return NULL;}
+  if(nodo == NULL){
+    printf("null pasarACodIntermedio\n");
+    return NULL;}
+  printf("despues del null en pasarACodIntermedio\n");
   NodoInt* nuevo;
   char* lab1;
   char* lab2;
-
+  if(nodo->tipoNodo==2){
+    metodoAIntermedio(nodo);
+  }
   if(nodo->tipoNodo==3||nodo->tipoNodo==4){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "JMPFalso";
@@ -325,7 +345,9 @@ if(nodo->tipoNodo==14){
 };
 
 void imprimirLista(NodoInt* nodo){
+  printf("())\n");
   if(nodo!=NULL){
+      printf("DENTRO DE IMPRIMIR\n");
      if(nodo->tipoNodo!=NULL){
        printf("TIPO NODO: %i\n", nodo->tipoNodo);
      }
@@ -653,6 +675,14 @@ void verificarTipoParametros(NodoArbol* nodo){
 
 }
 
+void codIntermedio(NodoArbol* nodo){
+  NodoArbol* aux=nodo;
+  while (aux!=NULL) {
+    pasarACodIntermedio(aux);
+    printf("aux:%p \n",aux );
+    aux=aux->nextlista;
+  }
+}
 
 
 char *aux;
@@ -660,7 +690,7 @@ char *aux;
 NodoArbol *nodoauxiliar ; //este puntero apunta al primer statement cuando se arma la lista de los statements
 NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoauxiliar
 
-#line 664 "calc-sintaxis.tab.c" /* yacc.c:339  */
+#line 694 "calc-sintaxis.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -736,10 +766,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 599 "calc-sintaxis.y" /* yacc.c:355  */
+#line 629 "calc-sintaxis.y" /* yacc.c:355  */
  int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;
 
-#line 743 "calc-sintaxis.tab.c" /* yacc.c:355  */
+#line 773 "calc-sintaxis.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -756,7 +786,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 760 "calc-sintaxis.tab.c" /* yacc.c:358  */
+#line 790 "calc-sintaxis.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1057,13 +1087,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   674,   674,   674,   678,   682,   686,   690,   696,   701,
-     709,   720,   721,   724,   743,   760,   781,   803,   803,   805,
-     806,   810,   810,   812,   814,   816,   818,   822,   823,   826,
-     827,   843,   848,   862,   871,   881,   889,   896,   902,   920,
-     922,   927,   929,   944,   962,   967,   968,   972,   988,  1004,
-    1020,  1036,  1052,  1068,  1084,  1100,  1116,  1133,  1149,  1165,
-    1166,  1179,  1180,  1185,  1194,  1196,  1205
+       0,   704,   704,   704,   716,   720,   724,   728,   734,   739,
+     747,   758,   759,   762,   781,   798,   819,   841,   841,   843,
+     844,   848,   848,   850,   852,   854,   856,   860,   861,   864,
+     865,   881,   886,   900,   909,   919,   927,   934,   940,   958,
+     960,   965,   967,   982,  1000,  1005,  1006,  1010,  1026,  1042,
+    1058,  1074,  1090,  1106,  1122,  1138,  1154,  1171,  1187,  1203,
+    1204,  1217,  1218,  1223,  1232,  1234,  1243
 };
 #endif
 
@@ -1946,61 +1976,69 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 674 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 704 "calc-sintaxis.y" /* yacc.c:1646  */
     {
       inicializar();}
-#line 1953 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1983 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 675 "calc-sintaxis.y" /* yacc.c:1646  */
-    {eliminarNivelPila();controlTiposMetod();//pasarACodIntermedio(listametodos);imprimirLista(codigoIntermedio);
+#line 705 "calc-sintaxis.y" /* yacc.c:1646  */
+    {eliminarNivelPila();
+        controlTiposMetod();
+        printf("ANTES DE CODIGO intermedio\n");
+        if(listametodos==NULL){
+          printf("listametodos es NULL\n");
+        }
+        codIntermedio(listametodos);
+        printf("DESPUES DE CODIGO intermedio\n");
+        imprimirLista(codigoIntermedio);
     }
-#line 1960 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1998 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 678 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 716 "calc-sintaxis.y" /* yacc.c:1646  */
     {
   // printf("TERMINO1\n");
 }
-#line 1968 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2006 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 682 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 720 "calc-sintaxis.y" /* yacc.c:1646  */
     {
     // printf("\nTERMINO2");
 }
-#line 1976 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2014 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 686 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 724 "calc-sintaxis.y" /* yacc.c:1646  */
     {
     // printf("\nTERMINO3");
   }
-#line 1984 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2022 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 690 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 728 "calc-sintaxis.y" /* yacc.c:1646  */
     {
     // printf("\nTERMINO4");
   }
-#line 1992 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2030 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 696 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 734 "calc-sintaxis.y" /* yacc.c:1646  */
     {
   // printf("\ndeclaracion de var finalizada");
 }
-#line 2000 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2038 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 701 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 739 "calc-sintaxis.y" /* yacc.c:1646  */
     {     if(buscarVariableSC((yyvsp[0].infos)->info)==NULL){
                       // printf("%s\n","la variable no esta en el scope!!" );
                       nuevaVariable((yyvsp[0].infos)->info,aux,(yyvsp[0].infos)->linea);
@@ -2009,11 +2047,11 @@ yyreduce:
                       }
 
                     }
-#line 2013 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2051 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 709 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 747 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                   if(buscarVariableSC((yyvsp[0].infos)->info)==NULL){
                   //  printf("%s\n","la variable no esta en el scope!!" );
@@ -2022,23 +2060,23 @@ yyreduce:
                     printf("ERROR linea %i; la variable %s ya esta declarada \n",(yyvsp[0].infos)->linea,(yyvsp[0].infos)->info  );
                     }
   }
-#line 2026 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2064 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 720 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 758 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyvsp[0].p)->nextlista=listametodos;listametodos=(yyvsp[0].p);}
-#line 2032 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2070 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 721 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 759 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyvsp[0].p)->nextlista=listametodos;listametodos=(yyvsp[0].p);}
-#line 2038 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2076 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 724 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 762 "calc-sintaxis.y" /* yacc.c:1646  */
     {
 
   // printf("declaracion de metodo2\n");
@@ -2058,11 +2096,11 @@ yyreduce:
   };
   (yyval.p) = aux;
 }
-#line 2062 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2100 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 743 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 781 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                 // printf("declaracion de metodo1\n");
                 NodoArbol *aux= malloc(sizeof(NodoArbol));
@@ -2078,11 +2116,11 @@ yyreduce:
                 };
                 (yyval.p) = aux;
                 }
-#line 2082 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2120 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 760 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 798 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                     // printf("declaracion de metodo4\n");
 
@@ -2104,11 +2142,11 @@ yyreduce:
                                                     (yyval.p) = aux;
 
                                                   }
-#line 2108 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2146 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 781 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 819 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                   // printf("declaracion de metodo3\n");
 
@@ -2125,83 +2163,83 @@ yyreduce:
                                                   };
                                                   (yyval.p) = aux;
                                                   }
-#line 2129 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2167 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 803 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 841 "calc-sintaxis.y" /* yacc.c:1646  */
     {nuevoNivelPila();}
-#line 2135 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2173 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 805 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 843 "calc-sintaxis.y" /* yacc.c:1646  */
     {nuevaVariable((yyvsp[0].infos)->info,(yyvsp[-1].s),(yyvsp[0].infos)->linea);}
-#line 2141 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2179 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 806 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 844 "calc-sintaxis.y" /* yacc.c:1646  */
     {nuevaVariable((yyvsp[0].infos)->info,(yyvsp[-1].s),(yyvsp[-2].infos)->linea);}
-#line 2147 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2185 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 810 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 848 "calc-sintaxis.y" /* yacc.c:1646  */
     {nuevoNivelPila();}
-#line 2153 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2191 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 810 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 848 "calc-sintaxis.y" /* yacc.c:1646  */
     {eliminarNivelPila(); (yyval.p)=(yyvsp[0].p);}
-#line 2159 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2197 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 812 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 850 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[-1].p)->first;}
-#line 2165 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2203 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 814 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 852 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
-#line 2171 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2209 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 816 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 854 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[-1].p)->first;}
-#line 2177 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2215 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 818 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 856 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
-#line 2183 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2221 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 822 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 860 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
-#line 2189 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2227 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 823 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 861 "calc-sintaxis.y" /* yacc.c:1646  */
     {}
-#line 2195 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2233 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 826 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 864 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyvsp[0].p)->first=(yyvsp[0].p);(yyval.p)=(yyvsp[0].p);}
-#line 2201 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2239 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 827 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 865 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyvsp[-1].p)->next = (yyvsp[0].p);
                             nodoauxiliar=(yyvsp[0].p);
                             nodoauxiliarAnt =nodoauxiliar;
@@ -2215,29 +2253,29 @@ yyreduce:
 
                             (yyval.p)=nodoauxiliarAnt;
                               }
-#line 2219 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2257 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 843 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 881 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                 aux="int";
                 (yyval.s)=aux;
                 }
-#line 2228 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2266 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 848 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 886 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                   aux="bool";
                   (yyval.s)=aux;
                   }
-#line 2237 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2275 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 862 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 900 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                               NodoArbol *nuevo= malloc(sizeof(NodoArbol));
 
@@ -2247,11 +2285,11 @@ yyreduce:
                                                               nuevo->nrolinea =(yyvsp[-5].i);
                                                               (yyval.p)=nuevo;
                                                             }
-#line 2251 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2289 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 871 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 909 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                                         NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                                                         nuevo->tipoNodo=4;
@@ -2261,11 +2299,11 @@ yyreduce:
                                                                         nuevo->nrolinea =(yyvsp[-7].i);
                                                                         (yyval.p)=nuevo;
                                                                       }
-#line 2265 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2303 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 881 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 919 "calc-sintaxis.y" /* yacc.c:1646  */
     {          NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=5;
                                         nuevo->tcondicion = (yyvsp[-1].p);
@@ -2273,11 +2311,11 @@ yyreduce:
                                         nuevo->nrolinea =(yyvsp[-2].i);
                                         (yyval.p)=nuevo;
                                       }
-#line 2277 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2315 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 889 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 927 "calc-sintaxis.y" /* yacc.c:1646  */
     {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=6;
                                         nuevo->tipo=(yyvsp[-1].p)->tipo;
@@ -2285,22 +2323,22 @@ yyreduce:
                                         nuevo->nrolinea =(yyvsp[-2].i);
                                         (yyval.p)=nuevo;
                                       }
-#line 2289 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2327 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 896 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 934 "calc-sintaxis.y" /* yacc.c:1646  */
     {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=7;
                                         nuevo->nrolinea =(yyvsp[-1].i);
                                         nuevo->tipo="void";
                                         (yyval.p)=nuevo;
                                       }
-#line 2300 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2338 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 902 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 940 "calc-sintaxis.y" /* yacc.c:1646  */
     {   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=8;
                                         nuevo->nombre=(yyvsp[-3].infos)->info;
@@ -2319,33 +2357,33 @@ yyreduce:
                                         nuevo->nrolinea =(yyvsp[-2].infos)->linea;
                                         (yyval.p)=nuevo;
                                       }
-#line 2323 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2361 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 920 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 958 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[-1].p);}
-#line 2329 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2367 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 922 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 960 "calc-sintaxis.y" /* yacc.c:1646  */
     {    NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                         nuevo->tipoNodo=10;
                                         nuevo->nrolinea =(yyvsp[0].infos)->linea;
                                         (yyval.p)=nuevo;
                                       }
-#line 2339 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2377 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 927 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 965 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[0].p);}
-#line 2345 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2383 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 929 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 967 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                 NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                                 nuevo->tipoNodo=9;
@@ -2361,11 +2399,11 @@ yyreduce:
                                                 (yyval.p)=nuevo;
 
                                                 }
-#line 2365 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2403 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 944 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 982 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                                 NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                                 nuevo->tipoNodo=9;
@@ -2381,29 +2419,29 @@ yyreduce:
                                                 (yyval.p)=nuevo;
 
                                                 }
-#line 2385 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2423 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 962 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1000 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[0].p)->first;}
-#line 2391 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2429 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 967 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1005 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyvsp[0].p)->first=(yyvsp[0].p); (yyval.p)=(yyvsp[0].p);  }
-#line 2397 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2435 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 968 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1006 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyvsp[0].p)->first=(yyvsp[-2].p)->first; (yyvsp[-2].p)->next = (yyvsp[0].p); (yyval.p)=(yyvsp[0].p);  }
-#line 2403 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2441 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 972 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1010 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                       NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                       nuevo->tipoNodo=14;
@@ -2420,11 +2458,11 @@ yyreduce:
                       }
                       (yyval.p)=nuevo;
                       }
-#line 2424 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2462 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 988 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1026 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2441,11 +2479,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2445 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2483 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 1004 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1042 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2462,11 +2500,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2466 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2504 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 1020 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1058 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2483,11 +2521,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2487 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2525 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 1036 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1074 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2504,11 +2542,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2508 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2546 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 1052 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1090 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2525,11 +2563,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2529 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2567 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 1068 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1106 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2546,11 +2584,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2550 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2588 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 1084 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1122 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2567,11 +2605,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2571 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2609 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 1100 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1138 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
@@ -2588,11 +2626,11 @@ yyreduce:
                           }
                           (yyval.p)=nuevo;
                           }
-#line 2592 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2630 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 1116 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1154 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                   nuevo->tipoNodo=14;
@@ -2609,11 +2647,11 @@ yyreduce:
                                   }
                                   (yyval.p)=nuevo;
                                   }
-#line 2613 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2651 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 1133 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1171 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                   nuevo->tipoNodo=15;
@@ -2630,11 +2668,11 @@ yyreduce:
                                   }
                                   (yyval.p)=nuevo;
                                   }
-#line 2634 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2672 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 1149 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1187 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                   nuevo->tipoNodo=15;
@@ -2651,17 +2689,17 @@ yyreduce:
                                   }
                                   (yyval.p)=nuevo;
                                   }
-#line 2655 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2693 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 1165 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1203 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[-1].p);}
-#line 2661 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2699 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 1166 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1204 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                                   nuevo->tipoNodo=16;
@@ -2675,23 +2713,23 @@ yyreduce:
                                     nuevo->tipo = (nuevo->op1)->tipo;
                                     (yyval.p)=nuevo;
                                   }
-#line 2679 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2717 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 1179 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1217 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[0].p);}
-#line 2685 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2723 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 1180 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1218 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[0].p);}
-#line 2691 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2729 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 1185 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1223 "calc-sintaxis.y" /* yacc.c:1646  */
     {
               NodoArbol *nuevo= malloc(sizeof(NodoArbol));
               nuevo->tipo="int";
@@ -2700,17 +2738,17 @@ yyreduce:
               nuevo->nrolinea =(yyvsp[0].infoi)->linea;
               (yyval.p)=nuevo;
               }
-#line 2704 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2742 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 1194 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1232 "calc-sintaxis.y" /* yacc.c:1646  */
     {(yyval.p)=(yyvsp[0].p);}
-#line 2710 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2748 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 1196 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1234 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                     NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                     nuevo->tipo="bool";
@@ -2719,11 +2757,11 @@ yyreduce:
                     nuevo->nrolinea =(yyvsp[0].i);
                     (yyval.p)=nuevo;
                   }
-#line 2723 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2761 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 1205 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 1243 "calc-sintaxis.y" /* yacc.c:1646  */
     {
                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                   nuevo->tipo="bool";
@@ -2732,11 +2770,11 @@ yyreduce:
                   nuevo->nrolinea =(yyvsp[0].i);
                   (yyval.p)=nuevo;
                 }
-#line 2736 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2774 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2740 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 2778 "calc-sintaxis.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2964,5 +3002,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1216 "calc-sintaxis.y" /* yacc.c:1906  */
+#line 1254 "calc-sintaxis.y" /* yacc.c:1906  */
 

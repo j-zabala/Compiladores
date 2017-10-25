@@ -35,11 +35,23 @@ void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 
-void loadParametros(NodoArbol* parameters){//hacer 
+void agregarCodIntermedio(NodoInt* nuevo);
 
+
+void loadParametros(NodoArbol* parameters){
+  if(parameters==NULL){ return; }
+  NodoInt* aux=malloc(sizeof(NodoInt));
+  aux->operacion="LOADP";
+  aux->nombre=parameters->nombre;
+  aux->op1=pasarACodIntermedio(parameters);
+  agregarCodIntermedio(aux);
+  loadParametros(parameters->nextlista);
 }
 
 void agregarCodIntermedio(NodoInt* nuevo){
+  if(nuevo==NULL){
+    return;
+  }
   if (codigoIntermedio==NULL){
     codigoIntermedio = nuevo;
 
@@ -52,6 +64,9 @@ void agregarCodIntermedio(NodoInt* nuevo){
 }
 
 void metodoAIntermedio(NodoArbol* nodo){
+  if(nodo==NULL){
+    return;
+  }
   if(nodo->tipoNodo!=2){
     printf("ERROR EL NODO PASADO NO ES UN METODO\n");
     exit(0);
@@ -89,11 +104,16 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
 
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
-  if(nodo == NULL){return NULL;}
+  if(nodo == NULL){
+    printf("null pasarACodIntermedio\n");
+    return NULL;}
+  printf("despues del null en pasarACodIntermedio\n");
   NodoInt* nuevo;
   char* lab1;
   char* lab2;
-
+  if(nodo->tipoNodo==2){
+    metodoAIntermedio(nodo);
+  }
   if(nodo->tipoNodo==3||nodo->tipoNodo==4){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "JMPFalso";
@@ -260,7 +280,9 @@ if(nodo->tipoNodo==14){
 };
 
 void imprimirLista(NodoInt* nodo){
+  printf("())\n");
   if(nodo!=NULL){
+      printf("DENTRO DE IMPRIMIR\n");
      if(nodo->tipoNodo!=NULL){
        printf("TIPO NODO: %i\n", nodo->tipoNodo);
      }
@@ -588,6 +610,14 @@ void verificarTipoParametros(NodoArbol* nodo){
 
 }
 
+void codIntermedio(NodoArbol* nodo){
+  NodoArbol* aux=nodo;
+  while (aux!=NULL) {
+    pasarACodIntermedio(aux);
+    printf("aux:%p \n",aux );
+    aux=aux->nextlista;
+  }
+}
 
 
 char *aux;
@@ -672,7 +702,15 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 %%
 
     program: {
-      inicializar();} clases {eliminarNivelPila();controlTiposMetod();//pasarACodIntermedio(listametodos);imprimirLista(codigoIntermedio);
+      inicializar();} clases {eliminarNivelPila();
+        controlTiposMetod();
+        printf("ANTES DE CODIGO intermedio\n");
+        if(listametodos==NULL){
+          printf("listametodos es NULL\n");
+        }
+        codIntermedio(listametodos);
+        printf("DESPUES DE CODIGO intermedio\n");
+        imprimirLista(codigoIntermedio);
     }
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {
