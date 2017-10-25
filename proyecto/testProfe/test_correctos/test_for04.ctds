@@ -1,0 +1,25 @@
+class{
+
+int a ;
+int b;
+bool c;
+
+int pruArreglos(int b, int c ){
+        int i;
+        a = 2;
+         A = i + 2;
+        return A[1];
+
+
+}
+
+
+int main(){
+
+    printI( pruArreglos( 4,8 ));
+
+    return 1;
+
+}
+
+}

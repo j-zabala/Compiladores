@@ -1,0 +1,32 @@
+class {
+int a ;
+int b;
+bool c;
+bool y;
+
+int pruArreglos(int b, int c ){
+         float y;
+         y = 8.87;
+
+         a = 4;
+         b = 2.6 + y;
+         c = ((b < c)) ;
+         c = b >= c;
+	return a;
+
+}
+
+int main(){
+    y = true;
+     a = 58 - (-6) ;
+     b = -2.6;
+     c = !((4 < 6)) ;
+     c = ( 5 >= a) || true ;
+     printI(pruArreglos(4, (8 * 6) / (7 % 2) ));
+     printB(c==false);
+     printF(3.5 + 4.0);
+     return 1;
+
+}
+
+}

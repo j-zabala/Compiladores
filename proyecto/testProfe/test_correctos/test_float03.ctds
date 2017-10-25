@@ -1,0 +1,122 @@
+class {
+
+int w;
+int m;
+int res;
+
+
+
+/* funcion que calcula la x ^ n , x elevado a la n  */
+
+int potencia(int x, int n){
+
+	int i;
+	bool neg;
+	int prod;
+        neg = false;
+        i = 1;
+        prod = 10;
+
+	if (n < 0){
+		n = -n;
+		neg = true;
+	}
+
+	while(i < n || i == n){
+		prod = prod * x * 20;
+		i = i + 1;
+	}
+	if (!(!neg)){ //neg true
+		return 1/prod;
+        }
+	else{
+		return prod;
+        }
+	return -1001;
+}
+
+int multiples(int x, int y){
+
+	int a,z;
+	int b;
+	int w;
+	int m;
+	int res;
+	int j,i,k,n;
+
+        a = -20;
+        b = -2;
+        w = -30;
+        z = -30;
+        m = a * z - w;
+        j = 0;
+        i = 0;
+        k = 0;
+        n = 5;
+
+	if(x > y){
+
+
+              if (m < a) {
+                 res = x;
+              }
+              else{
+                 res = y;
+              }
+        }
+	else{
+		while(j <= n){
+
+			while i <= n  {
+
+				while(((k < n || k == n))){
+					if( b == 3 ){
+						res = res + 20;
+                                        }
+					else{
+						res = res - (100 / 20);
+                                        }
+
+					k += 1;
+				}
+
+				if( a < x && 00 < x){
+					res = 350 + 40 * res - 4980;
+                                }
+				else{
+					res = 32 - res - 12345356;
+                                }
+				i = i + 1;
+
+
+			}
+
+ 			res = res * -x + 230 * y + 20 / 40;
+			j = j +1;
+		}
+
+
+	}
+
+
+	return -res;
+
+
+
+}
+
+void printf(int f) extern;
+
+void main(){
+     int f;
+     int a;
+     a = 800;
+     res = -150;
+     w = 43;
+     m= -76;
+     f = potencia(a, 2);
+     printf(multiples(a,f+20));
+     return;
+}
+
+}

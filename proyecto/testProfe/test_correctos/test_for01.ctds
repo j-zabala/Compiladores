@@ -1,0 +1,28 @@
+class {
+
+int a ;
+int b;
+bool c;
+
+int pruArreglos(int b, int c ){
+        int i;
+        a = 2;
+
+
+
+        return a;
+
+
+}
+
+
+
+int main(){
+
+    printf(pruArreglos(4,8 ));
+
+    return 1;
+
+}
+
+}

@@ -1,0 +1,43 @@
+class {
+
+/* test_potencia :funcion que calcula la x ^ n , x elevado a la n  */
+
+int potencia(int x, int n){
+
+	int i;
+	bool neg;
+	int prod;
+        neg = false;
+        i = 1;
+        prod = 1;
+
+	if (n < 0){
+		n = -n;
+		neg = !neg;
+	}
+
+	while(i <= n){
+		prod = prod * x;
+		i = i + 1;
+	}
+	if (!(!neg)){
+		return 1/prod;
+        }
+	else{
+		return prod;
+        }
+	return -100;
+}
+
+
+
+void main(){
+     int f;
+     int a;
+     a = 8;
+     f = potencia(a, 2);
+     printF(f);
+     return;
+}
+
+}
