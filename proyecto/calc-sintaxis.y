@@ -35,11 +35,25 @@ void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 
-void loadParametros(NodoArbol* parameters){//hacer
 
+void agregarCodIntermedio(NodoInt* nuevo);
+
+
+
+void loadParametros(NodoArbol* parameters){
+  if(parameters==NULL){ return; }
+  NodoInt* aux=malloc(sizeof(NodoInt));
+  aux->operacion="LOADP";
+  aux->nombre=parameters->nombre;
+  aux->op1=pasarACodIntermedio(parameters);
+  agregarCodIntermedio(aux);
+  loadParametros(parameters->nextlista);
 }
 
 void agregarCodIntermedio(NodoInt* nuevo){
+  if(nuevo==NULL){
+    return;
+  }
   if (codigoIntermedio==NULL){
     codigoIntermedio = nuevo;
 
@@ -52,6 +66,9 @@ void agregarCodIntermedio(NodoInt* nuevo){
 }
 
 void metodoAIntermedio(NodoArbol* nodo){
+  if(nodo==NULL){
+    return;
+  }
   if(nodo->tipoNodo!=2){
     printf("ERROR EL NODO PASADO NO ES UN METODO\n");
     exit(0);
@@ -73,6 +90,7 @@ void metodoAIntermedio(NodoArbol* nodo){
 
 char* nuevoLabel(char* info){
   char* aux;
+  aux=(char*)malloc(sizeof(char)*20);
   sprintf(aux,"LAB%d%s",cantidadLabels++,info);
   return aux;
 }
@@ -80,6 +98,7 @@ char* nuevoLabel(char* info){
 
 NodoArbol* nuevaVariableTemporal(char* tipo){
   NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+  nuevo->nombre=(char*)malloc(sizeof(char)*10);
   sprintf(nuevo->nombre,"T%d",cantidadTemporales);
   cantidadTemporales++;
   nuevo->tipo=tipo;
@@ -89,11 +108,17 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
 
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
-  if(nodo == NULL){return NULL;}
+  if(nodo == NULL){
+    printf("null pasarACodIntermedio\n");
+    return NULL;}
+  printf("despues del null en pasarACodIntermedio\n");
+  imprimirNodo(nodo);
   NodoInt* nuevo;
   char* lab1;
   char* lab2;
-
+  if(nodo->tipoNodo==2){ //declaracion de funcion
+    metodoAIntermedio(nodo);
+  }
   if(nodo->tipoNodo==3||nodo->tipoNodo==4){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "JMPFalso";
@@ -168,18 +193,12 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     nuevo->op1= nodo->op1;
     agregarCodIntermedio(nuevo);
   }
+
   if(nodo->tipoNodo==9){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
-    //ver si apuntamos al metodo
-    loadParametros(nodo->call_params);
-    agregarCodIntermedio(nuevo);
-  }
-  if(nodo->tipoNodo==9){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
+    printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",nodo->nombre);
+    nuevo->nombre= (nodo->call_metodo)->nombre;
     //ver si apuntamos al metodo
     loadParametros(nodo->call_params);
     agregarCodIntermedio(nuevo);
@@ -260,30 +279,32 @@ if(nodo->tipoNodo==14){
 };
 
 void imprimirLista(NodoInt* nodo){
+  printf("\n");
   if(nodo!=NULL){
-     if(nodo->tipoNodo!=NULL){
-       printf("TIPO NODO: %i\n", nodo->tipoNodo);
-     }
+    //   printf("DENTRO DE IMPRIMIR\n");
+    //  if(nodo->tipoNodo!=NULL){
+    //    printf("TIPO NODO: %i\n", nodo->tipoNodo);
+    //  }
 
-    if(nodo->tipo!=NULL){
-      printf("TIPO: %s\n", nodo->tipo);
-    }
+    // if(nodo->tipo!=NULL){
+    //   printf("TIPO: %s\n", nodo->tipo);
+    // }
     if(nodo->operacion!=NULL){
-      printf("OPERACION: %s\n", nodo->operacion);
+      printf("%s ", nodo->operacion);
     }
     if(nodo->nombre!=NULL){
-      printf("NOMBRE: %s\n", nodo->nombre);
+      printf("(%s) ", nodo->nombre);
     }
     if(nodo->op1!=NULL){
-        printf("OP1:\n");
+        printf(" ");
         imprimirNodo(nodo->op1);
     }
     if(nodo->op2!=NULL){
-        printf("OP2:\n");
+        printf(" ");
         imprimirNodo(nodo->op2);
     }
     if(nodo->op3!=NULL){
-        printf("OP3:\n");
+        printf(" ");
         imprimirNodo(nodo->op3);
     }
     if (nodo->next!=NULL){
@@ -299,55 +320,55 @@ void imprimirNodo(NodoArbol *nodo){
   // printf("nodo en la direccion: %p \n",nodo);
   // printf("TIPO NODO= %i \n", nodo->tipoNodo);
 
-  if(nodo->tcondicion!=NULL){
-
-    imprimirNodo(nodo->tcondicion);
-  }
-  if(nodo->tthen!=NULL){
-    imprimirNodo(nodo->tthen);
-  }
-  if(nodo->telse!=NULL){
-    imprimirNodo(nodo->telse);
-  }
-  if(nodo->expresion!=NULL){
-    imprimirNodo(nodo->expresion);
-  }
-
-  if(nodo->param!=NULL){
-    imprimirNodo(nodo->param);
-  }
-  if(nodo->call_params!=NULL){
-    imprimirNodo(nodo->call_params);
-  }
-  if(nodo->call_metodo!=NULL){
-    imprimirNodo(nodo->call_metodo);
-  }
-  if(nodo->first!=NULL){
-    printf("dir de mem del first %p \n",nodo->first);
-  }
-  if(nodo->tipo!=NULL){
-    printf("TIPO= %s\n", nodo->tipo);
-  }
+  // if(nodo->tcondicion!=NULL){
+  //
+  //   imprimirNodo(nodo->tcondicion);
+  // }
+  // if(nodo->tthen!=NULL){
+  //   imprimirNodo(nodo->tthen);
+  // }
+  // if(nodo->telse!=NULL){
+  //   imprimirNodo(nodo->telse);
+  // }
+  // if(nodo->expresion!=NULL){
+  //   imprimirNodo(nodo->expresion);
+  // }
+  //
+  // if(nodo->param!=NULL){
+  //   imprimirNodo(nodo->param);
+  // }
+  // if(nodo->call_params!=NULL){
+  //   imprimirNodo(nodo->call_params);
+  // }
+  // if(nodo->call_metodo!=NULL){
+  //   imprimirNodo(nodo->call_metodo);
+  // }
+  // if(nodo->first!=NULL){
+  //   printf("dir de mem del first %p \n",nodo->first);
+  // }
+  // if(nodo->tipo!=NULL){
+  //   printf("TIPO= %s\n", nodo->tipo);
+  // }
   if(nodo->nombre!=NULL){
-    printf("NOMBRE= %s\n", nodo->nombre);
+    printf(" %s", nodo->nombre);
   }
-  if(nodo->valorExpresion!=NULL){
-    imprimirNodo(nodo->valorExpresion);
-  }
-  if(nodo->op1!=NULL){
-    imprimirNodo(nodo->op1);
-  }
-  if(nodo->op2!=NULL){
-    imprimirNodo(nodo->op2);
-  }
+  // if(nodo->valorExpresion!=NULL){
+  //   imprimirNodo(nodo->valorExpresion);
+  // }
+  // if(nodo->op1!=NULL){
+  //   imprimirNodo(nodo->op1);
+  // }
+  // if(nodo->op2!=NULL){
+  //   imprimirNodo(nodo->op2);
+  // }
   if((nodo->valor)!=NULL){
-    printf("VALOR= %i\n", nodo->valor);
+    printf(" %i", nodo->valor);
   }
-  if((nodo->nrolinea)!=NULL){
-    printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
-  }
-
-  printf("el next de este nodo es %p \n",nodo->next);
+  // if((nodo->nrolinea)!=NULL){
+  //   printf("NUMERO DE LINEA= %i\n", nodo->nrolinea);
+  // }
+  //
+  // printf("el next de este nodo es %p \n",nodo->next);
 
 }
 
@@ -588,6 +609,14 @@ void verificarTipoParametros(NodoArbol* nodo){
 
 }
 
+void codIntermedio(NodoArbol* nodo){
+  NodoArbol* aux=nodo;
+  while (aux!=NULL) {
+    pasarACodIntermedio(aux);
+    printf("aux:%p \n",aux );
+    aux=aux->nextlista;
+  }
+}
 
 
 char *aux;
@@ -672,7 +701,15 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 %%
 
     program: {
-      inicializar();} clases {eliminarNivelPila();controlTiposMetod();//pasarACodIntermedio(listametodos);imprimirLista(codigoIntermedio);
+      inicializar();} clases {eliminarNivelPila();
+        controlTiposMetod();
+        printf("ANTES DE CODIGO intermedio\n");
+        if(listametodos==NULL){
+          printf("listametodos es NULL\n");
+        }
+        codIntermedio(listametodos);
+        printf("DESPUES DE CODIGO intermedio\n");
+        imprimirLista(codigoIntermedio);
     }
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {
