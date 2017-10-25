@@ -63,220 +63,205 @@ void agregarCodIntermedio(NodoInt* nuevo){
 
 }
 
-void metodoAIntermedio(NodoArbol* nodo){
-  if(nodo==NULL){
-    return;
+
+
+  char* nuevoLabel(char* info){
+    char* aux;
+    aux = (char*) malloc (sizeof(char)*20);
+    sprintf(aux,"LAB%d%s",cantidadLabels++,info);
+    return aux;
   }
-  if(nodo->tipoNodo!=2){
-    printf("ERROR EL NODO PASADO NO ES UN METODO\n");
-    exit(0);
-  }
-  NodoInt* nuevo = malloc(sizeof(NodoInt));
-  nuevo->nombre = nodo->nombre;
-  nuevo->operacion = "METODO";
-  agregarCodIntermedio(nuevo);
 
-  pasarACodIntermedio(nodo->cuerpo);
-
-  nuevo = malloc(sizeof(NodoInt));
-  nuevo->nombre = nodo->nombre;
-  nuevo->operacion = "ENDMETODO";
-  agregarCodIntermedio(nuevo);
-
-
-}
-
-char* nuevoLabel(char* info){
-  char* aux;
-  sprintf(aux,"LAB%d%s",cantidadLabels++,info);
-  return aux;
-}
-
-
-NodoArbol* nuevaVariableTemporal(char* tipo){
-  NodoArbol* nuevo = malloc(sizeof(NodoArbol));
-  sprintf(nuevo->nombre,"T%d",cantidadTemporales);
-  cantidadTemporales++;
-  nuevo->tipo=tipo;
-  printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
-  return nuevo;
+  char* a ;
+  NodoArbol* nuevaVariableTemporal(char* tipo){
+    NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+    nuevo->nombre =(char*) malloc(sizeof(char)*20);
+    sprintf(nuevo->nombre,"T%d",cantidadTemporales);
+    printf("entra nueva variable \n");
+    cantidadTemporales++;
+    nuevo->tipo=tipo;
+    printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
+    printf("fin nueva variable \n");
+    return nuevo;
 }
 
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
-  if(nodo == NULL){
-    printf("null pasarACodIntermedio\n");
-    return NULL;}
-  printf("despues del null en pasarACodIntermedio\n");
-  NodoInt* nuevo;
-  char* lab1;
-  char* lab2;
-  if(nodo->tipoNodo==2){
-    metodoAIntermedio(nodo);
-  }
-  if(nodo->tipoNodo==3||nodo->tipoNodo==4){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "JMPFalso";
-    nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
-    char* labELSE = nuevoLabel("ELSE");
-    char* labF = nuevoLabel("ENDIF");
-    nuevo->nombre = labELSE;
-    agregarCodIntermedio(nuevo);
+    if(nodo == NULL){
+      printf("null pasarACodIntermedio\n");
+      return NULL;}
+    printf("despues del null en pasarACodIntermedio\n");
+    NodoInt* nuevo;
+    char* lab1;
+    char* lab2;
+    if(nodo->tipoNodo==2){
 
-    pasarACodIntermedio(nodo->tthen); //agrega cod intermedio del then
+    }
+    if(nodo->tipoNodo==3||nodo->tipoNodo==4){
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "JMPFalso";
+      nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
+      char* labELSE = nuevoLabel("ELSE");
+      char* labF = nuevoLabel("ENDIF");
+      nuevo->nombre = labELSE;
+      agregarCodIntermedio(nuevo);
 
-    nuevo = malloc(sizeof(NodoInt));
-    nuevo->operacion = "JMP";        //agrega el JMP al final de el if
-    nuevo->nombre =labF;
-    agregarCodIntermedio(nuevo);
+      pasarACodIntermedio(nodo->tthen); //agrega cod intermedio del then
 
-    nuevo = malloc(sizeof(NodoInt));
-    nuevo->operacion = "LABEL"; // agrega el label al que se salta por si no cumple la cond
-    nuevo->nombre =labELSE;
-    agregarCodIntermedio(nuevo);
+      nuevo = malloc(sizeof(NodoInt));
+      nuevo->operacion = "JMP";        //agrega el JMP al final de el if
+      nuevo->nombre =labF;
+      agregarCodIntermedio(nuevo);
 
-    pasarACodIntermedio(nodo->telse);//agrega cod intermedio del else
+      nuevo = malloc(sizeof(NodoInt));
+      nuevo->operacion = "LABEL"; // agrega el label al que se salta por si no cumple la cond
+      nuevo->nombre =labELSE;
+      agregarCodIntermedio(nuevo);
 
-    nuevo = malloc(sizeof(NodoInt));
-    nuevo->operacion = "LABEL"; // agrega el label que marca el fin del if
-    nuevo->nombre =labF;
-    agregarCodIntermedio(nuevo);
-  }
+      pasarACodIntermedio(nodo->telse);//agrega cod intermedio del else
 
-
-  if(nodo->tipoNodo==5){
-    lab1 = nuevoLabel("WHILE");
-    lab2 = nuevoLabel("ENDWHILE");
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion="LABEL";
-    nuevo->nombre = lab1;
-    agregarCodIntermedio(nuevo);
-
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "JMPFalso";
-    nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
-    nuevo->nombre= lab2;
-    agregarCodIntermedio(nuevo);
-
-    pasarACodIntermedio(nodo->cuerpo);
-
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "JMP";
-    nuevo->nombre= lab1;
-    agregarCodIntermedio(nuevo);
-
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion="LABEL";
-    nuevo->nombre = lab2;
-    agregarCodIntermedio(nuevo);
-  }
-
-  if(nodo->tipoNodo==6||nodo->tipoNodo==7){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "RETURN";
-    if(nodo->tipoNodo==6){
-      nuevo->op1 = pasarACodIntermedio(nodo->expresion);
+      nuevo = malloc(sizeof(NodoInt));
+      nuevo->operacion = "LABEL"; // agrega el label que marca el fin del if
+      nuevo->nombre =labF;
+      agregarCodIntermedio(nuevo);
     }
 
-    agregarCodIntermedio(nuevo);
-  }
 
-  if(nodo->tipoNodo==8){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "MOV";
-    nuevo->op2 = pasarACodIntermedio(nodo->expresion);
-    nuevo->op1= nodo->op1;
-    agregarCodIntermedio(nuevo);
-  }
-  if(nodo->tipoNodo==9){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
-    //ver si apuntamos al metodo
-    loadParametros(nodo->call_params);
-    agregarCodIntermedio(nuevo);
-  }
-  if(nodo->tipoNodo==9){
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "CALL";
-    nuevo->nombre= nodo->nombre;
-    //ver si apuntamos al metodo
-    loadParametros(nodo->call_params);
-    agregarCodIntermedio(nuevo);
-  }
-  //literal entero
-  if(nodo->tipoNodo==12||nodo->tipoNodo==13){
-    NodoArbol *temp=nuevaVariableTemporal(nodo->tipo);
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->operacion = "MOV";
-    nuevo->op1 = temp;
-    nuevo->op2 = nodo;
-    agregarCodIntermedio(nuevo);
-    return temp;
-  }
+    if(nodo->tipoNodo==5){
+      lab1 = nuevoLabel("WHILE");
+      lab2 = nuevoLabel("ENDWHILE");
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion="LABEL";
+      nuevo->nombre = lab1;
+      agregarCodIntermedio(nuevo);
 
-if(nodo->tipoNodo==14){
-    NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
-    NodoArbol* temp2 = pasarACodIntermedio(nodo->op2);
-    NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
-    nuevo= malloc(sizeof(NodoInt));
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "JMPFalso";
+      nuevo->op1 = pasarACodIntermedio(nodo->tcondicion);
+      nuevo->nombre= lab2;
+      agregarCodIntermedio(nuevo);
 
-    nuevo->op1=temp1;
-    nuevo->op2=temp2;
-    nuevo->op3=res;
+      pasarACodIntermedio(nodo->cuerpo);
 
-    if(strcmp("*",nodo->nombre)==0){
-      nuevo->operacion="MULT";
-    }
-    if(strcmp("+",nodo->nombre)==0){
-      nuevo->operacion="SUM";
-    }
-    if(strcmp("/",nodo->nombre)==0){
-      nuevo->operacion="DIV";
-    }
-    if(strcmp("%",nodo->nombre)==0){
-      nuevo->operacion="MOD";
-    }
-    if(strcmp(">",nodo->nombre)==0){
-      nuevo->operacion="MAYORQUE";
-    }
-    if(strcmp("<",nodo->nombre)==0){
-      nuevo->operacion="MENORQUE";
-    }
-    if(strcmp("==",nodo->nombre)==0){
-      nuevo->operacion="IGUAL";
-    }
-    agregarCodIntermedio(nuevo);
-    return res;
-}
-  if(nodo->tipoNodo==15){
-    NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
-    NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
-    nuevo= malloc(sizeof(NodoInt));
-    nuevo->op1=temp1;
-    nuevo->op3=res;
-    if(strcmp("!",nodo->nombre)==0){
-      nuevo->operacion="NEGBOOL";
-    }
-    if(strcmp("-",nodo->nombre)==0){
-      nuevo->operacion="NEGINT";
-    }
-    agregarCodIntermedio(nuevo);
-    return res;
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "JMP";
+      nuevo->nombre= lab1;
+      agregarCodIntermedio(nuevo);
 
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion="LABEL";
+      nuevo->nombre = lab2;
+      agregarCodIntermedio(nuevo);
+    }
+
+    if(nodo->tipoNodo==6||nodo->tipoNodo==7){
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "RETURN";
+      if(nodo->tipoNodo==6){
+        nuevo->op1 = pasarACodIntermedio(nodo->expresion);
+      }
+
+      agregarCodIntermedio(nuevo);
+    }
+
+    if(nodo->tipoNodo==8){
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "MOV";
+      nuevo->op2 = pasarACodIntermedio(nodo->expresion);
+      nuevo->op1= nodo->op1;
+      agregarCodIntermedio(nuevo);
+    }
+    if(nodo->tipoNodo==9){
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "CALL";
+      nuevo->nombre= nodo->nombre;
+      //ver si apuntamos al metodo
+      loadParametros(nodo->call_params);
+      agregarCodIntermedio(nuevo);
+    }
+    if(nodo->tipoNodo==9){
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "CALL";
+      nuevo->nombre= nodo->nombre;
+      //ver si apuntamos al metodo
+      loadParametros(nodo->call_params);
+      agregarCodIntermedio(nuevo);
+    }
+    //literal entero
+    if(nodo->tipoNodo==12||nodo->tipoNodo==13){
+      NodoArbol *temp=nuevaVariableTemporal(nodo->tipo);
+      printf("LITERAL ENTERO O BOOL\n");
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->operacion = "MOV";
+      nuevo->op1 = temp;
+      nuevo->op2 = nodo;
+      agregarCodIntermedio(nuevo);
+      return temp;
+      printf("termino l ENTERO O BOOL\n");
+    }
+
+  if(nodo->tipoNodo==14){
+      NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
+      NodoArbol* temp2 = pasarACodIntermedio(nodo->op2);
+      NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
+      nuevo= malloc(sizeof(NodoInt));
+
+      nuevo->op1=temp1;
+      nuevo->op2=temp2;
+      nuevo->op3=res;
+
+      if(strcmp("*",nodo->nombre)==0){
+        nuevo->operacion="MULT";
+      }
+      if(strcmp("+",nodo->nombre)==0){
+        nuevo->operacion="SUM";
+      }
+      if(strcmp("/",nodo->nombre)==0){
+        nuevo->operacion="DIV";
+      }
+      if(strcmp("%",nodo->nombre)==0){
+        nuevo->operacion="MOD";
+      }
+      if(strcmp(">",nodo->nombre)==0){
+        nuevo->operacion="MAYORQUE";
+      }
+      if(strcmp("<",nodo->nombre)==0){
+        nuevo->operacion="MENORQUE";
+      }
+      if(strcmp("==",nodo->nombre)==0){
+        nuevo->operacion="IGUAL";
+      }
+      agregarCodIntermedio(nuevo);
+      return res;
   }
-  if(nodo->tipoNodo==16){
-    return nodo->op1;
+    if(nodo->tipoNodo==15){
+      NodoArbol* temp1 = pasarACodIntermedio(nodo->op1);
+      NodoArbol* res = nuevaVariableTemporal(nodo->tipo);
+      nuevo= malloc(sizeof(NodoInt));
+      nuevo->op1=temp1;
+      nuevo->op3=res;
+      if(strcmp("!",nodo->nombre)==0){
+        nuevo->operacion="NEGBOOL";
+      }
+      if(strcmp("-",nodo->nombre)==0){
+        nuevo->operacion="NEGINT";
+      }
+      agregarCodIntermedio(nuevo);
+      return res;
 
-  }
-  //avanza a la siguiente sentencia
-  if(nodo->next!=NULL){
-    pasarACodIntermedio(nodo->next);
-  }
-/*  if(nodo->next==NULL){ //guarda la ultima instruccion de la list de codigo intermedio
-    ultcodigoIntermedio=nodo;
-  }*/
-  return NULL;
+    }
+    if(nodo->tipoNodo==16){
+      return nodo->op1;
+
+    }
+    //avanza a la siguiente sentencia
+    if(nodo->next!=NULL){
+      pasarACodIntermedio(nodo->next);
+    }
+  /*  if(nodo->next==NULL){ //guarda la ultima instruccion de la list de codigo intermedio
+      ultcodigoIntermedio=nodo;
+    }*/
+    return NULL;
 };
 
 void imprimirLista(NodoInt* nodo){
@@ -405,7 +390,7 @@ void nuevoNivelPila(){
 }
 
 void eliminarNivelPila(){
-variableGlobalPila = variableGlobalPila->nodoInferior;
+  variableGlobalPila = variableGlobalPila->nodoInferior;
 
 }
 
@@ -456,82 +441,82 @@ NodoArbol* buscarVariableSC (char* param ) {
 
 NodoArbol* buscarVariable (char* param ) {
 
-  // printf("VAMOS A IMPRIMIR LA TABLA DE VARIABLES\n");
+    // printf("VAMOS A IMPRIMIR LA TABLA DE VARIABLES\n");
 
-  NodoPila *scope = variableGlobalPila;
-  NodoArbol *recorrido = scope->lista;
+    NodoPila *scope = variableGlobalPila;
+    NodoArbol *recorrido = scope->lista;
+    while(scope != NULL){
+      // printf("NIVEL CON PUNTERO: %p\n",scope );
+      while(recorrido != NULL){
+      //  printf("%s %s | ",recorrido->tipo,recorrido->nombre);
+       recorrido = recorrido->nextlista;
+      }
+      // printf("\n------------------------------------------\n" );
+      scope=scope->nodoInferior;
+      if (scope !=NULL){
+        recorrido = scope->lista;
+      }
+
+    }
+    // printf("termino de impriir la tabla\n");
+    scope = variableGlobalPila;
+    recorrido = scope->lista;
   while(scope != NULL){
-    // printf("NIVEL CON PUNTERO: %p\n",scope );
     while(recorrido != NULL){
-    //  printf("%s %s | ",recorrido->tipo,recorrido->nombre);
+      // printf("se va a buscar la variable %s\n",param);
+    //  printf("se va a comparar %s con %s \n",param,recorrido->nombre);
+     if(strcmp(recorrido->nombre,param)==0){
+       return recorrido;
+     }
      recorrido = recorrido->nextlista;
     }
-    // printf("\n------------------------------------------\n" );
     scope=scope->nodoInferior;
     if (scope !=NULL){
       recorrido = scope->lista;
     }
+  }
+    return NULL;
+  }
+
+  NodoArbol* buscarMetodo (char* param ) {
+    NodoArbol *recorrido = listametodos;
+    while(recorrido != NULL){
+     if (strcmp(recorrido->nombre,param)==0){
+       return recorrido;
+     }
+     recorrido = recorrido->nextlista;
+    }
+    return NULL;
+  }
+  int mismoTipoINT (NodoArbol *a,NodoArbol* b){
+    int res =0;
+    if(strcmp(b->tipo,"int")!=0){
+      res=2;
+    }
+    if(strcmp(a->tipo,"int")!=0){
+      res=1;
+    }
+    return res;
 
   }
-  // printf("termino de impriir la tabla\n");
-  scope = variableGlobalPila;
-  recorrido = scope->lista;
-while(scope != NULL){
-  while(recorrido != NULL){
-    // printf("se va a buscar la variable %s\n",param);
-  //  printf("se va a comparar %s con %s \n",param,recorrido->nombre);
-   if(strcmp(recorrido->nombre,param)==0){
-     return recorrido;
-   }
-   recorrido = recorrido->nextlista;
-  }
-  scope=scope->nodoInferior;
-  if (scope !=NULL){
-    recorrido = scope->lista;
-  }
-}
-  return NULL;
-}
 
-NodoArbol* buscarMetodo (char* param ) {
-  NodoArbol *recorrido = listametodos;
-  while(recorrido != NULL){
-   if (strcmp(recorrido->nombre,param)==0){
-     return recorrido;
-   }
-   recorrido = recorrido->nextlista;
-  }
-  return NULL;
-}
-int mismoTipoINT (NodoArbol *a,NodoArbol* b){
-  int res =0;
-  if(strcmp(b->tipo,"int")!=0){
-    res=2;
-  }
-  if(strcmp(a->tipo,"int")!=0){
-    res=1;
-  }
-  return res;
+  int mismoTipoBOOL (NodoArbol *a,NodoArbol* b){
+    int res =0;
+    if(strcmp(b->tipo,"bool")!=0){
+      res=2;
+    }
+    if(strcmp(a->tipo,"bool")!=0){
+      res=1;
+    }
+    return res;
 
-}
-
-int mismoTipoBOOL (NodoArbol *a,NodoArbol* b){
-  int res =0;
-  if(strcmp(b->tipo,"bool")!=0){
-    res=2;
   }
-  if(strcmp(a->tipo,"bool")!=0){
-    res=1;
-  }
-  return res;
 
-}
-
-int verificarMetodoDeclarado(char* n) {
-  if(buscarMetodo(n)!=NULL){
-    return 1;
-  }
-return 0;
+  int verificarMetodoDeclarado(char* n) {
+    if(buscarMetodo(n)!=NULL){
+      return 1;
+    }
+  return 0;
 
 }
 
@@ -614,7 +599,7 @@ void codIntermedio(NodoArbol* nodo){
   NodoArbol* aux=nodo;
   while (aux!=NULL) {
     pasarACodIntermedio(aux);
-    printf("aux:%p \n",aux );
+    printf("aux:%p funcion:%s\n",aux,aux->nombre );
     aux=aux->nextlista;
   }
 }
