@@ -86,7 +86,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 630 "calc-sintaxis.y" /* yacc.c:1909  */
+#line 632 "calc-sintaxis.y" /* yacc.c:1909  */
  int i; char *s; char c; struct nodoArbol *p; struct infoString *infos; struct infoInt *infoi  ;
 
 #line 93 "calc-sintaxis.tab.h" /* yacc.c:1909  */

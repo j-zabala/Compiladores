@@ -88,6 +88,7 @@ void metodoAIntermedio(NodoArbol* nodo){
 
 char* nuevoLabel(char* info){
   char* aux;
+  aux=(char*)malloc(sizeof(char)*20);
   sprintf(aux,"LAB%d%s",cantidadLabels++,info);
   return aux;
 }
@@ -95,6 +96,7 @@ char* nuevoLabel(char* info){
 
 NodoArbol* nuevaVariableTemporal(char* tipo){
   NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+  nuevo->nombre=(char*)malloc(sizeof(char)*10);
   sprintf(nuevo->nombre,"T%d",cantidadTemporales);
   cantidadTemporales++;
   nuevo->tipo=tipo;
