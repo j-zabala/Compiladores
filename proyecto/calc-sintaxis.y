@@ -618,6 +618,21 @@ void codIntermedio(NodoArbol* nodo){
   }
 }
 
+bool verficarMain(NodoArbol* listMeth){
+  NodoArbol* recorrido=listMeth;
+  int cantMain=0;
+  while (recorrido!=NULL) {
+    if(strcmp(recorrido->nombre,"main")==0){
+      cantMain++;
+    }
+    recorrido=recorrido->nextlista;
+  }
+  if(cantMain==0){
+    printf("ERROR: el programa no tiene definido un metodo 'main', y debe tener unicamente uno.\n");
+    exit(0);
+  }
+}
+
 
 char *aux;
 
@@ -703,6 +718,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
     program: {
       inicializar();} clases {eliminarNivelPila();
         controlTiposMetod();
+        verficarMain(listametodos);
         printf("ANTES DE CODIGO intermedio\n");
         if(listametodos==NULL){
           printf("listametodos es NULL\n");
