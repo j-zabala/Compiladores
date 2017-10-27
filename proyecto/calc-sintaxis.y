@@ -618,20 +618,31 @@ void codIntermedio(NodoArbol* nodo){
   }
 }
 
-bool verficarMain(NodoArbol* listMeth){
+void argumentosMain(NodoArbol* main){
+  NodoArbol* parametros=main->param;
+  if(parametros!=NULL){
+    printf("ERROR linea %i: el metodo main no debe tener ningun parametro.\n", main->nrolinea);
+    exit(0);
+  }
+}
+
+void verificarMain(NodoArbol* listMeth){
   NodoArbol* recorrido=listMeth;
   int cantMain=0;
   while (recorrido!=NULL) {
     if(strcmp(recorrido->nombre,"main")==0){
       cantMain++;
+    //  argumentosMain(recorrido);
     }
     recorrido=recorrido->nextlista;
   }
   if(cantMain==0){
-    printf("ERROR: el programa no tiene definido un metodo 'main', y debe tener unicamente uno.\n");
+    printf("ERROR: el programa no tiene definido un metodo 'main'(y debe tener unicamente uno).\n");
     exit(0);
   }
 }
+
+
 
 
 char *aux;
@@ -718,7 +729,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
     program: {
       inicializar();} clases {eliminarNivelPila();
         controlTiposMetod();
-        verficarMain(listametodos);
+        verificarMain(listametodos);
         printf("ANTES DE CODIGO intermedio\n");
         if(listametodos==NULL){
           printf("listametodos es NULL\n");
@@ -791,6 +802,9 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
     printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
     exit(0);
   };
+  if(strcmp(aux->nombre,"main")==0){
+    argumentosMain(aux);
+  }
   $$ = aux;
 }
 |type ID PARENTESISABRE PARENTESISCIERRA block {
@@ -826,6 +840,11 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                       exit(0);
                                                     };
                                                     eliminarNivelPila();
+
+                                                    if(strcmp($2->info,"main")==0){
+
+                                                      argumentosMain(aux);
+                                                    }
 
 
                                                     $$ = aux;
