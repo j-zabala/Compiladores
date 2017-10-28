@@ -1,0 +1,24 @@
+class {
+
+        int jota(int equis) {
+                int jota; //chequear esta declaracion. nombre de var = nombre funcion
+                return jota;
+        }
+
+       /* int iiih(int equis,bool holanda) {
+            int jota;
+           return equis + 1;
+        } */
+        int main() {
+                int ye;
+                bool zeta;
+                zeta = true;
+                ye=1;
+               // iiih(ye,zeta);
+                if (ye == 1) then {
+                                return ye;
+                        } else {
+                                return ye;
+                        }
+        }
+}

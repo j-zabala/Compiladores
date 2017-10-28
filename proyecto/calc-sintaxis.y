@@ -111,7 +111,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
   if(nodo == NULL){
     printf("null pasarACodIntermedio\n");
     return NULL;}
-  printf("despues del null en pasarACodIntermedio\n");
+  //printf("despues del null en pasarACodIntermedio\n");
   imprimirNodo(nodo);
   NodoInt* nuevo;
   char* lab1;
@@ -473,35 +473,39 @@ NodoArbol* buscarVariable (char* param ) {
 
   }
   // printf("termino de impriir la tabla\n");
-  scope = variableGlobalPila;
-  recorrido = scope->lista;
-while(scope != NULL){
-  while(recorrido != NULL){
-    // printf("se va a buscar la variable %s\n",param);
-  //  printf("se va a comparar %s con %s \n",param,recorrido->nombre);
-   if(strcmp(recorrido->nombre,param)==0){
-     return recorrido;
-   }
-   recorrido = recorrido->nextlista;
-  }
-  scope=scope->nodoInferior;
-  if (scope !=NULL){
-    recorrido = scope->lista;
-  }
-}
-  return NULL;
+  	scope = variableGlobalPila;
+  	recorrido = scope->lista;
+	while(scope != NULL){
+	  while(recorrido != NULL){
+	    // printf("se va a buscar la variable %s\n",param);
+	  //  printf("se va a comparar %s con %s \n",param,recorrido->nombre);
+	   if(strcmp(recorrido->nombre,param)==0){
+	     return recorrido;
+	   }
+	   recorrido = recorrido->nextlista;
+	  }
+	  scope=scope->nodoInferior;
+	  if (scope !=NULL){
+	    recorrido = scope->lista;
+	  }
+	}
+  	return NULL;
 }
 
 NodoArbol* buscarMetodo (char* param ) {
+
   NodoArbol *recorrido = listametodos;
   while(recorrido != NULL){
-   if (strcmp(recorrido->nombre,param)==0){
-     return recorrido;
-   }
-   recorrido = recorrido->nextlista;
+  	//printf("funcion: %s\n", recorrido->nombre);;
+
+   	if (strcmp(recorrido->nombre,param)==0){
+    	return recorrido;
+   	}
+   	recorrido = recorrido->nextlista;
   }
   return NULL;
 }
+
 int mismoTipoINT (NodoArbol *a,NodoArbol* b){
   int res =0;
   if(strcmp(b->tipo,"int")!=0){
@@ -618,6 +622,24 @@ void codIntermedio(NodoArbol* nodo){
   }
 }
 
+int unicoMetodo(char* nombre){
+	NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+	nuevo = buscarVariable(nombre); //ver si la variable se busca en el scope o en todas las variables
+	if(nuevo==NULL){
+		return 1;
+	}
+	return 0;
+}
+
+int unicaVariable(char* nombre){
+	NodoArbol* nuevo = malloc(sizeof(NodoArbol));
+	//printf("nombre variable : %s\n", nombre);
+	nuevo = buscarMetodo(nombre);
+	if(nuevo==NULL){
+		return 1;
+	}
+	return 0;
+}
 
 char *aux;
 
@@ -735,20 +757,24 @@ var_decl: type  listaID PUNTOYCOMA   {
 };
 ;
 
-listaID : ID  {     if(buscarVariableSC($1->info)==NULL){
+listaID : ID  {     if((buscarVariableSC($1->info)==NULL)&&(unicaVariable($1->info)==1)){
                       // printf("%s\n","la variable no esta en el scope!!" );
                       nuevaVariable($1->info,aux,$1->linea);
                     }else{
-                      printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info  );
+                      printf("ERROR linea %i: id %s ya esta declarado \n",$1->linea,$1->info);
+                      //printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info);
+                      exit(0);
                       }
 
                     }
 | listaID COMA ID {
-                  if(buscarVariableSC($3->info)==NULL){
+                  if((buscarVariableSC($3->info)==NULL)&&(unicaVariable($3->info)==1)){
                   //  printf("%s\n","la variable no esta en el scope!!" );
                     nuevaVariable($3->info,aux,$3->linea);
                   }else{
-                    printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info  );
+                   printf("ERROR linea %i: id %s ya esta declarado \n",$3->linea,$3->info);
+                   // printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info);
+                    exit(0);
                     }
   }
 ;
@@ -760,38 +786,40 @@ listamethod_decl : method_decl {$1->nextlista=listametodos;listametodos=$1;}
 
 method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
-  // printf("declaracion de metodo2\n");
-  NodoArbol *aux= malloc(sizeof(NodoArbol));
+														  // printf("declaracion de metodo2\n");
+														  NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-  aux->tipo=$1;
-  aux->tipoNodo=2;
-  aux->nombre= $2->info;
-  aux->cuerpo = $6;
-  aux->nrolinea =$2->linea;
-  aux->param = variableGlobalPila->lista;
+														  aux->tipo=$1;
+														  aux->tipoNodo=2;
+														  aux->nombre= $2->info;
+														  aux->cuerpo = $6;
+														  aux->nrolinea =$2->linea;
+														  aux->param = variableGlobalPila->lista;
 
-  eliminarNivelPila();
-  if(verificarMetodoDeclarado(aux->nombre)==1){
-    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
-    exit(0);
-  };
-  $$ = aux;
-}
+														  eliminarNivelPila();
+														  if((verificarMetodoDeclarado(aux->nombre)==1)||(unicoMetodo(aux->nombre)==0)){
+														    printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+														    //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+														    exit(0);
+														  };
+														  $$ = aux;
+														}
 |type ID PARENTESISABRE PARENTESISCIERRA block {
-                // printf("declaracion de metodo1\n");
-                NodoArbol *aux= malloc(sizeof(NodoArbol));
+								                // printf("declaracion de metodo1\n");
+								                NodoArbol *aux= malloc(sizeof(NodoArbol));
 
-                aux->tipo=$1;
-                aux->tipoNodo=2;
-                aux->nombre= $2->info;
-                aux->cuerpo = $5;
-                aux->nrolinea =$2->linea;
-                if(verificarMetodoDeclarado(aux->nombre)==1){
-                  printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
-                  exit(0);
-                };
-                $$ = aux;
-                }
+								                aux->tipo=$1;
+								                aux->tipoNodo=2;
+								                aux->nombre= $2->info;
+								                aux->cuerpo = $5;
+								                aux->nrolinea =$2->linea;
+								                if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
+								                  printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+								                  //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+								                  exit(0);
+								                };
+								                $$ = aux;
+								                }
 
 
   |VOID ID PARENTESISABRE param_decl PARENTESISCIERRA block {
@@ -805,8 +833,9 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                     aux->cuerpo = $6;
                                                     aux->nrolinea =$2->linea;
                                                     aux->param = variableGlobalPila->lista;
-                                                    if(verificarMetodoDeclarado(aux->nombre)==1){
-                                                      printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                    if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
+                                                      printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                      //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
                                                       exit(0);
                                                     };
                                                     eliminarNivelPila();
@@ -825,8 +854,10 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                   aux->nombre= $2->info;
                                                   aux->cuerpo = $5;
                                                   aux->nrolinea =$2->linea;
-                                                  if(verificarMetodoDeclarado(aux->nombre)==1){
-                                                    printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                  if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
+                                                  	//cambiar mensaje por id ya declarado 
+                                                    //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
+                                                    printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
                                                     exit(0);
                                                   };
                                                   $$ = aux;
