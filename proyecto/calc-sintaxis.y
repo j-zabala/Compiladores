@@ -47,7 +47,7 @@ void loadParametros(NodoArbol* parameters){
   aux->nombre=parameters->nombre;
   aux->op1=pasarACodIntermedio(parameters);
   agregarCodIntermedio(aux);
-  loadParametros(parameters->nextlista);
+  loadParametros(parameters->next);
 }
 
 void agregarCodIntermedio(NodoInt* nuevo){
@@ -197,7 +197,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
   if(nodo->tipoNodo==9){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "CALL";
-    printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",nodo->nombre);
+    printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",(nodo->call_metodo)->nombre);
     nuevo->nombre= (nodo->call_metodo)->nombre;
     //ver si apuntamos al metodo
     loadParametros(nodo->call_params);
@@ -620,6 +620,32 @@ void codIntermedio(NodoArbol* nodo){
   }
 }
 
+void argumentosMain(NodoArbol* main){
+  NodoArbol* parametros=main->param;
+  if(parametros!=NULL){
+    printf("ERROR linea %i: el metodo main no debe tener ningun parametro.\n", main->nrolinea);
+    exit(0);
+  }
+}
+
+void verificarMain(NodoArbol* listMeth){
+  NodoArbol* recorrido=listMeth;
+  int cantMain=0;
+  while (recorrido!=NULL) {
+    if(strcmp(recorrido->nombre,"main")==0){
+      cantMain++;
+    //  argumentosMain(recorrido);
+    }
+    recorrido=recorrido->nextlista;
+  }
+  if(cantMain==0){
+    printf("ERROR: el programa no tiene definido un metodo 'main'(y debe tener unicamente uno).\n");
+    exit(0);
+  }
+}
+
+
+
 
 char *aux;
 
@@ -705,6 +731,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
     program: {
       inicializar();} clases {eliminarNivelPila();
         controlTiposMetod();
+        verificarMain(listametodos);
         printf("ANTES DE CODIGO intermedio\n");
         if(listametodos==NULL){
           printf("listametodos es NULL\n");
@@ -777,6 +804,9 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
     printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
     exit(0);
   };
+  if(strcmp(aux->nombre,"main")==0){
+    argumentosMain(aux);
+  }
   $$ = aux;
 }
 |type ID PARENTESISABRE PARENTESISCIERRA block {
@@ -812,6 +842,11 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                       exit(0);
                                                     };
                                                     eliminarNivelPila();
+
+                                                    if(strcmp($2->info,"main")==0){
+
+                                                      argumentosMain(aux);
+                                                    }
 
 
                                                     $$ = aux;
@@ -901,6 +936,11 @@ type:INTRES    {
 statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
                                                               NodoArbol *nuevo= malloc(sizeof(NodoArbol));
 
+                                                              if(strcmp($3->tipo,"bool")!=0){
+                                                                printf("ERROR linea %i : la sentecia 'if' requiere una expresion booleana.\n",$1);
+                                                                exit(0);
+                                                              }
+
                                                               nuevo->tipoNodo=3;
                                                               nuevo->tcondicion = $3;
                                                               nuevo->tthen = $6;
@@ -909,6 +949,12 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
                                                             }
           | IF PARENTESISABRE expr PARENTESISCIERRA THEN block ELSE block  {
                                                                         NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+
+                                                                        if(strcmp($3->tipo,"bool")!=0){
+                                                                          printf("ERROR linea %i : la sentecia 'if' requiere una expresion booleana.\n",$1);
+                                                                          exit(0);
+                                                                        }
+
                                                                         nuevo->tipoNodo=4;
                                                                         nuevo->tcondicion = $3;
                                                                         nuevo->tthen = $6;
@@ -918,7 +964,13 @@ statement :  IF PARENTESISABRE expr PARENTESISCIERRA THEN block   {
                                                                       }
 
           | WHILE PARENTESISABRE expr PARENTESISCIERRA block {
-                                      NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+                                        NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+
+                                        if(strcmp($3->tipo,"bool")!=0){
+                                          printf("ERROR linea %i : la sentecia 'while' requiere una expresion booleana.\n",$1);
+                                          exit(0);
+                                        }
+
                                         nuevo->tipoNodo=5;
                                         nuevo->tcondicion = $3;
                                         nuevo->cuerpo = $5;
