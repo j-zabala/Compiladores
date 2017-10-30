@@ -624,7 +624,7 @@ void codIntermedio(NodoArbol* nodo){
 
 int unicoMetodo(char* nombre){
 	NodoArbol* nuevo = malloc(sizeof(NodoArbol));
-	nuevo = buscarVariable(nombre); //ver si la variable se busca en el scope o en todas las variables
+	nuevo = buscarVariableSC(nombre);
 	if(nuevo==NULL){
 		return 1;
 	}
@@ -757,7 +757,9 @@ var_decl: type  listaID PUNTOYCOMA   {
 };
 ;
 
-listaID : ID  {     if((buscarVariableSC($1->info)==NULL)&&(unicaVariable($1->info)==1)){
+listaID : ID  {     
+				if(variableGlobalPila->nodoInferior==NULL){
+					if((buscarVariableSC($1->info)==NULL)&&(unicaVariable($1->info)==1)){
                       // printf("%s\n","la variable no esta en el scope!!" );
                       nuevaVariable($1->info,aux,$1->linea);
                     }else{
@@ -765,17 +767,40 @@ listaID : ID  {     if((buscarVariableSC($1->info)==NULL)&&(unicaVariable($1->in
                       //printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info);
                       exit(0);
                       }
-
-                    }
+          
+				}else{
+					if(buscarVariableSC($1->info)==NULL){
+                      // printf("%s\n","la variable no esta en el scope!!" );
+                      nuevaVariable($1->info,aux,$1->linea);
+                    }else{
+                      printf("ERROR linea %i: id %s ya esta declarado \n",$1->linea,$1->info);
+                      //printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info);
+                      exit(0);
+                      }
+                }
+              }
+            
+					
 | listaID COMA ID {
-                  if((buscarVariableSC($3->info)==NULL)&&(unicaVariable($3->info)==1)){
-                  //  printf("%s\n","la variable no esta en el scope!!" );
-                    nuevaVariable($3->info,aux,$3->linea);
-                  }else{
-                   printf("ERROR linea %i: id %s ya esta declarado \n",$3->linea,$3->info);
-                   // printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info);
-                    exit(0);
-                    }
+				if(variableGlobalPila->nodoInferior==NULL){
+	                  if((buscarVariableSC($3->info)==NULL)&&(unicaVariable($3->info)==1)){
+	                  //  printf("%s\n","la variable no esta en el scope!!" );
+	                    nuevaVariable($3->info,aux,$3->linea);
+	                  }else{
+	                   printf("ERROR linea %i: id %s ya esta declarado \n",$3->linea,$3->info);
+	                   // printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info);
+	                    exit(0);
+	                  }
+	            }else{
+	            	if(buscarVariableSC($3->info)==NULL){
+	                  //  printf("%s\n","la variable no esta en el scope!!" );
+	                    nuevaVariable($3->info,aux,$3->linea);
+	                  }else{
+	                   printf("ERROR linea %i: id %s ya esta declarado \n",$3->linea,$3->info);
+	                   // printf("ERROR linea %i; la variable %s ya esta declarada \n",$3->linea,$3->info);
+	                    exit(0);
+	                  }
+	            }
   }
 ;
 

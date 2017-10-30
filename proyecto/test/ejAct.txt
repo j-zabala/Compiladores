@@ -1,15 +1,16 @@
 class {
-
+        int jota;
+        
         int jota(int equis) {
-                int jota; //chequear esta declaracion. nombre de var = nombre funcion
-                return jota;
+                int j; 
+                return j;
         }
 
-       /* int iiih(int equis,bool holanda) {
+        int iiih(int equis,bool holanda) {
             int jota;
            return equis + 1;
-        } */
-        int main() {
+        }
+        int main(){
                 int ye;
                 bool zeta;
                 zeta = true;
