@@ -565,6 +565,8 @@ int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
       cant_ret_correctos=cant_ret_correctos+verifTiposif(param_tipo,nombre_metodo,recorrido);
     }
     if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
+      if (strcmp(recorrido->tipo,param_tipo)!=0){
+        printf("ERROR linea %i: en la funcion %s se quiere retornar una expresion de distinto tipo que el tipo de retorno del metodo\n",recorrido->nrolinea, nombre_metodo);exit(0);}
       cant_ret_correctos=cant_ret_correctos+verifTiposRet(param_tipo,nombre_metodo,recorrido);
     }
     recorrido=recorrido->next;
@@ -582,8 +584,8 @@ void controlTiposMetod(){
   NodoArbol* metodo = listametodos;
   while(metodo!=NULL){
     verifTipos(metodo->tipo,metodo->nombre,metodo->cuerpo);
-    //metodo=metodo->nextlista;
-    metodo=NULL;
+    metodo=metodo->nextlista;
+
   }
 
 
