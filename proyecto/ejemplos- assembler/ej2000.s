@@ -1,17 +1,20 @@
-	.file	"ej2000.c"
+
 	.comm	a,4,4
 	.comm	b,4,4
+
+
+
 	.text
+	
 	.globl	inc
 	.type	inc, @function
 inc:
 .LFB0:
-	.cfi_startproc
+
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
+
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
+
 	movl	%edi, -20(%rbp)
 	movl	$2, -8(%rbp)
 	movl	$3, -4(%rbp)
@@ -26,12 +29,13 @@ inc:
 	.cfi_endproc
 .LFE0:
 	.size	inc, .-inc
+
 	.globl	main
 	.type	main, @function
 main:
 .LFB1:
 
-	
+
 	pushq	%rbp
 
 	movq	%rsp, %rbp

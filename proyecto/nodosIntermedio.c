@@ -21,5 +21,5 @@ typedef struct nodoInt {
         struct nodoArbol* op1;
         struct nodoArbol* op2;
         struct nodoArbol* op3;
-
+        struct nodoArbol* metodoOriginal;
 } NodoInt;

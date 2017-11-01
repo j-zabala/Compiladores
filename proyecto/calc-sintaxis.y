@@ -42,6 +42,64 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 void agregarCodIntermedio(NodoInt* nuevo);
 
 
+void codAssembler (){
+  FILE * archivo=fopen ("assembler.s", "w+");
+
+  CAglobales(archivo);
+  pasarACodAssembler(archivo,codigoIntermedio,0);
+
+
+  fclose(archivo);
+}
+
+void CAglobales(FILE* archivo){
+  NodoArbol* recorrido=variableGlobalPila->lista;
+  while(recorrido!=NULL){
+    if(recorrido->isGlobal==1){
+      fprintf(archivo, "  .comm %s,8 \n",recorrido->nombre );
+      recorrido=recorrido->nextlista;
+      printf("se agrega la variable %s a las globals",recorrido->nombre);
+    }
+  }
+  fprintf(archivo, "  .text\n");
+
+}
+
+void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
+  if (strcmp(nodo->operacion,"METODO")==0){
+    fprintf(arch, "  .globl	%s\n",nodo->nombre );
+    fprintf(arch, "  .type	%s, @function\n",nodo->nombre );
+    fprintf(arch, "%s:\n",nodo->nombre );
+    fprintf(arch, "  LFB%i:\n",metodonro);
+    int cantidadenter;
+    if(mod((nodo->metodoOriginal)->maxoffSet+8,16)==0){
+      cantidadenter=(maxoffSet+8*-1);
+    }else{
+      cantidadenter=(maxoffSet+8*-1)+16;
+    }
+    fprintf(arch, "  enter %i,$0\n",metodonro);
+    pasarACodAssembler(arch,nodo->next,metodonro);
+
+  }
+
+  if (strcmp(nodo->operacion,"ENDMETODO")==0){
+    fprintf(arch, "  leave\n");
+    fprintf(arch, "  LFE%i:\n",metodonro);
+    fprintf(arch, ".size	%s, .-%s",nodo->nombre,nodo->nombre );
+    pasarACodAssembler(arch,nodo->next,metodonro+1);
+
+  }
+
+
+  if (strcmp(nodo->operacion,"METODO")==0){
+
+  }
+  if (strcmp(nodo->operacion,"METODO")==0){
+
+  }
+
+}
+
 
 void loadParametros(NodoArbol* parameters){
   if(parameters==NULL){ return; }
@@ -92,7 +150,7 @@ void metodoAIntermedio(NodoArbol* nodo){
   agregarCodIntermedio(nuevo);
 
   nodo->maxoffSet=currentOffSet;
-
+  nuevo->metodoOriginal=nodo;
 }
 
 char* nuevoLabel(char* info){

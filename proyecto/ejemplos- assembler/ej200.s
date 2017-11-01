@@ -2,6 +2,7 @@
 	.comm	a,4,4
 	.comm	b,4,4
 	.text
+
 	.globl	inc
 	.type	inc, @function
 
@@ -26,8 +27,12 @@ inc:
 
 .LFE0:
 	.size	inc, .-inc
+
+
+
 	.globl	main
 	.type	main, @function
+
 main:
 .LFB1:
 
