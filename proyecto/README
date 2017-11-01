@@ -16,3 +16,7 @@ UTILIZACION:
 IMPORTANTE: en la carpeta test se incluyen algunos test de los diferentes
 errores sintacticos y semanticos que encuentra el compilador, si no se indica ningun error
 significa que el codigo ingresador es correcto en sintaxis y en semantica.
+
+Los test sugeridos por los profesores fueron adaptados al lenguaje mini-TDS
+
+ 

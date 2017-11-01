@@ -576,10 +576,10 @@ int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
     recorrido=recorrido->next;
   }
 
-  if (cant_ret_correctos==0){
-    printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
-    exit(0);
-  }
+  //if (cant_ret_correctos==0){
+  //  printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
+  //  exit(0);
+  // }
   return cant_ret_correctos;
 }
 
@@ -788,7 +788,7 @@ var_decl: type  listaID PUNTOYCOMA   {
 };
 ;
 
-listaID : ID  {     
+listaID : ID  {
 				if(variableGlobalPila->nodoInferior==NULL){
 					if((buscarVariableSC($1->info)==NULL)&&(unicaVariable($1->info)==1)){
                       // printf("%s\n","la variable no esta en el scope!!" );
@@ -798,7 +798,7 @@ listaID : ID  {
                       //printf("ERROR linea %i; la variable %s ya esta declarada \n",$1->linea,$1->info);
                       exit(0);
                       }
-          
+
 				}else{
 					if(buscarVariableSC($1->info)==NULL){
                       // printf("%s\n","la variable no esta en el scope!!" );
@@ -810,8 +810,8 @@ listaID : ID  {
                       }
                 }
               }
-            
-					
+
+
 | listaID COMA ID {
 				if(variableGlobalPila->nodoInferior==NULL){
 	                  if((buscarVariableSC($3->info)==NULL)&&(unicaVariable($3->info)==1)){
@@ -920,7 +920,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                   aux->cuerpo = $5;
                                                   aux->nrolinea =$2->linea;
                                                   if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
-                                                  	//cambiar mensaje por id ya declarado 
+                                                  	//cambiar mensaje por id ya declarado
                                                     //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
                                                     printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
                                                     exit(0);
