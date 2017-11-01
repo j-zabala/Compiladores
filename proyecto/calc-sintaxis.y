@@ -31,6 +31,9 @@ NodoInt* ultcodigoIntermedio;
 int cantidadTemporales;
 int cantidadLabels;
 
+int currentOffSet;
+
+
 void imprimirNodo(NodoArbol *nodo);//como el forward de pascal
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
@@ -76,6 +79,9 @@ void metodoAIntermedio(NodoArbol* nodo){
   NodoInt* nuevo = malloc(sizeof(NodoInt));
   nuevo->nombre = nodo->nombre;
   nuevo->operacion = "METODO";
+  currentOffSet=nodo->maxoffSet;
+
+
   agregarCodIntermedio(nuevo);
 
   pasarACodIntermedio(nodo->cuerpo);
@@ -85,6 +91,7 @@ void metodoAIntermedio(NodoArbol* nodo){
   nuevo->operacion = "ENDMETODO";
   agregarCodIntermedio(nuevo);
 
+  nodo->maxoffSet=currentOffSet;
 
 }
 
@@ -102,6 +109,10 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
   sprintf(nuevo->nombre,"T%d",cantidadTemporales);
   cantidadTemporales++;
   nuevo->tipo=tipo;
+
+  nuevo->offSet = currentOffSet;
+  currentOffSet =currentOffSet -8;
+
   printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
   return nuevo;
 }
@@ -416,6 +427,13 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
   aux->tipo = param_tipo;
   aux->nextlista =NULL;
   aux->nrolinea = numeroLinea;
+  aux->offSet= currentOffSet;
+  currentOffSet=currentOffSet-8;
+  if(variableGlobalPila->nodoInferior==NULL){
+    aux->isGlobal = 1;
+  }else{
+    aux->isGlobal = 0;
+  }
 
   if (variableGlobalPila->lista !=NULL){
     NodoArbol *reco = variableGlobalPila->lista; //segundo o mas de la lista
@@ -429,6 +447,7 @@ void nuevaVariable(char* param_nombre, char* param_tipo,int numeroLinea){
 
 }
 void inicializar (){
+  currentOffSet=-8;
   cantidadTemporales=0;
   cantidadLabels=0;
   listametodos=NULL;
@@ -851,7 +870,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
   aux->cuerpo = $6;
   aux->nrolinea =$2->linea;
   aux->param = variableGlobalPila->lista;
-
+  aux->maxoffSet = currentOffSet;
   eliminarNivelPila();
   if((verificarMetodoDeclarado(aux->nombre)==1)||(unicoMetodo(aux->nombre)==0)){
 														    printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -864,16 +883,17 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
   $$ = aux;
 }
 
-|type ID PARENTESISABRE PARENTESISCIERRA block {
+|type ID PARENTESISABRE PARENTESISCIERRA {currentOffSet=-8;} block {
 								                // printf("declaracion de metodo1\n");
 								                NodoArbol *aux= malloc(sizeof(NodoArbol));
 
 								                aux->tipo=$1;
 								                aux->tipoNodo=2;
 								                aux->nombre= $2->info;
-								                aux->cuerpo = $5;
+								                aux->cuerpo = $6;
 								                aux->nrolinea =$2->linea;
-								                if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
+                                aux->maxoffSet = currentOffSet;
+                                if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
 								                  printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
 								                  //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
 								                  exit(0);
@@ -893,6 +913,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                     aux->cuerpo = $6;
                                                     aux->nrolinea =$2->linea;
                                                     aux->param = variableGlobalPila->lista;
+                                                    aux->maxoffSet = currentOffSet;
                                                     if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
                                                       printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
                                                       //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -909,7 +930,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                     $$ = aux;
 
                                                   }
-  |VOID ID PARENTESISABRE PARENTESISCIERRA block {
+  |VOID ID PARENTESISABRE PARENTESISCIERRA {currentOffSet=-8;} block {
                                                   // printf("declaracion de metodo3\n");
 
                                                   NodoArbol *aux= malloc(sizeof(NodoArbol));
@@ -917,8 +938,9 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                   aux->tipo="void";
                                                   aux->tipoNodo=2;
                                                   aux->nombre= $2->info;
-                                                  aux->cuerpo = $5;
+                                                  aux->cuerpo = $6;
                                                   aux->nrolinea =$2->linea;
+                                                  aux->maxoffSet = currentOffSet;
                                                   if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
                                                   	//cambiar mensaje por id ya declarado
                                                     //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -933,7 +955,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 
 
 
-param_decl : {nuevoNivelPila();} Nparam_decl
+param_decl : {currentOffSet=-8;nuevoNivelPila();} Nparam_decl
 
 Nparam_decl: type ID   {nuevaVariable($2->info,$1,$2->linea);}
  |Nparam_decl COMA type ID  {nuevaVariable($4->info,$3,$2->linea);}

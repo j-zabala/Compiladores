@@ -41,6 +41,9 @@ typedef struct nodoArbol {
         struct nodoArbol* op1;
         struct nodoArbol* op2;
 
+        int offSet;
+        int maxoffSet;
+        int isGlobal;
 
         int valor;  //para los literales
         int nrolinea;
