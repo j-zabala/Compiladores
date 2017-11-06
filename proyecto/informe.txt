@@ -1,0 +1,4 @@
+
+
+
+-- vamos a usar el registro eax para las asignaciones de variable a variable

@@ -46,6 +46,7 @@ void codAssembler (){
   FILE * archivo=fopen ("assembler.s", "w+");
 
   CAglobales(archivo);
+  printf("termino con las globales");
   pasarACodAssembler(archivo,codigoIntermedio,0);
 
 
@@ -53,30 +54,45 @@ void codAssembler (){
 }
 
 void CAglobales(FILE* archivo){
+  printf("comienza el agregado de las var globales\n");
+  if(variableGlobalPila==NULL){printf("nullll\n");}
   NodoArbol* recorrido=variableGlobalPila->lista;
+  printf("ahhhhh\n");
   while(recorrido!=NULL){
+    printf("entro en el while\n");
     if(recorrido->isGlobal==1){
+      printf("\n es glob");
       fprintf(archivo, "  .comm %s,8 \n",recorrido->nombre );
-      recorrido=recorrido->nextlista;
+
       printf("se agrega la variable %s a las globals",recorrido->nombre);
     }
+    recorrido=recorrido->nextlista;
   }
+  printf("termino el while\n");
   fprintf(archivo, "  .text\n");
 
 }
 
 void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
+
+
   if (strcmp(nodo->operacion,"METODO")==0){
+    //printf("el nodo op es un METODO\n");
     fprintf(arch, "  .globl	%s\n",nodo->nombre );
     fprintf(arch, "  .type	%s, @function\n",nodo->nombre );
     fprintf(arch, "%s:\n",nodo->nombre );
     fprintf(arch, "  LFB%i:\n",metodonro);
     int cantidadenter;
-    if(mod((nodo->metodoOriginal)->maxoffSet+8,16)==0){
-      cantidadenter=(maxoffSet+8*-1);
-    }else{
-      cantidadenter=(maxoffSet+8*-1)+16;
+    //printf("escribio el encabezado del metodo\n");
+    if(nodo->metodoOriginal==NULL){
+      printf("el metodooriginal es null\n");
     }
+    if(((nodo->metodoOriginal)->maxoffSet+8%16)==0){
+      cantidadenter=((nodo->metodoOriginal)->maxoffSet+8*-1);
+    }else{
+      cantidadenter=((nodo->metodoOriginal)->maxoffSet+8*-1)+16;
+    }
+    //printf("enter %i\n",cantidadenter );
     fprintf(arch, "  enter %i,$0\n",metodonro);
     pasarACodAssembler(arch,nodo->next,metodonro);
 
@@ -91,12 +107,31 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
   }
 
 
-  if (strcmp(nodo->operacion,"METODO")==0){
+  if (strcmp(nodo->operacion,"MOV")==0){
+    printf("el tipo del nodo es %i , corresponde a la variable %s\n",(nodo->op2)->tipoNodo,(nodo->op2)->nombre);
+    if((nodo->op2)->tipoNodo==1){
+      printf("hacemos un mov de una variable a una variable\n");
+      fprintf(arch, "  mov %i(\%rbp), eax \n",(nodo->op2)->offSet);
 
-  }
-  if (strcmp(nodo->operacion,"METODO")==0){
+      fprintf(arch, "  mov eax, %i(\%rbp) \n",(nodo->op1)->offSet);
+      printf( "  mov %i(\%rbp), eax \n",(nodo->op2)->offSet);
 
+      printf( "  mov eax, %i(\%rbp) \n",(nodo->op1)->offSet);
+    }
+    if((nodo->op2)->tipoNodo==12||(nodo->op2)->tipoNodo==13){
+      printf("hacemos un mov de un literal a una variable\n");
+        fprintf(arch, "  mov $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
+        printf("  mov $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
+
+    }
+    pasarACodAssembler(arch,nodo->next,metodonro);
   }
+  // if (strcmp(nodo->operacion,"METODO")==0){
+  //
+  // }
+
+pasarACodAssembler(arch,nodo->next,metodonro);
+
 
 }
 
@@ -138,8 +173,7 @@ void metodoAIntermedio(NodoArbol* nodo){
   nuevo->nombre = nodo->nombre;
   nuevo->operacion = "METODO";
   currentOffSet=nodo->maxoffSet;
-
-
+  nuevo->metodoOriginal=nodo;
   agregarCodIntermedio(nuevo);
 
   pasarACodIntermedio(nodo->cuerpo);
@@ -152,6 +186,9 @@ void metodoAIntermedio(NodoArbol* nodo){
   nodo->maxoffSet=currentOffSet;
   nuevo->metodoOriginal=nodo;
 }
+
+
+
 
 char* nuevoLabel(char* info){
   char* aux;
@@ -167,7 +204,7 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
   sprintf(nuevo->nombre,"T%d",cantidadTemporales);
   cantidadTemporales++;
   nuevo->tipo=tipo;
-
+  nuevo->tipoNodo=1;
   nuevo->offSet = currentOffSet;
   currentOffSet =currentOffSet -8;
 
@@ -830,7 +867,8 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
 %%
 
     program: {
-      inicializar();} clases {eliminarNivelPila();
+      inicializar();} clases {
+        //eliminarNivelPila();
         controlTiposMetod();
         verificarMain(listametodos);
         printf("ANTES DE CODIGO intermedio\n");
@@ -840,6 +878,7 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
         codIntermedio(listametodos);
         printf("DESPUES DE CODIGO intermedio\n");
         imprimirLista(codigoIntermedio);
+        codAssembler();
     }
 
 clases: CLASS  LLAVEABRE LLAVECIERRA          {
