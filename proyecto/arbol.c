@@ -1,8 +1,6 @@
 
 /*
-
    Pre-Proyecto de Compiladores 2017
-
    Integrantes: Bruno Zergoni Coronel, Joaquin Zabala, Valentin Vivaldi
 
  */
@@ -43,6 +41,7 @@ typedef struct nodoArbol {
 
         int offSet;
         int maxoffSet;
+        int posicionParametro;
         int isGlobal;
 
         int valor;  //para los literales

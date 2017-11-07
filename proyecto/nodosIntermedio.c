@@ -22,4 +22,5 @@ typedef struct nodoInt {
         struct nodoArbol* op2;
         struct nodoArbol* op3;
         struct nodoArbol* metodoOriginal;
+        int nroparametro;
 } NodoInt;

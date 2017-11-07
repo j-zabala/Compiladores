@@ -78,13 +78,14 @@ main:
 	movl	$22, -8(%rbp)
 
 
-	movl	-24(%rbp), %r9d
-	movl	-28(%rbp), %r8d
-	movl	-32(%rbp), %ecx
-	movl	-36(%rbp), %edx
-	movl	-40(%rbp), %esi
+	movl	-24(%rbp), %r9d  6 R9D
+	movl	-28(%rbp), %r8d 5TO R8D
+	movl	-32(%rbp), %ecx  4TO RCX
+	movl	-36(%rbp), %edx   3RO RDX
+	movl	-40(%rbp), %esi      2DO RSI
 
-	movl	-44(%rbp), %eax
+	movl	-44(%rbp), %eax  1RO EN EL RDI
+
 
 	movl	-8(%rbp), %edi
 	pushq	%rdi

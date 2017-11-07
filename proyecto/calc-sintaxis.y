@@ -110,25 +110,45 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
   if (strcmp(nodo->operacion,"MOV")==0){
     printf("el tipo del nodo es %i , corresponde a la variable %s\n",(nodo->op2)->tipoNodo,(nodo->op2)->nombre);
     if((nodo->op2)->tipoNodo==1){
-      printf("hacemos un mov de una variable a una variable\n");
-      fprintf(arch, "  mov %i(\%rbp), eax \n",(nodo->op2)->offSet);
+      printf("hacemos un movq de una variable a una variable\n");
+      fprintf(arch, "  movq %i(\%rbp), \%rax \n",(nodo->op2)->offSet);
 
-      fprintf(arch, "  mov eax, %i(\%rbp) \n",(nodo->op1)->offSet);
-      printf( "  mov %i(\%rbp), eax \n",(nodo->op2)->offSet);
+      fprintf(arch, "  movq rax, %i(\%rbp) \n",(nodo->op1)->offSet);
+      printf( "  movq %i(\%rbp), \%rax \n",(nodo->op2)->offSet);
 
-      printf( "  mov eax, %i(\%rbp) \n",(nodo->op1)->offSet);
+      printf( "  movq rax, %i(\%rbp) \n",(nodo->op1)->offSet);
     }
     if((nodo->op2)->tipoNodo==12||(nodo->op2)->tipoNodo==13){
-      printf("hacemos un mov de un literal a una variable\n");
-        fprintf(arch, "  mov $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
-        printf("  mov $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
+      printf("hacemos un movq de un literal a una variable\n");
+        fprintf(arch, "  movq $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
+        printf("  movq $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
 
     }
     pasarACodAssembler(arch,nodo->next,metodonro);
   }
-  // if (strcmp(nodo->operacion,"METODO")==0){
-  //
-  // }
+   if (strcmp(nodo->operacion,"LOADP")==0){
+     if(nodo->nroparametro >6){
+       fprintf(arch, "  movq \%rdi, \%rax \n");
+       fprintf(arch, "movq	%i(\%rbp), \%rdi \n",(nodo->op1)->offSet);
+       fprintf(arch, "  pushq	\%rdi \n");
+
+       fprintf(arch, "  movq  \%rax,\%rdi \n");
+     }
+     if(nodo->nroparametro <=6){
+       char* reg ;
+       switch (nodo->nroparametro) {
+         case 1: reg="rdi";break;
+         case 2: reg="rsi";break;
+         case 3: reg="rdx";break;
+         case 4: reg="rcx";break;
+         case 5: reg="r8d";break;
+         case 6: reg="r9d";break;
+       }
+       fprintf(arch, "movq	%i(\%rbp), \%%s \n",(nodo->op1)->offSet,reg);
+     }
+
+
+   }
 
 pasarACodAssembler(arch,nodo->next,metodonro);
 
@@ -136,14 +156,15 @@ pasarACodAssembler(arch,nodo->next,metodonro);
 }
 
 
-void loadParametros(NodoArbol* parameters){
+void loadParametros(NodoArbol* parameters,int posicion){
   if(parameters==NULL){ return; }
   NodoInt* aux=malloc(sizeof(NodoInt));
   aux->operacion="LOADP";
   aux->nombre=parameters->nombre;
   aux->op1=pasarACodIntermedio(parameters);
+  aux->nroparametro=posicion;
+  loadParametros(parameters->next,posicion+1);
   agregarCodIntermedio(aux);
-  loadParametros(parameters->next);
 }
 
 void agregarCodIntermedio(NodoInt* nuevo){
@@ -306,7 +327,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",(nodo->call_metodo)->nombre);
     nuevo->nombre= (nodo->call_metodo)->nombre;
     //ver si apuntamos al metodo
-    loadParametros(nodo->call_params);
+    loadParametros(nodo->call_params,1);
     agregarCodIntermedio(nuevo);
   }
   //literal entero
@@ -782,6 +803,20 @@ void verificarMain(NodoArbol* listMeth){
 }
 
 
+void corregirOffSetParametro(NodoArbol* param,int pos){
+  if (param==NULL){return;}
+  if(param!=NULL){
+    param->posicionParametro=pos;
+    if(pos>6){
+        param->offSet=16+(pos-7)*8;  //para que el 7mo lo dje en 16, el 8vo en 24
+    }
+
+  }
+  corregirOffSetParametro(param->nextlista,pos+1);
+}
+
+
+
 
 
 
@@ -967,6 +1002,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
   aux->cuerpo = $6;
   aux->nrolinea =$2->linea;
   aux->param = variableGlobalPila->lista;
+  corregirOffSetParametro(aux->param,1);
   aux->maxoffSet = currentOffSet;
   eliminarNivelPila();
   if((verificarMetodoDeclarado(aux->nombre)==1)||(unicoMetodo(aux->nombre)==0)){
@@ -990,6 +1026,8 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
 								                aux->cuerpo = $6;
 								                aux->nrolinea =$2->linea;
                                 aux->maxoffSet = currentOffSet;
+                                aux->param=NULL;
+                                corregirOffSetParametro(aux->param,1);
                                 if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
 								                  printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
 								                  //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -1010,6 +1048,7 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                     aux->cuerpo = $6;
                                                     aux->nrolinea =$2->linea;
                                                     aux->param = variableGlobalPila->lista;
+                                                    corregirOffSetParametro(aux->param,1);
                                                     aux->maxoffSet = currentOffSet;
                                                     if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
                                                       printf("ERROR en linea %i : id %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -1038,6 +1077,8 @@ method_decl: type ID PARENTESISABRE param_decl PARENTESISCIERRA block {
                                                   aux->cuerpo = $6;
                                                   aux->nrolinea =$2->linea;
                                                   aux->maxoffSet = currentOffSet;
+                                                  aux->param=NULL;
+                                                  corregirOffSetParametro(aux->param,1);
                                                   if(verificarMetodoDeclarado(aux->nombre)==1||(unicoMetodo(aux->nombre)==0)){
                                                   	//cambiar mensaje por id ya declarado
                                                     //printf("ERROR en linea %i : metodo %s ya declarado  anteriormente  \n",aux->nrolinea,aux->nombre);
@@ -1058,6 +1099,7 @@ Nparam_decl: type ID   {nuevaVariable($2->info,$1,$2->linea);}
  |Nparam_decl COMA type ID  {nuevaVariable($4->info,$3,$2->linea);}
 
 ;
+
 
 block : {nuevoNivelPila();} Nblock {eliminarNivelPila(); $$=$2;}
 
