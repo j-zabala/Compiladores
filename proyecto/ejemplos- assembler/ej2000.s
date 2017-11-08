@@ -63,6 +63,7 @@ main:
 	movl	a(%rip), %eax
 	movl	%eax, %edi
 	call	inc
+
 	movl	%eax, -20(%rbp)
 	movl	-20(%rbp), %eax
 	leave

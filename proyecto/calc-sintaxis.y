@@ -41,6 +41,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo);
 
 void agregarCodIntermedio(NodoInt* nuevo);
 
+char* nuevoLabel(char* info);
 
 void codAssembler (){
   FILE * archivo=fopen ("assembler.s", "w+");
@@ -52,6 +53,21 @@ void codAssembler (){
 
   fclose(archivo);
 }
+
+char* varAAssembler (NodoArbol* nodo){
+
+  char* aux=(char*)malloc(sizeof(char)*20);
+  if(nodo->isGlobal){
+  sprintf(aux,"%s(\%rip)",nodo->nombre);
+
+}else{
+  sprintf(aux,"%i(\%rbp)",nodo->offSet);
+}
+  return aux;
+
+}
+
+
 
 void CAglobales(FILE* archivo){
   printf("comienza el agregado de las var globales\n");
@@ -73,10 +89,33 @@ void CAglobales(FILE* archivo){
 
 }
 
+void recuperarParametros(NodoArbol* nodo,int nro,FILE* arch){
+    if(nodo==NULL){return;}
+    if(nro <=6){
+      char* reg ;
+      switch (nro) {
+        case 1: reg="rdi";break;
+        case 2: reg="rsi";break;
+        case 3: reg="rdx";break;
+        case 4: reg="rcx";break;
+        case 5: reg="r8d";break;
+        case 6: reg="r9d";break;
+      }
+      fprintf(arch, "  movq  \%%s,%s \n",reg,varAAssembler(nodo));
+    }
+    recuperarParametros(nodo->nextlista,nro+1,arch);
+
+}
+
+
+
+
 void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
+  if  (nodo == NULL){return;}
 
 
   if (strcmp(nodo->operacion,"METODO")==0){
+    printf("nodo intermedio operacion: metodo\n");
     //printf("el nodo op es un METODO\n");
     fprintf(arch, "  .globl	%s\n",nodo->nombre );
     fprintf(arch, "  .type	%s, @function\n",nodo->nombre );
@@ -94,8 +133,13 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
     }
     //printf("enter %i\n",cantidadenter );
     fprintf(arch, "  enter %i,$0\n",metodonro);
-    pasarACodAssembler(arch,nodo->next,metodonro);
 
+    recuperarParametros((nodo->metodoOriginal)->param,1,arch);
+
+
+
+    pasarACodAssembler(arch,nodo->next,metodonro);
+    printf("nodo intermedio operacion: metodo\n");
   }
 
   if (strcmp(nodo->operacion,"ENDMETODO")==0){
@@ -108,32 +152,36 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
 
   if (strcmp(nodo->operacion,"MOV")==0){
+    printf("mov en un mov p\n");
     printf("el tipo del nodo es %i , corresponde a la variable %s\n",(nodo->op2)->tipoNodo,(nodo->op2)->nombre);
     if((nodo->op2)->tipoNodo==1){
       printf("hacemos un movq de una variable a una variable\n");
-      fprintf(arch, "  movq %i(\%rbp), \%rax \n",(nodo->op2)->offSet);
+      fprintf(arch, "  movq %s, \%rax \n",varAAssembler(nodo->op2));
 
-      fprintf(arch, "  movq rax, %i(\%rbp) \n",(nodo->op1)->offSet);
-      printf( "  movq %i(\%rbp), \%rax \n",(nodo->op2)->offSet);
+      fprintf(arch, "  movq rax, %s \n",varAAssembler(nodo->op1));
+      printf( "  movq %s, \%rax \n",varAAssembler(nodo->op2));
 
-      printf( "  movq rax, %i(\%rbp) \n",(nodo->op1)->offSet);
+      printf( "  movq rax, %s \n",varAAssembler(nodo->op1));
     }
     if((nodo->op2)->tipoNodo==12||(nodo->op2)->tipoNodo==13){
       printf("hacemos un movq de un literal a una variable\n");
-        fprintf(arch, "  movq $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
-        printf("  movq $%i,%i(\%rbp) \n",(nodo->op2)->valor,(nodo->op1)->offSet);
+        fprintf(arch, "  movq $%i,%s \n",(nodo->op2)->valor,varAAssembler(nodo->op1));
+        printf("  movq $%i,%s \n",(nodo->op2)->valor,varAAssembler(nodo->op1));
 
     }
+    printf("salio en un mov p\n");
     pasarACodAssembler(arch,nodo->next,metodonro);
   }
+
    if (strcmp(nodo->operacion,"LOADP")==0){
+     printf("entro en un load p\n");
      if(nodo->nroparametro >6){
        fprintf(arch, "  movq \%rdi, \%rax \n");
-       fprintf(arch, "movq	%i(\%rbp), \%rdi \n",(nodo->op1)->offSet);
+       fprintf(arch, "movq	%s, \%rdi \n",varAAssembler(nodo->op1));
        fprintf(arch, "  pushq	\%rdi \n");
-
        fprintf(arch, "  movq  \%rax,\%rdi \n");
      }
+
      if(nodo->nroparametro <=6){
        char* reg ;
        switch (nodo->nroparametro) {
@@ -144,14 +192,125 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
          case 5: reg="r8d";break;
          case 6: reg="r9d";break;
        }
-       fprintf(arch, "movq	%i(\%rbp), \%%s \n",(nodo->op1)->offSet,reg);
+       fprintf(arch, "movq	%s, \%%s \n",varAAssembler(nodo->op1),reg);
      }
 
-
+     printf("end en un load p\n");
+     pasarACodAssembler(arch,nodo->next,metodonro);
    }
 
-pasarACodAssembler(arch,nodo->next,metodonro);
+   if (strcmp(nodo->operacion,"RETURN")==0){
+     if(nodo->op1!=NULL){
+       fprintf(arch, "movq	%s, \%rax \n",(varAAssembler(nodo->op1)));
+     }
 
+       fprintf(arch, "ret \n");
+    pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+
+   if (strcmp(nodo->operacion,"CALL")==0){
+       fprintf(arch, "call %s \n",nodo->nombre);
+       if(nodo->op1!=NULL){
+         fprintf(arch, "movq	\%rax, %s  \n",varAAssembler(nodo->op1));
+       }
+         pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+
+   if (strcmp(nodo->operacion,"JMPFalso")==0){
+       fprintf(arch, "cmp %s,1  \n",varAAssembler(nodo->op1));
+       fprintf(arch, "jne %s \n",nodo->nombre);
+       pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"JMP")==0){
+       fprintf(arch, "jmp %s \n",nodo->nombre);
+       pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"LABEL")==0){
+       fprintf(arch, ".%s: \n",nodo->nombre);
+       pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+
+   if (strcmp(nodo->operacion,"SUM")==0){
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op1));
+      fprintf(arch, "add	%s, \%rax \n",varAAssembler(nodo->op2));
+      fprintf(arch, "movq	 \%rax,%s \n",varAAssembler(nodo->op3));
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+
+   if (strcmp(nodo->operacion,"MULT")==0){
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op1));
+      fprintf(arch, "imul	%s, \%rax \n",varAAssembler(nodo->op2));
+      fprintf(arch, "movq	 \%rax,%s \n",varAAssembler(nodo->op3));
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"DIV")==0){
+      fprintf(arch, "movq	0, \%rdx \n");
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op1));
+      fprintf(arch, "idiv %s \n",varAAssembler(nodo->op2));
+      fprintf(arch, "movq	 \%rax,%s \n",varAAssembler(nodo->op3));
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"MOD")==0){
+      fprintf(arch, "movq	0, \%rdx \n");
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op1));
+      fprintf(arch, "idiv %s \n",varAAssembler(nodo->op2));
+      fprintf(arch, "movq	 \%rdx,%s \n",varAAssembler(nodo->op3));
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"MAYORQUE")==0){
+      char* labelaux=nuevoLabel(".L");
+      fprintf(arch, "movq	 0,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "movq	%s, \%rdx \n",varAAssembler(nodo->op1));
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op2));
+      fprintf(arch, "cmpg	\%rax, \%rdx\n",varAAssembler(nodo->op2));
+      fprintf(arch, "jle	 %s \n",labelaux);
+      fprintf(arch, "movq	 1,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "%s: \n",labelaux);
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"MENORQUE")==0){
+      char* labelaux=nuevoLabel(".L");
+      fprintf(arch, "movq	 0,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "movq	%s, \%rdx \n",varAAssembler(nodo->op1));
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op2));
+      fprintf(arch, "cmpl	\%rax, \%rdx\n",varAAssembler(nodo->op2));
+      fprintf(arch, "jge	 %s \n",labelaux);
+      fprintf(arch, "movq	 1,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "%s: \n",labelaux);
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"IGUAL")==0){
+      char* labelaux=nuevoLabel(".L");
+      fprintf(arch, "movq	 0,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "movq	%s, \%rdx \n",varAAssembler(nodo->op1));
+      fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op2));
+      fprintf(arch, "cmp	\%rax, \%rdx\n",varAAssembler(nodo->op2));
+      fprintf(arch, "jne	 %s \n",labelaux);
+      fprintf(arch, "movq	 1,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "%s: \n",labelaux);
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"NEGBOOL")==0){
+      char* labelaux=nuevoLabel(".L");
+      fprintf(arch, "movq	 0,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "movq	%s, \%rdx \n",varAAssembler(nodo->op1));
+      fprintf(arch, "cmp	1, \%rdx\n");
+      fprintf(arch, "je	 %s \n",labelaux);
+      fprintf(arch, "movq	 1,%s \n",varAAssembler(nodo->op3));
+      fprintf(arch, "%s: \n",labelaux);
+      pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+     if (strcmp(nodo->operacion,"NEGINT")==0){
+        fprintf(arch, "movq	%s, \%rax \n",varAAssembler(nodo->op1));
+        fprintf(arch, "imul	-1, \%rax \n");
+        fprintf(arch, "movq	 \%rax,%s \n",varAAssembler(nodo->op3));
+        pasarACodAssembler(arch,nodo->next,metodonro);
+       }
+
+
+
+
+       return;
 
 }
 
@@ -326,9 +485,15 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
     nuevo->operacion = "CALL";
     printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",(nodo->call_metodo)->nombre);
     nuevo->nombre= (nodo->call_metodo)->nombre;
+    if(strcmp((nodo->call_metodo)->tipo,"void")!=0){
+      nuevo->op1=nuevaVariableTemporal((nodo->call_metodo)->tipo);
+    }
+
+
     //ver si apuntamos al metodo
     loadParametros(nodo->call_params,1);
     agregarCodIntermedio(nuevo);
+    return nuevo->op1;
   }
   //literal entero
   if(nodo->tipoNodo==12||nodo->tipoNodo==13){
@@ -437,6 +602,7 @@ void imprimirLista(NodoInt* nodo){
     if (nodo->next!=NULL){
       imprimirLista(nodo->next);
     }
+
   }
 }
 
