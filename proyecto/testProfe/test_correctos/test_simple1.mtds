@@ -1,0 +1,12 @@
+class{
+   int c;
+
+   void main(){
+        int y;
+        y = 7;
+        c = 80;
+        y= y+c;
+        return;
+   }
+
+}
