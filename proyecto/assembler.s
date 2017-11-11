@@ -17,8 +17,8 @@ main:
   movq	$0, %rax 
   call printf
   movq	-8(%rbp), %rax 
-  ret 
   leave
+  ret 
 .LFE0:
   .size	main, .-main
 .LC0:
@@ -40,8 +40,8 @@ inc:
   movq	$0, %rax 
   call printf
   movq	-8(%rbp), %rax 
-  ret 
   leave
+  ret 
 .LFE1:
   .size	inc, .-inc
 .LC1:

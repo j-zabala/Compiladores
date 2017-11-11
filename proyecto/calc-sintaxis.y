@@ -145,6 +145,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
   if (strcmp(nodo->operacion,"ENDMETODO")==0){
     fprintf(arch, "  leave\n");
+    fprintf(arch, "  ret \n");
     fprintf(arch, ".LFE%i:\n",metodonro);
     fprintf(arch, "  .size	%s, .-%s\n",nodo->nombre,nodo->nombre );
     fprintf(arch, ".LC%i:\n",metodonro);
@@ -219,7 +220,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
        fprintf(arch, "  movq	%s, \%rax \n",(varAAssembler(nodo->op1)));
      }
 
-       fprintf(arch, "  ret \n");
+
     pasarACodAssembler(arch,nodo->next,metodonro);
      }
 
