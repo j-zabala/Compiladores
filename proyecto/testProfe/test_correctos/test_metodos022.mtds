@@ -1,0 +1,39 @@
+class {
+   int c;
+
+   int alo1( int x){
+
+            x = x + 1;
+      return x;
+
+   }
+
+
+   int alo(bool b, int x){
+
+            x = alo1(x);
+
+
+      return alo1(x);
+
+   }
+
+
+
+
+   void main(){
+
+
+        int y;
+        y = 7;
+
+
+
+        y = alo(true,y);
+
+        return ;
+
+   }
+
+
+}

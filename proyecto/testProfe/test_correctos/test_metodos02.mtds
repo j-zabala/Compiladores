@@ -1,15 +1,15 @@
 class {
    int c;
 
-   void alo(bool b, int x){
+   int alo(bool b, int x){
       if ( b ) then{
-            x= x + 1;
+            x = x + 1;
       }
       else{
           x = x - 1;
       }
-      
-      return ;
+
+      return x;
    }
 
    void Alo(bool b, int x){ //es case sensitive no deberia dar error
@@ -20,6 +20,8 @@ class {
       alo(true, x);
       x =  x + 1;
       return x;
+      x=50;
+
    }
 
    void main(){
@@ -27,12 +29,13 @@ class {
 
         int y;
         y = 7;
-        alo(true,y);
+        y=alo(true,y);
 
         c = 80;
         y = alo2(y);
-        alo(false, (3)*y);
-        return;
+        y=alo(false, (3)*y);
+        return ;
+        y=5;
    }
 
 
