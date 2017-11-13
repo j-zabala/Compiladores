@@ -2,15 +2,15 @@
 int a;
 int b;
 
-int inc(int x){
-  return x+1;
-}
+
 
 
 int main(){
-    a=2;
-    b=inc(a);
+    a=1;
+    b=0;
+    int c;
+    c = a||b;
 
-return b;
+return c;
 
 }

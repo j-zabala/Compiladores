@@ -1,30 +1,28 @@
-  .comm res,8 
   .text
   .globl	main
   .type	main, @function
 main:
 .LFB0:
-  enter $64,$0
+  enter $48,$0
   movq $0,-16(%rbp) 
-  movq -16(%rbp), %rax 
-  movq %rax, res(%rip) 
-  movq $6,-40(%rbp) 
-  movq	-40(%rbp),%rdi 
-  call inc 
-  movq	%rax, -32(%rbp)  
-  movq $102,-48(%rbp) 
-  movq	-48(%rbp),%rsi 
-  movq	-32(%rbp),%rdi 
-  call resto 
-  movq	%rax, -24(%rbp)  
-  movq -24(%rbp), %rax 
-  movq %rax, -8(%rbp) 
-  movq $1,-56(%rbp) 
-  movq	-56(%rbp), %rsi 
+  movq $0,-24(%rbp) 
+  movq	-16(%rbp), %rax 
+  testq	%rax, %rax 
+  jne	LAB4lOR 
+  movq	-24(%rbp), %rax 
+  testq	%rax, %rax 
+  je	LAB5lOR 
+  LAB4lOR: 
+  movq	 $1,-32(%rbp) 
+  jmp	LAB6lOR 
+  LAB5lOR: 
+  movq	 $0,-32(%rbp) 
+  LAB6lOR: 
+  movq	-32(%rbp), %rsi 
   movq $.LC0,%rdi
   movq	$0, %rax 
   call printf
-  movq	-56(%rbp), %rax 
+  movq	-32(%rbp), %rax 
   jmp endmetodo0
   endmetodo0:
   leave
@@ -33,81 +31,74 @@ main:
   .size	main, .-main
 .LC0:
   .string	"la funcion main devuelve: %i "  
-  .globl	resto
-  .type	resto, @function
-resto:
+  .globl	breaks
+  .type	breaks, @function
+breaks:
 .LFB1:
   enter $112,$0
   movq  %rdi,-8(%rbp) 
-  movq  %rsi,-16(%rbp) 
-  movq $3,-32(%rbp) 
-  movq $2,-40(%rbp) 
-  movq	-32(%rbp), %rax 
-  imul	-40(%rbp), %rax 
-  movq	 %rax,-48(%rbp) 
+  movq $1,-32(%rbp) 
+  movq -32(%rbp), %rax 
+  movq %rax, -24(%rbp) 
+  movq $0,-40(%rbp) 
+  movq -40(%rbp), %rax 
+  movq %rax, -16(%rbp) 
+LAB0WHILE: 
+  movq $10,-48(%rbp) 
   movq	 $0,-56(%rbp) 
-  movq	-8(%rbp), %rdx 
+  movq	-16(%rbp), %rdx 
   movq	-48(%rbp), %rax 
   cmp	%rax, %rdx
-  jle	 LAB2.L 
+  jge	 LAB7.L 
   movq	 $1,-56(%rbp) 
-LAB2.L: 
-  cmp $1,-56(%rbp)  
-  jne LAB0ELSE 
-  movq	-8(%rbp), %rax 
-  imul	$-1, %rax 
-  movq	 %rax,-64(%rbp) 
-  movq $3,-72(%rbp) 
-  movq	$0, %rdx 
-  movq	-64(%rbp), %rax 
-  movq -72(%rbp),%rbx 
-  cqo
-  idiv %rbx 
-  movq	 %rdx,-80(%rbp) 
+LAB7.L: 
+  movq	-56(%rbp), %rax 
+  testq	%rax, %rax 
+  je	LAB8lAND 
+  movq	-24(%rbp), %rax 
+  testq	%rax, %rax 
+  je	LAB8lAND 
+  movq	 $1,-64(%rbp) 
+  jmp	LAB9lAND 
+  LAB8lAND: 
+  movq	 $0,-64(%rbp) 
+  LAB9lAND: 
+  cmp $1,-64(%rbp)  
+  jne LAB1ENDWHILE 
+  movq $1,-72(%rbp) 
+  movq	-16(%rbp), %rax 
+  add	-72(%rbp), %rax 
+  movq	 %rax,-80(%rbp) 
   movq -80(%rbp), %rax 
+  movq %rax, -16(%rbp) 
+  movq $0,-88(%rbp) 
+  movq	 $0,-96(%rbp) 
+  movq	-8(%rbp), %rdx 
+  movq	-88(%rbp), %rax 
+  cmp	%rax, %rdx
+  jge	 LAB10.L 
+  movq	 $1,-96(%rbp) 
+LAB10.L: 
+  cmp $1,-96(%rbp)  
+  jne LAB2ELSE 
+  movq $0,-104(%rbp) 
+  movq -104(%rbp), %rax 
   movq %rax, -24(%rbp) 
-  jmp LAB1ENDIF 
-LAB0ELSE: 
-  movq $2,-88(%rbp) 
-  movq	-8(%rbp), %rax 
-  add	-88(%rbp), %rax 
-  movq	 %rax,-96(%rbp) 
-  movq -96(%rbp), %rax 
-  movq %rax, -24(%rbp) 
-LAB1ENDIF: 
-  movq	-24(%rbp), %rsi 
+  jmp LAB3ENDIF 
+LAB2ELSE: 
+LAB3ENDIF: 
+  jmp LAB0WHILE 
+LAB1ENDWHILE: 
+  movq	-16(%rbp), %rsi 
   movq $.LC1,%rdi
   movq	$0, %rax 
   call printf
-  movq	-24(%rbp), %rax 
+  movq	-16(%rbp), %rax 
   jmp endmetodo1
   endmetodo1:
   leave
   ret 
 .LFE1:
-  .size	resto, .-resto
+  .size	breaks, .-breaks
 .LC1:
-  .string	"la funcion resto devuelve: %i "  
-  .globl	inc
-  .type	inc, @function
-inc:
-.LFB2:
-  enter $32,$0
-  movq  %rdi,-8(%rbp) 
-  movq $1,-16(%rbp) 
-  movq	-8(%rbp), %rax 
-  add	-16(%rbp), %rax 
-  movq	 %rax,-24(%rbp) 
-  movq	-24(%rbp), %rsi 
-  movq $.LC2,%rdi
-  movq	$0, %rax 
-  call printf
-  movq	-24(%rbp), %rax 
-  jmp endmetodo2
-  endmetodo2:
-  leave
-  ret 
-.LFE2:
-  .size	inc, .-inc
-.LC2:
-  .string	"la funcion inc devuelve: %i "  
+  .string	"la funcion breaks devuelve: %i "  

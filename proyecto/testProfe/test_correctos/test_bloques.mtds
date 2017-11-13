@@ -7,7 +7,7 @@ int breaks(int g){
       i = 0;
 
       while(i < 10 && aux){
-	{ //bloque 1
+	       { //bloque 1
           i = i + 1;
 
              { //bloque 2
@@ -28,9 +28,9 @@ int breaks(int g){
 
 
 
-int main(){
-
-   return 1;
+bool main(){
+    int y;
+   return false||false;
 }
 
 

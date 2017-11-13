@@ -278,6 +278,43 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
       fprintf(arch, "  movq	 \%rax,%s \n",varAAssembler(nodo->op3));
       pasarACodAssembler(arch,nodo->next,metodonro);
      }
+    if (strcmp(nodo->operacion,"AND")==0){
+        fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op1));
+        fprintf(arch, "  testq	\%rax, \%rax \n");
+        char * label1=nuevoLabel("lAND");
+        char * label2=nuevoLabel("lAND");
+        fprintf(arch, "  je	%s \n",label1);
+        fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op2));
+        fprintf(arch, "  testq	\%rax, \%rax \n");
+        fprintf(arch, "  je	%s \n",label1);
+        fprintf(arch, "  movq	 $1,%s \n",varAAssembler(nodo->op3));
+        fprintf(arch, "  jmp	%s \n",label2);
+        fprintf(arch, "  %s: \n",label1);
+        fprintf(arch, "  movq	 $0,%s \n",varAAssembler(nodo->op3));
+        fprintf(arch, "  %s: \n",label2);
+
+        pasarACodAssembler(arch,nodo->next,metodonro);
+     }
+   if (strcmp(nodo->operacion,"OR")==0){
+     char * label2=nuevoLabel("lOR");
+     char * label3=nuevoLabel("lOR");
+     char * label4=nuevoLabel("lOR");
+       fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op1));
+       fprintf(arch, "  testq	\%rax, \%rax \n");
+       fprintf(arch, "  jne	%s \n",label2);
+       fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op2));
+       fprintf(arch, "  testq	\%rax, \%rax \n");
+       fprintf(arch, "  je	%s \n",label3);
+       fprintf(arch, "  %s: \n",label2);
+
+       fprintf(arch, "  movq	 $1,%s \n",varAAssembler(nodo->op3));
+       fprintf(arch, "  jmp	%s \n",label4);
+       fprintf(arch, "  %s: \n",label3);
+       fprintf(arch, "  movq	 $0,%s \n",varAAssembler(nodo->op3));
+       fprintf(arch, "  %s: \n",label4);
+
+       pasarACodAssembler(arch,nodo->next,metodonro);
+    }
    if (strcmp(nodo->operacion,"DIV")==0){
       fprintf(arch, "  movq	$0, \%rdx \n");
       fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op1));
@@ -308,6 +345,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
       pasarACodAssembler(arch,nodo->next,metodonro);
      }
    if (strcmp(nodo->operacion,"MENORQUE")==0){
+     printf("entra a MENORQUE\n" );
       char* labelaux=nuevoLabel(".L");
       fprintf(arch, "  movq	 $0,%s \n",varAAssembler(nodo->op3));
       fprintf(arch, "  movq	%s, \%rdx \n",varAAssembler(nodo->op1));
@@ -316,7 +354,9 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
       fprintf(arch, "  jge	 %s \n",labelaux);
       fprintf(arch, "  movq	 $1,%s \n",varAAssembler(nodo->op3));
       fprintf(arch, "%s: \n",labelaux);
+      printf("SALE DE  MENORQUE\n" );
       pasarACodAssembler(arch,nodo->next,metodonro);
+
      }
    if (strcmp(nodo->operacion,"IGUAL")==0){
       char* labelaux=nuevoLabel(".L");
@@ -578,6 +618,13 @@ if(nodo->tipoNodo==14){
     }
     if(strcmp("==",nodo->nombre)==0){
       nuevo->operacion="IGUAL";
+    }
+    if(strcmp("&&",nodo->nombre)==0){
+      printf("ENCONTRO EL ANDDDDDDDDD\n");
+      nuevo->operacion="AND";
+    }
+    if(strcmp("||",nodo->nombre)==0){
+      nuevo->operacion="OR";
     }
     agregarCodIntermedio(nuevo);
     return res;
@@ -1622,6 +1669,7 @@ expr : expr MAS expr {
                           nuevo->tipoNodo=14;
                           nuevo->nrolinea =$2->linea;
                           nuevo->nombre= $2->info;
+                        
                           nuevo->op1 = $1;
                           nuevo->op2 = $3;
                           int error = mismoTipoBOOL($1,$3);
