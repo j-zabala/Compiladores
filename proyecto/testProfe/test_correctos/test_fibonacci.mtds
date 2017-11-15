@@ -1,0 +1,38 @@
+class{
+  int c;
+  int id(int x){
+  return x;
+
+  }
+
+  int fibonacci (int i){
+    int prim;
+    int sec;
+    int ter;
+    prim =1;
+    sec=1;
+    ter=2;
+
+    if(i>2)then{
+    while(i>2){
+      prim=sec;
+      sec=ter;
+      ter=id(prim+sec);
+      i=i-1;
+    }
+    return ter;
+    }
+    if(i==2)then{return ter;}
+    if(i==1)then{return sec;}
+    if(i==0)then{return prim;}
+    else{return 0;}
+  }
+
+
+  int main(){
+    c=16;
+
+   return 1+2+3+4+5+6+7+8+9;
+   }
+
+}
