@@ -394,6 +394,109 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 }
 
 
+NodoArbol* nuevoLiteralbin(char* operacion, int valor1, int valor2){
+  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+  if(strcmp(operacion,"+")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1+valor2;
+  }
+  if(strcmp(operacion,"*")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1*valor2;
+  }
+  if(strcmp(operacion,"-")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1-valor2;
+  }
+  if(strcmp(operacion,"/")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1/valor2;
+  }
+  if(strcmp(operacion,"%")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1%valor2;
+  }
+  if(strcmp(operacion,"==")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= valor1==valor2;
+  }
+  if(strcmp(operacion,"<")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= valor1<valor2;
+  }
+  if(strcmp(operacion,">")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= valor1>valor2;
+  }
+  if(strcmp(operacion,"&&")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= valor1&&valor2;
+  }
+  if(strcmp(operacion,"||")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= valor1||valor2;
+  }
+  return nuevo;
+}
+
+NodoArbol* nuevoLiteralun(char* operacion, int valor1){
+  NodoArbol *nuevo= malloc(sizeof(NodoArbol));
+  if(strcmp(operacion,"-")==0){
+    nuevo->tipo="int";
+    nuevo->tipoNodo=12;
+    nuevo->valor= valor1*-1;
+  }
+  if(strcmp(operacion,"!")==0){
+    nuevo->tipo="bool";
+    nuevo->tipoNodo=13;
+    nuevo->valor= !valor1;
+  }
+  return nuevo;
+}
+
+NodoArbol* optimizarExpresion(NodoArbol* nodoexp){
+  printf("entro al optimizar\n");
+  if(nodoexp==NULL){return NULL;}
+  if(nodoexp->tipoNodo==14||nodoexp->tipoNodo==15){
+    printf("OPTIMIZAR EXPRESION DE %s\n",nodoexp->nombre);
+    nodoexp->op1 = optimizarExpresion(nodoexp->op1);
+
+  }
+
+  if(nodoexp->tipoNodo==14){
+    nodoexp->op2 = optimizarExpresion(nodoexp->op2);
+  }
+
+
+  if (  nodoexp->tipoNodo==14&&   ((nodoexp->op1)->tipoNodo==12||(nodoexp->op1)->tipoNodo==13)    &&(nodoexp->op1)->tipoNodo==(nodoexp->op2)->tipoNodo){
+    printf("eloperando 1 es %i\n",(nodoexp->op1)->valor);
+    printf("eloperando 2 es %i\n",(nodoexp->op2)->valor);
+    return nuevoLiteralbin(nodoexp->nombre,(nodoexp->op1)->valor,(nodoexp->op2)->valor);
+
+  }
+if(nodoexp->tipoNodo==15){
+
+  if(nodoexp->op1!=NULL&& ((nodoexp->op1)->tipoNodo==12)||  (nodoexp->op1)->tipoNodo==13){
+    printf("entro al ifloco rompedor\n");
+    return nuevoLiteralun(nodoexp->nombre,(nodoexp->op1)->valor);
+  }
+}
+
+  printf("no optimizo\n");
+  return nodoexp;
+}
+
+
 void loadParametros(NodoArbol* parameters,int posicion){
   if(parameters==NULL){ return; }
   NodoInt* aux=malloc(sizeof(NodoInt));
@@ -1550,7 +1653,7 @@ expr : expr MAS expr {
                           printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                           exit(0);
                       }
-                      $$=nuevo;
+                      $$=optimizarExpresion(nuevo);
                       }
     | expr MENOS expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1566,7 +1669,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr POR expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1582,7 +1685,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr DIVISION expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1598,7 +1701,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr MOD expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1614,7 +1717,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     |expr MAYORQUE expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1630,7 +1733,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr MENORQUE expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1646,7 +1749,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr EQUALS expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1662,14 +1765,14 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : operandos de distintos tipos \n",nuevo->nrolinea);
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     |expr AND expr {
                           NodoArbol *nuevo= malloc(sizeof(NodoArbol));
                           nuevo->tipoNodo=14;
                           nuevo->nrolinea =$2->linea;
                           nuevo->nombre= $2->info;
-                        
+
                           nuevo->op1 = $1;
                           nuevo->op2 = $3;
                           int error = mismoTipoBOOL($1,$3);
@@ -1679,7 +1782,7 @@ expr : expr MAS expr {
                               printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                               exit(0);
                           }
-                          $$=nuevo;
+                          $$=optimizarExpresion(nuevo);
                           }
     | expr OR expr {
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1695,7 +1798,7 @@ expr : expr MAS expr {
                                       printf("ERROR en linea %i : error de tipo en operando  %i° \n",nuevo->nrolinea,error );
                                       exit(0);
                                   }
-                                  $$=nuevo;
+                                  $$=optimizarExpresion(nuevo);
                                   }
 
     | MENOS expr %prec UNARIO {
@@ -1712,7 +1815,7 @@ expr : expr MAS expr {
                                       printf("ERROR en linea %i : error de tipo en operando (no es un entero)   \n",nuevo->nrolinea);
                                       exit(0);
                                   }
-                                  $$=nuevo;
+                                  $$=optimizarExpresion(nuevo);
                                   }
     | EXCLAMACION expr %prec UNARIO{
                                   NodoArbol *nuevo= malloc(sizeof(NodoArbol));
@@ -1728,7 +1831,7 @@ expr : expr MAS expr {
                                       printf("ERROR en linea %i : error de tipo en operando (no es un booleano)   \n",nuevo->nrolinea);
                                       exit(0);
                                   }
-                                  $$=nuevo;
+                                  $$=optimizarExpresion(nuevo);
                                   }
     | PARENTESISABRE expr PARENTESISCIERRA {$$=$2;}
     | ID{
