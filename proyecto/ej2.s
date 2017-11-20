@@ -14,12 +14,15 @@ main:
 	.cfi_def_cfa_register 6
 	movl	$1, a(%rip)
 	movl	$0, b(%rip)
+
 	movl	a(%rip), %eax
 	testl	%eax, %eax
 	jne	.L2
+
 	movl	b(%rip), %eax
 	testl	%eax, %eax
 	je	.L3
+
 .L2:
 	movl	$1, %eax
 	jmp	.L4

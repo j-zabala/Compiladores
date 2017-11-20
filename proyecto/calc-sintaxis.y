@@ -1036,11 +1036,20 @@ return 0;
 int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo);
 
 int verifTiposif(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
+  printf("entro a veriftiposif\n");
   if(strcmp((nodo->tcondicion)->tipo,"bool")!=0){
     printf("ERROR linea %i: la condicion del if no es una expresion booleana \n",nodo->nrolinea);
   }
-  if(verifTipos(paramtipo,nombre_metodo,nodo->tthen)>0 &&verifTipos(paramtipo,nombre_metodo,nodo->telse)>0 ){return 1;}
-
+  printf("la condicion esta bien\n");
+  int a =verifTiposRECURSIVO(paramtipo,nombre_metodo,nodo->tthen);
+  int b=verifTiposRECURSIVO(paramtipo,nombre_metodo,nodo->telse);
+  printf("el veriftipos del then dio: %i\n",a);
+  printf("el veriftipos del else dio: %i\n",b);
+  if(a>0 &&b>0 ){
+    printf("retornamos 1 prro\n");
+    return 1;
+  }else{
+    return 0;}
 
 }
 
@@ -1051,14 +1060,15 @@ int verifTiposRet(char* paramtipo,char* nombre_metodo,NodoArbol* nodo){
   }
   return 1;
 }
-int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
+
+int verifTiposRECURSIVO(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
   int cant_ret_correctos=0;
   NodoArbol* recorrido = primernodo;
-  // printf("recorrido de statements en el main \n ");
+
   while(recorrido!=NULL){
-    // printf("nodo actual es:%i \n",recorrido->tipoNodo);
+
     if(recorrido->tipoNodo==4){
-      // printf("va a verificar en los if\n" );
+
       cant_ret_correctos=cant_ret_correctos+verifTiposif(param_tipo,nombre_metodo,recorrido);
     }
     if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
@@ -1069,10 +1079,31 @@ int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
     recorrido=recorrido->next;
   }
 
-  //if (cant_ret_correctos==0){
-  //  printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
-  //  exit(0);
-  // }
+  return cant_ret_correctos;
+}
+
+int verifTipos(char* param_tipo,char* nombre_metodo,NodoArbol* primernodo){
+  int cant_ret_correctos=0;
+  NodoArbol* recorrido = primernodo;
+
+  while(recorrido!=NULL){
+
+    if(recorrido->tipoNodo==4){
+
+      cant_ret_correctos=cant_ret_correctos+verifTiposif(param_tipo,nombre_metodo,recorrido);
+    }
+    if(recorrido->tipoNodo==6||recorrido->tipoNodo==7){
+      if (strcmp(recorrido->tipo,param_tipo)!=0){
+        printf("ERROR linea %i: en la funcion %s se quiere retornar una expresion de distinto tipo que el tipo de retorno del metodo\n",recorrido->nrolinea, nombre_metodo);exit(0);}
+      cant_ret_correctos=cant_ret_correctos+verifTiposRet(param_tipo,nombre_metodo,recorrido);
+    }
+    recorrido=recorrido->next;
+  }
+
+  if (cant_ret_correctos==0){
+   printf("ERROR: la funcion %s posee flujos de ejecucion sin return\n", nombre_metodo);
+   exit(0);
+  }
   return cant_ret_correctos;
 }
 

@@ -16,13 +16,14 @@ int promedio (int nota1, int nota2, int nota3){
 	if ((nota1 == nota2) && (nota1 == nota3) && (nota2 == nota3))then{
 		return nota1;
 	}
+	return 10;
 }
 
 
 
 int main(){
 
- return 1;
+ return promedio(200,330,400);
 }
 
 }
