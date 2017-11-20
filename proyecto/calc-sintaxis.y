@@ -47,7 +47,7 @@ void codAssembler (){
   FILE * archivo=fopen ("assembler.s", "w+");
 
   CAglobales(archivo);
-  printf("termino con las globales");
+  //printf("termino con las globales");
   pasarACodAssembler(archivo,codigoIntermedio,0);
 
 
@@ -70,21 +70,23 @@ char* varAAssembler (NodoArbol* nodo){
 
 
 void CAglobales(FILE* archivo){
-  printf("comienza el agregado de las var globales\n");
-  if(variableGlobalPila==NULL){printf("nullll\n");}
+  //printf("comienza el agregado de las var globales\n");
+  if(variableGlobalPila==NULL){
+  //  printf("nullll\n");
+  }
   NodoArbol* recorrido=variableGlobalPila->lista;
-  printf("ahhhhh\n");
+//  printf("ahhhhh\n");
   while(recorrido!=NULL){
-    printf("entro en el while\n");
+  //  printf("entro en el while\n");
     if(recorrido->isGlobal==1){
-      printf("\n es glob");
+    //  printf("\n es glob");
       fprintf(archivo, "  .comm %s,8 \n",recorrido->nombre );
 
-      printf("se agrega la variable %s a las globals",recorrido->nombre);
+      //printf("se agrega la variable %s a las globals",recorrido->nombre);
     }
     recorrido=recorrido->nextlista;
   }
-  printf("termino el while\n");
+  //printf("termino el while\n");
   fprintf(archivo, "  .text\n");
 
 }
@@ -116,7 +118,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
 
   if (strcmp(nodo->operacion,"METODO")==0){
-    printf("nodo intermedio operacion: metodo\n");
+    //printf("nodo intermedio operacion: metodo\n");
     //printf("el nodo op es un METODO\n");
     fprintf(arch, "  .globl	%s\n",nodo->nombre );
     fprintf(arch, "  .type	%s, @function\n",nodo->nombre );
@@ -125,13 +127,13 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
     int cantidadenter;
     //printf("escribio el encabezado del metodo\n");
     if(nodo->metodoOriginal==NULL){
-      printf("el metodooriginal es null\n");
+      //printf("el metodooriginal es null\n");
     }
     if(((nodo->metodoOriginal)->maxoffSet%16)==0){
-      printf("el maxoffSet del metodo  %s  es %i\n",(nodo->metodoOriginal)->nombre,(nodo->metodoOriginal)->maxoffSet);
+      //printf("el maxoffSet del metodo  %s  es %i\n",(nodo->metodoOriginal)->nombre,(nodo->metodoOriginal)->maxoffSet);
       cantidadenter=(((nodo->metodoOriginal)->maxoffSet)*-1);
     }else{
-      printf("no mod 0 el maxoffSet del metodo  %s  es %i\n",(nodo->metodoOriginal)->nombre,(nodo->metodoOriginal)->maxoffSet);
+      //printf("no mod 0 el maxoffSet del metodo  %s  es %i\n",(nodo->metodoOriginal)->nombre,(nodo->metodoOriginal)->maxoffSet);
       cantidadenter=(((nodo->metodoOriginal)->maxoffSet)*-1)+8;
     }
     //printf("enter %i\n",cantidadenter );
@@ -142,7 +144,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
 
     pasarACodAssembler(arch,nodo->next,metodonro);
-    printf("nodo intermedio operacion: metodo\n");
+    //printf("nodo intermedio operacion: metodo\n");
   }
 
   if (strcmp(nodo->operacion,"ENDMETODO")==0){
@@ -160,29 +162,29 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
 
   if (strcmp(nodo->operacion,"MOV")==0){
-    printf("inicia mov de %s a %s\n",(nodo->op1)->nombre,(nodo->op2)->nombre );
-    printf("el tipo del nodo es %i , corresponde a la variable %s\n",(nodo->op2)->tipoNodo,(nodo->op2)->nombre);
+    //printf("inicia mov de %s a %s\n",(nodo->op1)->nombre,(nodo->op2)->nombre );
+    //printf("el tipo del nodo es %i , corresponde a la variable %s\n",(nodo->op2)->tipoNodo,(nodo->op2)->nombre);
     if((nodo->op2)->tipoNodo==1){
-      printf("hacemos un movq de una variable a una variable\n");
+      //printf("hacemos un movq de una variable a una variable\n");
       fprintf(arch, "  movq %s, \%rax \n",varAAssembler(nodo->op2));
 
       fprintf(arch, "  movq \%rax, %s \n",varAAssembler(nodo->op1));
-      printf( "  movq %s, \%rax \n",varAAssembler(nodo->op2));
+      //printf( "  movq %s, \%rax \n",varAAssembler(nodo->op2));
 
-      printf( "  movq \%rax, %s \n",varAAssembler(nodo->op1));
+      //printf( "  movq \%rax, %s \n",varAAssembler(nodo->op1));
     }
     if((nodo->op2)->tipoNodo==12||(nodo->op2)->tipoNodo==13){
-      printf("hacemos un movq de un literal a una variable\n");
+      //printf("hacemos un movq de un literal a una variable\n");
         fprintf(arch, "  movq $%i,%s \n",(nodo->op2)->valor,varAAssembler(nodo->op1));
-        printf("  movq $%i,%s \n",(nodo->op2)->valor,varAAssembler(nodo->op1));
+        //printf("  movq $%i,%s \n",(nodo->op2)->valor,varAAssembler(nodo->op1));
 
     }
-    printf("fin mov \n");
+    //printf("fin mov \n");
     pasarACodAssembler(arch,nodo->next,metodonro);
   }
 
    if (strcmp(nodo->operacion,"LOADP")==0){
-     printf("entro en un load p\n");
+     //printf("entro en un load p\n");
      if(nodo->nroparametro >6){
        fprintf(arch, "  movq \%rdi, \%rax \n");
        fprintf(arch, "  movq	%s, \%rdi \n",varAAssembler(nodo->op1));
@@ -206,7 +208,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
 
      }
 
-     printf("end en un load p\n");
+     //printf("end en un load p\n");
      pasarACodAssembler(arch,nodo->next,metodonro);
    }
 
@@ -259,14 +261,14 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
      }
 
    if (strcmp(nodo->operacion,"SUM")==0){
-     printf("entro en un nodo sum\n");
+     //printf("entro en un nodo sum\n");
       fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op1));
       fprintf(arch, "  add	%s, \%rax \n",varAAssembler(nodo->op2));
       fprintf(arch, "  movq	 \%rax,%s \n",varAAssembler(nodo->op3));
       pasarACodAssembler(arch,nodo->next,metodonro);
      }
      if (strcmp(nodo->operacion,"RES")==0){
-       printf("entro en un nodo res\n");
+       //printf("entro en un nodo res\n");
         fprintf(arch, "  movq	%s, \%rax \n",varAAssembler(nodo->op1));
         fprintf(arch, "  sub	%s, \%rax \n",varAAssembler(nodo->op2));
         fprintf(arch, "  movq	 \%rax,%s \n",varAAssembler(nodo->op3));
@@ -345,7 +347,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
       pasarACodAssembler(arch,nodo->next,metodonro);
      }
    if (strcmp(nodo->operacion,"MENORQUE")==0){
-     printf("entra a MENORQUE\n" );
+     //printf("entra a MENORQUE\n" );
       char* labelaux=nuevoLabel(".L");
       fprintf(arch, "  movq	 $0,%s \n",varAAssembler(nodo->op3));
       fprintf(arch, "  movq	%s, \%rdx \n",varAAssembler(nodo->op1));
@@ -354,7 +356,7 @@ void pasarACodAssembler(FILE* arch,NodoInt* nodo,int metodonro){
       fprintf(arch, "  jge	 %s \n",labelaux);
       fprintf(arch, "  movq	 $1,%s \n",varAAssembler(nodo->op3));
       fprintf(arch, "%s: \n",labelaux);
-      printf("SALE DE  MENORQUE\n" );
+      //printf("SALE DE  MENORQUE\n" );
       pasarACodAssembler(arch,nodo->next,metodonro);
 
      }
@@ -425,7 +427,7 @@ void metodoAIntermedio(NodoArbol* nodo){
     return;
   }
   if(nodo->tipoNodo!=2){
-    printf("ERROR EL NODO PASADO NO ES UN METODO\n");
+    //printf("ERROR EL NODO PASADO NO ES UN METODO\n");
     exit(0);
   }
   NodoInt* nuevo = malloc(sizeof(NodoInt));
@@ -467,14 +469,14 @@ NodoArbol* nuevaVariableTemporal(char* tipo){
   nuevo->offSet = currentOffSet;
   currentOffSet =currentOffSet -8;
 
-  printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
+  //printf("SE CREO LA VARIABLE %s tipo %s\n",nuevo->nombre,nuevo->tipo );
   return nuevo;
 }
 
 
 NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
   if(nodo == NULL){
-    printf("null pasarACodIntermedio\n");
+    //printf("null pasarACodIntermedio\n");
     return NULL;}
   //printf("despues del null en pasarACodIntermedio\n");
   imprimirNodo(nodo);
@@ -562,7 +564,7 @@ NodoArbol* pasarACodIntermedio(NodoArbol* nodo){
   if(nodo->tipoNodo==9){
     nuevo= malloc(sizeof(NodoInt));
     nuevo->operacion = "CALL";
-    printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",(nodo->call_metodo)->nombre);
+    //printf("\nhacemos el nodo call: el nombre del nodo es :%s\n",(nodo->call_metodo)->nombre);
     nuevo->nombre= (nodo->call_metodo)->nombre;
     if(strcmp((nodo->call_metodo)->tipo,"void")!=0){
       nuevo->op1=nuevaVariableTemporal((nodo->call_metodo)->tipo);
@@ -620,7 +622,7 @@ if(nodo->tipoNodo==14){
       nuevo->operacion="IGUAL";
     }
     if(strcmp("&&",nodo->nombre)==0){
-      printf("ENCONTRO EL ANDDDDDDDDD\n");
+      //printf("ENCONTRO EL ANDDDDDDDDD\n");
       nuevo->operacion="AND";
     }
     if(strcmp("||",nodo->nombre)==0){
@@ -755,14 +757,14 @@ void imprimirNodo(NodoArbol *nodo){
 }
 
 void imprimirmetodos(){
-  printf("imprimir metodos \n");
+  //printf("imprimir metodos \n");
 
   NodoArbol *metodo = listametodos ;
   NodoArbol *recorrido = metodo->cuerpo ;
   while(metodo!=NULL){
-    printf("vamos a imprimir metodo con nombre: %s\n",metodo->nombre);
+    //printf("vamos a imprimir metodo con nombre: %s\n",metodo->nombre);
     while (recorrido != NULL) {
-      printf("recorrido = %p\n",recorrido );
+      //printf("recorrido = %p\n",recorrido );
       imprimirNodo(recorrido);
       recorrido = recorrido->next;
     }
@@ -1009,7 +1011,7 @@ void codIntermedio(NodoArbol* nodo){
   NodoArbol* aux=nodo;
   while (aux!=NULL) {
     pasarACodIntermedio(aux);
-    printf("aux:%p \n",aux );
+  //  printf("aux:%p \n",aux );
     aux=aux->nextlista;
   }
 }
@@ -1161,12 +1163,12 @@ NodoArbol *nodoauxiliarAnt ; // lo usamos para guardar el nodo anterior al nodoa
         //eliminarNivelPila();
         controlTiposMetod();
         verificarMain(listametodos);
-        printf("ANTES DE CODIGO intermedio\n");
+      //  printf("ANTES DE CODIGO intermedio\n");
         if(listametodos==NULL){
-          printf("listametodos es NULL\n");
+      //    printf("listametodos es NULL\n");
         }
         codIntermedio(listametodos);
-        printf("DESPUES DE CODIGO intermedio\n");
+    //    printf("DESPUES DE CODIGO intermedio\n");
         imprimirLista(codigoIntermedio);
         codAssembler();
     }
@@ -1669,7 +1671,7 @@ expr : expr MAS expr {
                           nuevo->tipoNodo=14;
                           nuevo->nrolinea =$2->linea;
                           nuevo->nombre= $2->info;
-                        
+
                           nuevo->op1 = $1;
                           nuevo->op2 = $3;
                           int error = mismoTipoBOOL($1,$3);
