@@ -1,0 +1,24 @@
+class{
+  int c;
+  int id(int x){
+    return x;
+  }
+
+  int main(){
+    c=16;
+    if(c-4==0)then{
+
+    }else{
+    return 1;
+
+    }
+    if(c>5)then{
+    return 1;
+    }else{
+        return 1;
+    }
+
+
+   }
+
+}

@@ -1,10 +1,14 @@
 class{
   int c;
+  int id(int x){
+  return x;
+  }
+
   int fibonacci (int i){
     int prim;
     int sec;
     int ter;
-    prim =1;
+    prim =0;
     sec=1;
     ter=1;
 
@@ -12,7 +16,7 @@ class{
     while(i>2){
       prim=sec;
       sec=ter;
-      ter=prim+sec;
+      ter=id(prim+sec);
       i=i-1;
     }
     return ter;
